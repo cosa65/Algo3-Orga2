@@ -4,7 +4,7 @@
 using namespace std;
 
 
-//podria ir como una operacion de Matriz esta, pero como en realidad es algo que esta mas relacionado con la EG me parecio ponerlo mejor aca, pero si despues optimizamos seria mejor moverla a la struct
+//va como una operacion de Matriz esta
 
 /*void intercambiarFilas(Matriz mat, int fila1, int fila2){
 

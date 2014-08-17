@@ -4,7 +4,6 @@
 using namespace std;
 
 
-//podria ir como una operacion de Matriz esta, pero como en realidad es algo que esta mas relacionado con la EG me parecio ponerlo mejor aca, pero si despues optimizamos seria mejor moverla a la struct
 
 /*void intercambiarFilas(Matriz mat, int fila1, int fila2){
 
@@ -139,6 +138,7 @@ cout << endl <<"test EliminacionGaussiana"<< endl;
 	cout << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;
 	cout << mat.Posicion(3,1) << mat.Posicion(3,2) <<mat.Posicion(3,3) << endl;
 
+cout << endl << "es.... hermoso ;D " << endl;
 //---------------------------------------
 
 	
