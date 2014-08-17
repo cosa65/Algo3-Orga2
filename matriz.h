@@ -7,13 +7,20 @@ struct Matriz
 {
 public:
 
+//generador basico, no se usa
 Matriz();
 
 //~Matriz();
 
+//generador que te crea una matriz de una tamaño, no pide vectores
+Matriz( int tamfilas, int tamcolumnas);
+
+//generador que te crea la matriz con los vectores que le pasaste
 Matriz(vector <vector<int> >, int tamfilas, int tamcolumnas);
 
 int Posicion(int fila, int columna);
+
+void Definir(int, int fila, int columna);
 
 private:
 

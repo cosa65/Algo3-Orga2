@@ -41,5 +41,9 @@ int main()
 	
 //---------------------------------------
 
+	mat.Definir(2,1,1);
+	cout << endl << "definir la pos 1,1 nueva como:" << mat.Posicion(1,1) << endl;
+
+//---------------------------------------
 	return 0;
 }
