@@ -9,7 +9,7 @@ Matriz::Matriz( int tamfilas, int tamcolumnas){
 	_Ccolumnas = tamfilas;
 }
 
-Matriz::Matriz( vector< vector<int> > filas, int tamfilas, int tamcolumnas){
+Matriz::Matriz( vector< vector<double> > filas, int tamfilas, int tamcolumnas){
 
 	_array = filas;	
 	_Cfilas = tamcolumnas;
@@ -17,13 +17,33 @@ Matriz::Matriz( vector< vector<int> > filas, int tamfilas, int tamcolumnas){
 
 }
 
-void Matriz::Definir(int def,int fila, int columna){
+void Matriz::Definir(double def,int fila, int columna){
 
 	_array[fila - 1][columna - 1] = def;
 
 }
 
-int Matriz::Posicion(int fila, int columna){
+void Matriz::intercambiarFilas(int fila1, int fila2){
+
+	vector<double> guarda2 = _array[fila2-1];
+
+	_array[fila2-1] = _array[fila1-1];
+
+	_array[fila1-1] = guarda2;
+
+}
+
+void Matriz::restarFilas(int filaRestada, int filaQueResta, double multFilaARestar){
+
+	for (int i=0; i< _Ccolumnas; i++){
+			
+			_array[filaRestada-1][i] = _array[filaRestada-1][i] - (_array[filaQueResta-1][i]* multFilaARestar);
+
+		}
+
+}
+
+double Matriz::Posicion(int fila, int columna){
 
 	return _array[fila - 1][columna - 1];
 
