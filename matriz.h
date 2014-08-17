@@ -18,13 +18,21 @@ Matriz( int tamfilas, int tamcolumnas);
 //generador que te crea la matriz con los vectores que le pasaste
 Matriz(vector <vector<int> >, int tamfilas, int tamcolumnas);
 
+void Definir(int, int fila, int columna);
+
 int Posicion(int fila, int columna);
 
-void Definir(int, int fila, int columna);
+int Cfilas();
+
+int Ccolumnas();
+
+int TamTotal();
 
 private:
 
 vector< vector<int> > _array;		//	taria bueno que este fuera un puntero a vector< vector<int> > asi no se pasa por copia, pero tira 											segmentation fault si lo es...
+int _Cfilas;
 
+int _Ccolumnas;
 
 };

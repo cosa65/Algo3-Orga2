@@ -2,6 +2,14 @@
 #include <iostream>
 #include "matriz.cpp"
 using namespace std;
+
+
+void EliminacionGaussiana (Matriz mat){
+
+//for(i = 1, i <=)
+
+}
+
 //esots tests va a haber que borrarlos, es para ver que ande bien la matriz
 int main()
 {
@@ -31,7 +39,7 @@ int main()
 
 	Matriz mat;
 
-	mat = Matriz(as, 3, 2);
+	mat = Matriz(as, 3, 3);
 
 //---------------------------------------
 	
@@ -42,8 +50,10 @@ int main()
 //---------------------------------------
 
 	mat.Definir(2,1,1);
-	cout << endl << "definir la pos 1,1 nueva como:" << endl << mat.Posicion(1,1) << endl;
+	cout << endl << "definir la pos 1,1 nueva como:" << mat.Posicion(1,1) << endl;
 
 //---------------------------------------
+
+	cout << "filas: " << mat.Cfilas() << endl << "columnas: " << mat.Ccolumnas() << endl << "tamaño: " << mat.TamTotal() << endl;
 	return 0;
 }
