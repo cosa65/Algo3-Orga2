@@ -1,0 +1,23 @@
+#include <vector>
+
+using namespace std;
+
+
+struct Matriz
+{
+public:
+
+Matriz();
+
+//~Matriz();
+
+Matriz(vector <vector<double> >, double tamfilas, double tamcolumnas);
+
+double Posicion(double fila, double columna);
+
+private:
+
+vector< vector<double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<double> > asi no se pasa por copia, pero tira 											segmentation fault si lo es...
+
+
+};

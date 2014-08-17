@@ -1,6 +1,15 @@
-#include 
+#include "matriz.h"
 
-int main{
+Matriz::Matriz(){}
 
-return 0
+Matriz::Matriz( vector< vector<double> > filas, double tamfilas, double tamcolumnas){
+
+	_array = filas;	
+
+}
+
+double Matriz::Posicion(double fila, double columna){
+
+	return _array[fila][columna];
+
 }

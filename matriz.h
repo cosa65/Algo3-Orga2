@@ -7,9 +7,13 @@ struct Matriz
 {
 public:
 
+Matriz();
+
 //~Matriz();
 
 Matriz(vector <vector<int> >, int tamfilas, int tamcolumnas);
+
+int Posicion(int fila, int columna);
 
 private:
 
