@@ -139,9 +139,10 @@ cout << endl <<"test EliminacionGaussiana"<< endl;
 	cout << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;
 	cout << mat.Posicion(3,1) << mat.Posicion(3,2) <<mat.Posicion(3,3) << endl;
 
+cout << endl << "es.... hermoso ;D " << endl;
 //---------------------------------------
 
-
+	
 
 
 
