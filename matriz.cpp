@@ -10,6 +10,6 @@ Matriz::Matriz( vector< vector<int> > filas, int tamfilas, int tamcolumnas){
 
 int Matriz::Posicion(int fila, int columna){
 
-	return _array[fila][columna];
+	return _array[fila - 1][columna - 1];
 
 }

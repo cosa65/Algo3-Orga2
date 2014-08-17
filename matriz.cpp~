@@ -2,14 +2,14 @@
 
 Matriz::Matriz(){}
 
-Matriz::Matriz( vector< vector<double> > filas, double tamfilas, double tamcolumnas){
+Matriz::Matriz( vector< vector<int> > filas, int tamfilas, int tamcolumnas){
 
 	_array = filas;	
 
 }
 
-double Matriz::Posicion(double fila, double columna){
+int Matriz::Posicion(int fila, int columna){
 
-	return _array[fila][columna];
+	return _array[fila - 1][columna - 1];
 
 }
