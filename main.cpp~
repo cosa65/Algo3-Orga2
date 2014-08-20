@@ -4,6 +4,7 @@
 using namespace std;
 
 
+//va como una operacion de Matriz esta
 
 /*void intercambiarFilas(Matriz mat, int fila1, int fila2){
 
