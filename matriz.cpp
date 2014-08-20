@@ -68,3 +68,11 @@ int Matriz::TamTotal(){
 
 }
 
+void Matriz::mostrar() const {
+      for (int i=0;i<_Cfilas;i++) {
+	    for (int j=0;i<_Ccolumnas;j++){
+		  cout << Posicion(i,j) << " ";
+	    }  cout << endl;
+      }
+}
+

@@ -12,7 +12,7 @@ MatrizB();
 
 MatrizB(int cantfilas, int cantcolumnas);
 
-MatrizB(int cantfilas, int cantcolumnas, vector< vector<double> > );
+MatrizB(vector< vector<double> > , int cantfilas, int cantcolumnas);
 
 private:
 
