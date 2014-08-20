@@ -1,6 +1,7 @@
 //g++ main.cpp -o main
 #include <iostream>
 #include "matriz.cpp"
+#include "matrizBanda.cpp"
 using namespace std;
 
 

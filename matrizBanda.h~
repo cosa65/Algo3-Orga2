@@ -1,0 +1,25 @@
+#include <vector>
+
+using namespace std;
+
+
+
+struct MatrizB
+{
+public:
+
+MatrizB();
+
+MatrizB(int cantfilas, int cantcolumnas);
+
+MatrizB(int cantfilas, int cantcolumnas, vector< vector<double> > );
+
+private:
+
+vector< vector<double> > _array;
+
+int _Cfilas;
+
+int _Ccolumnas;
+
+};

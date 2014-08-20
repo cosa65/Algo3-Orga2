@@ -14,10 +14,10 @@ Matriz();
 //~Matriz();
 
 //generador que te crea una matriz de una tamaño, no pide vectores
-Matriz( int tamfilas, int tamcolumnas);
+Matriz( int cantfilas, int cantcolumnas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-Matriz(vector <vector<double> >, int tamfilas, int tamcolumnas);
+Matriz(vector <vector<double> >, int cantfilas, int cantcolumnas);
 
 void Definir(double adefinir, int fila, int columna);
 

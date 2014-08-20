@@ -2,18 +2,18 @@
 
 Matriz::Matriz(){}
 
-Matriz::Matriz( int tamfilas, int tamcolumnas){
+Matriz::Matriz( int cantfilas, int cantcolumnas){
 
-	_array.resize( tamfilas * tamcolumnas );
-	_Cfilas = tamcolumnas;
-	_Ccolumnas = tamfilas;
+	_array.resize( cantfilas * cantcolumnas );
+	_Cfilas = cantfilas;
+	_Ccolumnas = cantcolumnas;
 }
 
-Matriz::Matriz( vector< vector<double> > filas, int tamfilas, int tamcolumnas){
+Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas){
 
 	_array = filas;	
-	_Cfilas = tamcolumnas;
-	_Ccolumnas = tamfilas;
+	_Cfilas = cantfilas;
+	_Ccolumnas = cantcolumnas;
 
 }
 
