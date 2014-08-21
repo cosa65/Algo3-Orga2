@@ -1,5 +1,6 @@
 //g++ main.cpp -o main
 #include <iostream>
+#include <fstream>
 #include "matriz.cpp"
 #include "matrizBanda.cpp"
 using namespace std;
@@ -64,98 +65,63 @@ Matriz EliminacionGaussiana (Matriz mat){
 	}
 	return mat;
 }
-//estos tests va a haber que borrarlos, es para ver que ande bien la matriz
+
+bool determinado (Matriz m, int x, int y) {
+	return true;
+}
+
+Matriz cargar(istream& is) {
+	ifstream fe(is);
+    int a;
+	int b;
+	int h;
+    is >> a;
+	is >> b;
+	is >> h;
+	int ancho=(a/h)+1;
+	int largo=(b/h)+1;
+	Matriz m=Matriz(ancho*largo,ancho*largo);
+	int radio;
+	is >> radio;
+	int cant;
+	is >> cant;
+	double sxs[cant];
+	double sys[cant];
+	double s;
+	for (int i=1;i<=cant;i++) {
+		is >> s;
+		sxs[i-1]=s; //X de las sanguijuelas
+		is >> s;
+		sys[i-1]=s; //Y de las sanguijuelas
+	} for (int i=1;i<=ancho*largo;i++) {
+		int y=(i-1)/ancho+1; // x e y son el lugar del vector incógnita al que corresponde la fila i
+		int x;
+		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
+		if (determinado(m,x,y)) {
+			for (int j=1;j<=ancho*largo;j++) {
+				if (i==j) {
+					m.Definir(1,i,j);
+				} else {
+					m.Definir(0,i,j);
+				}
+			}		
+		} else {
+			for (int j=1;j<=ancho*largo;j++) {
+				if (i==j) {
+					m.Definir(-1,i,j);
+				} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i-j==ancho-2) {
+					m.Definir(0.25,i,j);
+				} else {
+					m.Definir(0,i,j);
+				}
+			}
+		} m.mostrar();
+	}
+ }
+
+
 int main()
 {
-//--------------------------------------
-//Test crear matrices
-
-	vector<double> a(3);
-	a[0] = 1;
-	a[1] = 2;
-	a[2] = 3;
-
-	vector<double> b(3);
-	b[0] = 4;
-	b[1] = 5;
-	b[2] = 6;
-
-	vector<double> c(3);
-	c[0] = 7;
-	c[1] = 8;
-	c[2] = 9;
-
-	vector< vector<double> > as(3);
-	
-	as[0] = a;
-	as[1] = b;
-	as[2] = c;
-
-	Matriz mat;
-
-	mat = Matriz(as, 3, 3);
-
-//---------------------------------------
-cout<< endl <<"test observador posicion (las posiciones se cuentan desde 1)";
-	cout << mat.Posicion(1,1) << mat.Posicion(1,2) <<mat.Posicion(1,3) << endl;
-	cout << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;
-	cout << mat.Posicion(3,1) << mat.Posicion(3,2) <<mat.Posicion(3,3) << endl;
-	
-//---------------------------------------
-cout << endl <<"test definir";
-	mat.Definir(2,1,1);
-	cout << endl << "definir la pos 1,1 nueva como:" << mat.Posicion(1,1) << endl;
-	mat.Definir(1,1,1);
-
-//---------------------------------------
-cout << endl << "test observadores simples";
-
-	cout << "filas: " << mat.Cfilas() << endl << "columnas: " << mat.Ccolumnas() << endl << "tamaño: " << mat.TamTotal() << endl;
-
-//---------------------------------------
-cout << endl <<"test intercambiarFilas" ;
-
-	mat.intercambiarFilas(2, 1);
-	cout << endl << mat.Posicion(1,1) << mat.Posicion(1,2) <<mat.Posicion(1,3) << endl;
-	cout << endl << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;
-
-	mat.intercambiarFilas(2, 1);
-
-//---------------------------------------
-//cout << endl << "test restarFilas, anda pero quiero tener la mat como antes" ;
-
-	
-
-	/*mat.restarFilas(2, 1, 1);
-	cout << endl << mat.Posicion(1,1) << mat.Posicion(1,2) <<mat.Posicion(1,3) << endl;
-	cout << endl << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;*/
-
-
-//---------------------------------------
-cout << endl <<"test EliminacionGaussiana"<< endl;
-
-	mat = 	EliminacionGaussiana(mat);
-	
-	cout << mat.Posicion(1,1) << mat.Posicion(1,2) <<mat.Posicion(1,3) << endl;
-	cout << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(2,3) << endl;
-	cout << mat.Posicion(3,1) << mat.Posicion(3,2) <<mat.Posicion(3,3) << endl;
-//---------------------------------------
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
+	cargar("test1.in");
 	return 0;
 }

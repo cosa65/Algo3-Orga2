@@ -7,23 +7,25 @@ Matriz::Matriz( int cantfilas, int cantcolumnas){
 	_array.resize( cantfilas * cantcolumnas );
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
+	_indeps.resize(cantfilas);
 }
 
-Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas){
+Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas,vector<double> indeps){
 
 	_array = filas;	
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
+	_indeps = indeps;
 
 }
 
-void Matriz::Definir(double def,int fila, int columna){
+void Matriz::Definir(double def,int fila, int columna) {
 
 	_array[fila - 1][columna - 1] = def;
 
 }
 
-void Matriz::intercambiarFilas(int fila1, int fila2){
+void Matriz::intercambiarFilas(int fila1, int fila2) {
 
 	vector<double> guarda2 = _array[fila2-1];
 
@@ -31,15 +33,17 @@ void Matriz::intercambiarFilas(int fila1, int fila2){
 
 	_array[fila1-1] = guarda2;
 
+	double swap=_indeps[fila1-1];
+	_indeps[fila1-1]=_indeps[fila2-1];
+	_indeps[fila2-1]=swap;
 }
 
 void Matriz::restarFilas(int filaRestada, int filaQueResta, double multFilaARestar){
 
 	for (int i=0; i< _Ccolumnas; i++){
-			
-			_array[filaRestada-1][i] = _array[filaRestada-1][i] - (_array[filaQueResta-1][i]* multFilaARestar);
-
-		}
+		_array[filaRestada-1][i] = _array[filaRestada-1][i] - (_array[filaQueResta-1][i]* multFilaARestar);
+	}
+	_indeps[filaRestada-1] = _indeps[filaRestada-1] - (_indeps[filaQueResta-1]* multFilaARestar);
 
 }
 
@@ -68,11 +72,11 @@ int Matriz::TamTotal(){
 
 }
 
-void Matriz::mostrar() const {
-      for (int i=0;i<_Cfilas;i++) {
-	    for (int j=0;i<_Ccolumnas;j++){
+void Matriz::mostrar() {
+      for (int i=1;i<=_Cfilas;i++) {
+	    for (int j=1;j<=_Ccolumnas;j++){
 		  cout << Posicion(i,j) << " ";
-	    }  cout << endl;
+	    }  cout << "|" << _indeps[i-1] <<endl;
       }
 }
 
