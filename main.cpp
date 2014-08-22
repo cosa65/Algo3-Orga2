@@ -1,8 +1,8 @@
 //g++ main.cpp -o main
 #include <iostream>
 #include <fstream>
-#include "matriz.h"
-#include "matrizBanda.h"
+#include "matriz.cpp"
+#include "matrizBanda.cpp"
 using namespace std;
 
 

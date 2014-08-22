@@ -1,4 +1,5 @@
 #include "matrizBanda.h"
+#include <vector>
 
 MatrizB::MatrizB(){}
 

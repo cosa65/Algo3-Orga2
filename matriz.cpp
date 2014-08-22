@@ -1,13 +1,19 @@
+#include <vector>
 #include "matriz.h"
 
 Matriz::Matriz(){}
 
 Matriz::Matriz( int cantfilas, int cantcolumnas){
+	_array.resize(cantfilas); ///OJO que no es un array plano, es un array de arrays, esto no funciona así
+	for (int i = 0; i < cantfilas; i++){
 
-	_array.resize(cantfilas * cantcolumnas); ///OJO que no es un array plano, es un array de arrays, esto no funciona así
+	_array[i].resize(cantcolumnas);
+
+	}
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
 	_indeps.resize(cantfilas);
+	
 }
 
 Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas,vector<double> indeps){

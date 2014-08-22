@@ -33,7 +33,7 @@ int Ccolumnas();
 
 int TamTotal();
 
-void mostrar() const;
+void mostrar();
 
 private:
 
