@@ -4,7 +4,7 @@ Matriz::Matriz(){}
 
 Matriz::Matriz( int cantfilas, int cantcolumnas){
 
-	_array.resize( cantfilas * cantcolumnas );
+	_array.resize(cantfilas * cantcolumnas); ///OJO que no es un array plano, es un array de arrays, esto no funciona así
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
 	_indeps.resize(cantfilas);
@@ -12,7 +12,7 @@ Matriz::Matriz( int cantfilas, int cantcolumnas){
 
 Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas,vector<double> indeps){
 
-	_array = filas;	
+	_array = filas;
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
 	_indeps = indeps;
@@ -21,7 +21,7 @@ Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas,
 
 void Matriz::Definir(double def,int fila, int columna) {
 
-	_array[fila - 1][columna - 1] = def;
+	_array[fila - 1][columna - 1] = def; ///Creo que si el lugar estaba vacío se rompe, si no no sé por qué tira seg. fault.
 
 }
 
@@ -54,8 +54,8 @@ double Matriz::Posicion(int fila, int columna){
 }
 
 int Matriz::Cfilas(){
-	
-	
+
+
 	return _Cfilas;
 
 }
@@ -73,10 +73,10 @@ int Matriz::TamTotal(){
 }
 
 void Matriz::mostrar() {
-      for (int i=1;i<=_Cfilas;i++) {
+    for (int i=1;i<=_Cfilas;i++) {
 	    for (int j=1;j<=_Ccolumnas;j++){
-		  cout << Posicion(i,j) << " ";
-	    }  cout << "|" << _indeps[i-1] <<endl;
-      }
+            //cout << Posicion(i,j) << " ";
+	    }  //cout << "|" << _indeps[i-1] <<endl;
+    }
 }
 

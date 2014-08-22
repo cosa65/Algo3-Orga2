@@ -1,8 +1,8 @@
 //g++ main.cpp -o main
 #include <iostream>
 #include <fstream>
-#include "matriz.cpp"
-#include "matrizBanda.cpp"
+#include "matriz.h"
+#include "matrizBanda.h"
 using namespace std;
 
 
@@ -11,19 +11,19 @@ using namespace std;
 /*void intercambiarFilas(Matriz mat, int fila1, int fila2){
 
 	double guarda1;
-	
+
 	double guarda2;
 
 	int tamFila = mat.Ccolumnas();
 
 	for(int i = 1; i <= tamFila; i++){
 
-		guarda2 = mat.Posicion(fila1, i);		
+		guarda2 = mat.Posicion(fila1, i);
 		guarda2 = mat.Posicion(fila2, i);
-		
+
 		mat.Definir(guarda1, fila2, i);
 		mat.Definir(guarda2, fila1, i);
-						
+
 		}
 
 	cout << endl << mat.Posicion(fila1,1) << mat.Posicion(fila1,2) <<mat.Posicion(fila1,3) << endl;
@@ -39,20 +39,20 @@ Matriz EliminacionGaussiana (Matriz mat){
 
 
 		if (mat.Posicion(i, i) == 0){
-		//caso que el elemento i de mi fila actual ya valga 0	
-			for (int y = filas; y >i; y--){	
+		//caso que el elemento i de mi fila actual ya valga 0
+			for (int y = filas; y >i; y--){
 				if (mat.Posicion(y,i) !=0) {
 				mat.intercambiarFilas(y,i);
 				y = i;
 				}
 			}
-		
+
 		}
 		else{
 		//caso que el elemento i de mi fila actual no valga 0
 
 			for(int j=i+1; j<=filas; j++){
-				
+
 				if(mat.Posicion(j,i)!=0){
 					double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 					mat.restarFilas(j, i, mult);
@@ -70,28 +70,32 @@ bool determinado (Matriz m, int x, int y) {
 	return true;
 }
 
-Matriz cargar(istream& is) {
-	ifstream fe(is);
+Matriz cargar() {
+    ifstream archivo;
+    string input = "";
+    cout << "  Ingrese nombre de archivo existente: ";
+    getline(cin, input);
+    archivo.open(input.c_str());
     int a;
 	int b;
 	int h;
-    is >> a;
-	is >> b;
-	is >> h;
+    archivo >> a;
+	archivo >> b;
+	archivo >> h;
 	int ancho=(a/h)+1;
 	int largo=(b/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
 	int radio;
-	is >> radio;
+	archivo >> radio;
 	int cant;
-	is >> cant;
+	archivo >> cant;
 	double sxs[cant];
 	double sys[cant];
 	double s;
 	for (int i=1;i<=cant;i++) {
-		is >> s;
+		archivo >> s;
 		sxs[i-1]=s; //X de las sanguijuelas
-		is >> s;
+		archivo >> s;
 		sys[i-1]=s; //Y de las sanguijuelas
 	} for (int i=1;i<=ancho*largo;i++) {
 		int y=(i-1)/ancho+1; // x e y son el lugar del vector incógnita al que corresponde la fila i
@@ -100,11 +104,13 @@ Matriz cargar(istream& is) {
 		if (determinado(m,x,y)) {
 			for (int j=1;j<=ancho*largo;j++) {
 				if (i==j) {
+                    cout << i;
+                    cout << j;
 					m.Definir(1,i,j);
 				} else {
 					m.Definir(0,i,j);
 				}
-			}		
+			}
 		} else {
 			for (int j=1;j<=ancho*largo;j++) {
 				if (i==j) {
@@ -115,13 +121,13 @@ Matriz cargar(istream& is) {
 					m.Definir(0,i,j);
 				}
 			}
-		} m.mostrar();
+		} m.mostrar();return m;
 	}
  }
 
 
 int main()
 {
-	cargar("test1.in");
+	cargar();
 	return 0;
 }
