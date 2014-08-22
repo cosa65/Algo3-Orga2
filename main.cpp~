@@ -79,7 +79,6 @@ bool enSanguijuela (vector <double> vx, vector <double> vy, int x, int y, int r)
 
 bool esBorde (int l, int a, int x, int y) {
 	if (x==a || y==l || x==1 || y==1) {
-		cout << x <<" "<< y<< ": " << "En borde" << endl; ///Se entiende
 		return true;
 	} return false;
 }
@@ -99,6 +98,7 @@ Matriz cargar() {
 	int ancho=(anchoParab/h)+1;
 	int largo=(anchoParab/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
+	m.DefGrandidad(h,anchoParab);
 	int radio;
 	archivo >> radio;
 	double Temp;
@@ -149,8 +149,8 @@ vector<double> ResolucionFosquiMan (Matriz mat){
 	vector<double> x(n);
 	for (int i=0; i < n; i++ ){
 		double acum=mat.PosIndep(n-i);
-		for(int j=1; j < n-i; j++) {
-			acum=acum-mat.Posicion(n-i,n-i+j)*x[n-i+j];
+		for(int j=n-i+1; j <=n; j++) {
+			acum=acum-mat.Posicion(n-i, j)*x[j];
 		}
 	x[n-i] = acum;
 	} return x;
@@ -161,5 +161,19 @@ int main()
 	Matriz matr = cargar();
 	matr=EliminacionGaussiana(matr);
 	matr.mostrar();
+	vector<double> x=ResolucionFosquiMan(matr);
+	int h=matr.Granularidad();
+	ofstream f2;
+	string input = "";
+    cout << "Ingrese nombre de archivo de salida: ";
+    getline(cin, input);
+    f2.open(input.c_str()), ofstream::out);
+	for (int i=1;i<matr.Cfilas();i++) {
+		int ry=(i-1)/matr.AnchoParab()*h;
+		int rx;
+		if (i%matr.AnchoParab()==0) {rx = matr.AnchoParab();} else {rx=i%matr.AnchoParab();}
+		rx=(rx-1)*h;
+		f2<< ry << " " << rx << " " << x[i] << endl;
+	} 
 	return 0;
 }
