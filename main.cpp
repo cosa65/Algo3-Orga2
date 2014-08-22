@@ -70,42 +70,37 @@ bool determinado (Matriz m, int x, int y) {
 	return true;
 }
 
-Matriz cargar() {
-    ifstream test;
+Matriz cargar(Matriz m) {
+    ifstream archivo;
     string input = "";
-    cout << "  Ingrese nombre de test existente: ";
+    cout << "  Ingrese nombre de archivo existente: ";
     getline(cin, input);
-    test.open(input.c_str());
+    archivo.open(input.c_str());
     int anchoParab;
 	int largoParab;
 	int h;
-    test >> anchoParab;
-	test >> largoParab;
-	test >> h;
+    archivo >> anchoParab;
+	archivo >> largoParab;
+	archivo >> h;
 	int ancho=(anchoParab/h)+1;
 	int largo=(anchoParab/h)+1;
-	Matriz m=Matriz(ancho*largo,ancho*largo);
+	m=Matriz(ancho*largo,ancho*largo);
 	int radio;
-	test >> radio;
-	cout << endl << "radio:" <<radio << endl;	//esto sale despues
+	archivo >> radio;
 	double Temp;
-	test >> Temp;
-	cout << "Temp:" << Temp << endl;			//esto sale despues
+	archivo >> Temp;
 	int cant;
-	test >> cant;
-	cout << "cant:" << cant << endl;			//esto sale despues
+	archivo >> cant;
 	double Posx[cant];
 	double Posy[cant];
 	for (int i=0;i<cant;i++) {
-		test >> Posx[i];
-		Posx[i]=Temp; 			//X de las sanguijuelas
-		test >> Posy[i];
-		Posy[i]=Temp; 			//Y de las sanguijuelas
+		archivo >> Posx[i]; 			//X de las sanguijuelas
+		archivo >> Posy[i];			//Y de las sanguijuelas
 	}
 
 
 	for (int i=1;i<=ancho*largo;i++) {
-	int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
+	int y=(i-1)/(ancho+1); 	// x e y son el lugar del vector incógnita al que corresponde la fila i
 	int x;
 	if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
 	if (determinado(m,x,y)) {
@@ -119,22 +114,25 @@ Matriz cargar() {
 			}
 		}
 	} 	else {
-		for (int j=1;j<=ancho*largo;j++) {
-			if (i==j) {
-				m.Definir(-1,i,j);
-			} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i-j==ancho-2) {
-				m.Definir(0.25,i,j);
-			} else {
-				m.Definir(0,i,j);
+			for (int j=1;j<=ancho*largo;j++) {
+				if (i==j) {
+					m.Definir(-1,i,j);
+				} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i-j==ancho-2) {
+					m.Definir(0.25,i,j);
+				} else {
+					m.Definir(0,i,j);
+				}
 			}
-		}
-		} m.mostrar(); return m;
+		} return m;
 	}
 }
 
 
+
 int main()
 {
-	cargar();
+	Matriz mat;
+	mat = cargar(mat);
+	mat.mostrar;
 	return 0;
 }
