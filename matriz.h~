@@ -1,4 +1,4 @@
-#include <vector>
+
 
 using namespace std;
 
@@ -20,6 +20,8 @@ Matriz( int cantfilas, int cantcolumnas);
 Matriz(vector <vector<double> >, int cantfilas, int cantcolumnas, vector<double>);
 
 void Definir(double adefinir, int fila, int columna);
+
+void DefinirB(double def,int fila);
 
 void intercambiarFilas(int fila1, int fila2);
 

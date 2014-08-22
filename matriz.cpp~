@@ -4,10 +4,10 @@
 Matriz::Matriz(){}
 
 Matriz::Matriz( int cantfilas, int cantcolumnas){
-	_array.resize(cantfilas); ///OJO que no es un array plano, es un array de arrays, esto no funciona así
+	_array.resize(cantfilas); 
 	for (int i = 0; i < cantfilas; i++){
 
-	_array[i].resize(cantcolumnas);
+		_array[i].resize(cantcolumnas);
 
 	}
 	_Cfilas = cantfilas;
@@ -27,7 +27,13 @@ Matriz::Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas,
 
 void Matriz::Definir(double def,int fila, int columna) {
 
-	_array[fila - 1][columna - 1] = def; ///Creo que si el lugar estaba vacío se rompe, si no no sé por qué tira seg. fault.
+	_array[fila - 1][columna - 1] = def; 
+
+}
+
+void Matriz::DefinirB(double def,int fila) {
+
+	_indeps[fila - 1] = def; 
 
 }
 
@@ -81,7 +87,7 @@ int Matriz::TamTotal(){
 void Matriz::mostrar() {
     for (int i=1;i<=_Cfilas;i++) {
 	    for (int j=1;j<=_Ccolumnas;j++){
-            cout << Posicion(i,j) << " ";
+           cout << Posicion(i,j) << " ";
 	    }  cout << "|" << _indeps[i-1] <<endl;
     }
 }

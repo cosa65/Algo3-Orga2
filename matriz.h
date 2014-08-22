@@ -21,11 +21,15 @@ Matriz(vector <vector<double> >, int cantfilas, int cantcolumnas, vector<double>
 
 void Definir(double adefinir, int fila, int columna);
 
+void DefinirB(double def,int fila);
+
 void intercambiarFilas(int fila1, int fila2);
 
 void restarFilas(int filaRestada, int filaQueResta, double multFilaARestar);
 
 double Posicion(int fila, int columna);
+
+double PosIndep(int fila);
 
 int Cfilas();
 
