@@ -1,8 +1,8 @@
 //g++ main.cpp -o main
 #include <iostream>
 #include <fstream>
-#include "matriz.h"
-#include "matrizBanda.h"
+#include "matriz.cpp"
+#include "matrizBanda.cpp"
 using namespace std;
 
 
@@ -71,59 +71,66 @@ bool determinado (Matriz m, int x, int y) {
 }
 
 Matriz cargar() {
-    ifstream archivo;
+    ifstream test;
     string input = "";
-    cout << "  Ingrese nombre de archivo existente: ";
+    cout << "  Ingrese nombre de test existente: ";
     getline(cin, input);
-    archivo.open(input.c_str());
-    int a;
-	int b;
+    test.open(input.c_str());
+    int anchoParab;
+	int largoParab;
 	int h;
-    archivo >> a;
-	archivo >> b;
-	archivo >> h;
-	int ancho=(a/h)+1;
-	int largo=(b/h)+1;
+    test >> anchoParab;
+	test >> largoParab;
+	test >> h;
+	int ancho=(anchoParab/h)+1;
+	int largo=(anchoParab/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
 	int radio;
-	archivo >> radio;
+	test >> radio;
+	cout << endl << "radio:" <<radio << endl;	//esto sale despues
+	double Temp;
+	test >> Temp;
+	cout << "Temp:" << Temp << endl;			//esto sale despues
 	int cant;
-	archivo >> cant;
-	double sxs[cant];
-	double sys[cant];
-	double s;
-	for (int i=1;i<=cant;i++) {
-		archivo >> s;
-		sxs[i-1]=s; //X de las sanguijuelas
-		archivo >> s;
-		sys[i-1]=s; //Y de las sanguijuelas
-	} for (int i=1;i<=ancho*largo;i++) {
-		int y=(i-1)/ancho+1; // x e y son el lugar del vector incógnita al que corresponde la fila i
-		int x;
-		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
-		if (determinado(m,x,y)) {
-			for (int j=1;j<=ancho*largo;j++) {
-				if (i==j) {
-                    cout << i;
-                    cout << j;
-					m.Definir(1,i,j);
-				} else {
-					m.Definir(0,i,j);
-				}
-			}
-		} else {
-			for (int j=1;j<=ancho*largo;j++) {
-				if (i==j) {
-					m.Definir(-1,i,j);
-				} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i-j==ancho-2) {
-					m.Definir(0.25,i,j);
-				} else {
-					m.Definir(0,i,j);
-				}
-			}
-		} m.mostrar();return m;
+	test >> cant;
+	cout << "cant:" << cant << endl;			//esto sale despues
+	double Posx[cant];
+	double Posy[cant];
+	for (int i=0;i<cant;i++) {
+		test >> Posx[i];
+		Posx[i]=Temp; 			//X de las sanguijuelas
+		test >> Posy[i];
+		Posy[i]=Temp; 			//Y de las sanguijuelas
 	}
- }
+
+
+	for (int i=1;i<=ancho*largo;i++) {
+	int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
+	int x;
+	if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
+	if (determinado(m,x,y)) {
+		for (int j=1;j<=ancho*largo;j++) {
+			if (i==j) {
+                   cout << i;
+                   cout << j;
+				m.Definir(1,i,j);
+			} else {
+				m.Definir(0,i,j);
+			}
+		}
+	} 	else {
+		for (int j=1;j<=ancho*largo;j++) {
+			if (i==j) {
+				m.Definir(-1,i,j);
+			} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i-j==ancho-2) {
+				m.Definir(0.25,i,j);
+			} else {
+				m.Definir(0,i,j);
+			}
+		}
+		} m.mostrar(); return m;
+	}
+}
 
 
 int main()
