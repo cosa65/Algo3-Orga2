@@ -70,7 +70,7 @@ bool determinado (Matriz m, int x, int y) {
 	return true;
 }
 
-Matriz cargar(Matriz m) {
+Matriz cargar() {
     ifstream archivo;
     string input = "";
     cout << "  Ingrese nombre de archivo existente: ";
@@ -84,7 +84,7 @@ Matriz cargar(Matriz m) {
 	archivo >> h;
 	int ancho=(anchoParab/h)+1;
 	int largo=(anchoParab/h)+1;
-	m=Matriz(ancho*largo,ancho*largo);
+	Matriz m=Matriz(ancho*largo,ancho*largo);
 	int radio;
 	archivo >> radio;
 	double Temp;
@@ -106,8 +106,8 @@ Matriz cargar(Matriz m) {
 	if (determinado(m,x,y)) {
 		for (int j=1;j<=ancho*largo;j++) {
 			if (i==j) {
-                   cout << i;
-                   cout << j;
+                   //cout << i;                     esto tira muchas cosas muy raras
+                   //cout << j;						esto tambien
 				m.Definir(1,i,j);
 			} else {
 				m.Definir(0,i,j);
@@ -123,16 +123,16 @@ Matriz cargar(Matriz m) {
 					m.Definir(0,i,j);
 				}
 			}
-		} return m;
+		}
 	}
+	return m;
 }
 
 
 
 int main()
 {
-	Matriz mat;
-	mat = cargar(mat);
-	mat.mostrar;
+	Matriz matr = cargar();
+	//matr.mostrar();
 	return 0;
 }
