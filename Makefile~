@@ -1,0 +1,6 @@
+make:
+	g++ -g main.cpp -o main
+	echo "ESPI PUTO" 
+	
+clean:
+	rm -f main
