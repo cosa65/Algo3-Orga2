@@ -168,10 +168,10 @@ int main()
     cout << "Ingrese nombre de archivo de salida: ";
     getline(cin, input);
     f2.open(input.c_str(), ofstream::out);
-	for (int i=1;i<matr.Cfilas();i++) {
-		int ry=(i-1)/matr.AnchoParab()*h;
+	for (int i=1;i<=matr.Cfilas();i++) {
+		int ry=(i-1)/(matr.AnchoParab()+h);
 		int rx;
-		if (i%matr.AnchoParab()==0) {rx = matr.AnchoParab();} else {rx=i%matr.AnchoParab();}
+		if (i%(matr.AnchoParab()/h+1)==0) {rx = (matr.AnchoParab()/h+1);} else {rx=i%(matr.AnchoParab()/h+1);}
 		rx=(rx-1)*h;
 		f2<< ry << " " << rx << " " << x[i] << endl;
 	} 

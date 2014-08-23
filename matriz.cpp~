@@ -54,7 +54,7 @@ void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutacione
 	double swap=_indeps[fila1-1];
 	_indeps[fila1-1]=_indeps[fila2-1];
 	_indeps[fila2-1]=swap;
-	int swapP = _pos[fila1-1]
+	int swapP = _pos[fila1-1];
 	_pos[fila1-1]=_pos[fila2-1];
 	_pos[fila2-1]=swapP;
 }
