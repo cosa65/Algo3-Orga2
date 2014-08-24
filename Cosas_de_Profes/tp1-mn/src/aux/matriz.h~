@@ -4,7 +4,7 @@
 
 using namespace std;
 
-typedef vector<long long double> fila;
+typedef vector<long double> fila;
 
 struct Matriz
 {
@@ -19,21 +19,23 @@ Matriz();
 Matriz( int cantfilas, int cantcolumnas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-Matriz( vector< vector<long long double> > filas, int cantfilas, int cantcolumnas, vector<long long double> indeps, vector<int> pos);
+Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos);
 
-void Definir(long long double adefinir, int fila, int columna);
+void Definir(long double adefinir, int fila, int columna);
 
-void DefinirB(long long double def,int fila);
+void DefinirB(long double def,int fila);
 
 void DefinirP(int def,int fila);
 
 void intercambiarFilas(int fila1, int fila2);
 
-void restarFilas(int filaRestada, int filaQueResta, long long double multFilaARestar);
+void restarFilas(int filaRestada, int filaQueResta, long double multFilaARestar);
 
-long long double Posicion(int fila, int columna);
+long double Posicion(int fila, int columna);
 
-long long double PosIndep(int fila);
+long double PosIndep(int fila);
+
+int posSinPivot(int fila);
 
 void DefGrandidad(int grano, int herpes);
 
@@ -51,7 +53,7 @@ void mostrar();
 
 private:
 
-vector< vector<long long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long long double> > asi no se pasa por copia, pero tira 											segmentation fault si lo es...
+vector< vector<long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long double> > asi no se pasa por copia,  											segmentation fault si lo es...
 int _Cfilas;
 
 int _Ccolumnas;
@@ -60,7 +62,7 @@ int _h;
 
 int _ancho;
 
-vector<long long double> _indeps;
+vector<long double> _indeps;
 
 vector<int> _pos;
 
@@ -82,7 +84,7 @@ Matriz::Matriz( int cantfilas, int cantcolumnas){
 	
 }
 
-Matriz::Matriz( vector< vector<long long double> > filas, int cantfilas, int cantcolumnas, vector<long long double> indeps, vector<int> pos){
+Matriz::Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos){
 
 	_array = filas;
 	_Cfilas = cantfilas;
@@ -93,13 +95,13 @@ Matriz::Matriz( vector< vector<long long double> > filas, int cantfilas, int can
 
 }
 
-void Matriz::Definir(long long double def,int fila, int columna) {
+void Matriz::Definir(long double def,int fila, int columna) {
 
 	_array[fila - 1][columna - 1] = def; 
 
 }
 
-void Matriz::DefinirB(long long double def,int fila) {
+void Matriz::DefinirB(long double def,int fila) {
 
 	_indeps[fila - 1] = def; 
 
@@ -110,21 +112,23 @@ void Matriz::DefinirP(int def,int fila){
 }
 
 void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutaciones.
-	vector<long long double> guarda2 = _array[fila2-1];
+
+	vector<long double> guarda2 = _array[fila2-1];
 
 	_array[fila2-1] = _array[fila1-1];
 
 	_array[fila1-1] = guarda2;
 
-	long long double swap=_indeps[fila1-1];
+	long double swap=_indeps[fila1-1];
 	_indeps[fila1-1]=_indeps[fila2-1];
 	_indeps[fila2-1]=swap;
+
 	int swapP = _pos[fila1-1];
 	_pos[fila1-1]=_pos[fila2-1];
 	_pos[fila2-1]=swapP;
 }
 
-void Matriz::restarFilas(int filaRestada, int filaQueResta, long long double multFilaARestar){
+void Matriz::restarFilas(int filaRestada, int filaQueResta, long double multFilaARestar){
 
 	for (int i=0; i< _Ccolumnas; i++){
 		_array[filaRestada-1][i] = _array[filaRestada-1][i] - (_array[filaQueResta-1][i]* multFilaARestar);
@@ -133,15 +137,21 @@ void Matriz::restarFilas(int filaRestada, int filaQueResta, long long double mul
 
 }
 
-long long double Matriz::Posicion(int fila, int columna){
+long double Matriz::Posicion(int fila, int columna){
 
 	return _array[fila - 1][columna - 1];
 
 }
 
-long long double Matriz::PosIndep(int fila){
+long double Matriz::PosIndep(int fila){
 
 	return _indeps[fila - 1];
+
+}
+
+int posSinPivot(int fila){
+
+	return _pos[fila -1];
 
 }
 

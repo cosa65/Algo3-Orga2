@@ -35,6 +35,8 @@ long double Posicion(int fila, int columna);
 
 long double PosIndep(int fila);
 
+int posSinPivot(int fila);
+
 void DefGrandidad(int grano, int herpes);
 
 int Granularidad();
@@ -51,7 +53,7 @@ void mostrar();
 
 private:
 
-vector< vector<long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long double> > asi no se pasa por copia, pero tira 											segmentation fault si lo es...
+vector< vector<long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long double> > asi no se pasa por copia,  											segmentation fault si lo es...
 int _Cfilas;
 
 int _Ccolumnas;
@@ -110,6 +112,7 @@ void Matriz::DefinirP(int def,int fila){
 }
 
 void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutaciones.
+
 	vector<long double> guarda2 = _array[fila2-1];
 
 	_array[fila2-1] = _array[fila1-1];
@@ -119,6 +122,7 @@ void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutacione
 	long double swap=_indeps[fila1-1];
 	_indeps[fila1-1]=_indeps[fila2-1];
 	_indeps[fila2-1]=swap;
+
 	int swapP = _pos[fila1-1];
 	_pos[fila1-1]=_pos[fila2-1];
 	_pos[fila2-1]=swapP;
@@ -142,6 +146,12 @@ long double Matriz::Posicion(int fila, int columna){
 long double Matriz::PosIndep(int fila){
 
 	return _indeps[fila - 1];
+
+}
+
+int Matriz::posSinPivot(int fila){
+
+	return _pos[fila -1];
 
 }
 

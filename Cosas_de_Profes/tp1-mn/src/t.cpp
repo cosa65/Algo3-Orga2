@@ -114,7 +114,7 @@ Matriz cargar(char* in) {
 	return m;
 }
 
-vector<double> ResolucionFosquiMan (Matriz mat){
+/*vector<double> ResolucionFosquiMan (Matriz mat){
 	int n = mat.Cfilas();
 	vector<double> x(n);
 	for (int i=0; i < n; i++ ){
@@ -124,8 +124,38 @@ vector<double> ResolucionFosquiMan (Matriz mat){
 		}
 	x[n-i-1] = acum;
 	} return x;
-}
+}*/
 
+vector <double> ResolucionSuperFosquiMan (Matriz mat){
+	int fils = mat.Cfilas();
+
+	vector<double> x(fils);
+
+	for (int i=fils; i > 0; i--){
+		long double incog = mat.PosIndep(i);
+
+		for (int j=fils; j>i; j--){
+			incog -= mat.Posicion(i,j)*x[j];
+		}
+
+		x[i] = incog;
+	}
+
+	//Acomodo los valores a su fila correspondiente (por si hubo cambio de filas en EG)
+	for (int i=1; i<=fils; i++){
+		if (mat.posSinPivot(i)==i){}
+		else{
+			for(int j=i; j<=fils; j++){
+				if (mat.posSinPivot(j)==i)		{
+					double guarda = x[i-1];
+					x[i-1]=x[j-1];
+					x[j-1]=guarda;
+				}
+			}
+		}
+	}
+	return x;
+}
 void devolver (Matriz matr, vector<double> x, char* out) {
 	int h=matr.Granularidad();
 	int ap=matr.AnchoParab();
@@ -146,13 +176,13 @@ void devolver (Matriz matr, vector<double> x, char* out) {
 int main(int argc, char *argv[])
 {
 
-
+	
 
 	//for(int testI=1; testI< argc; testI+=2){
 
 	{Matriz matr = cargar(argv[1]);
 	matr=EliminacionGaussiana(matr);
-	vector<double> x=ResolucionFosquiMan(matr);
+	vector<double> x=ResolucionSuperFosquiMan(matr);
 	devolver(matr,x,argv[2]);}
 
 	//}
