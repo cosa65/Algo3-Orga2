@@ -6,32 +6,6 @@
 #include "matrizBanda.cpp"
 using namespace std;
 
-
-//va como una operacion de Matriz esta
-
-/*void intercambiarFilas(Matriz mat, int fila1, int fila2){
-
-	double guarda1;
-
-	double guarda2;
-
-	int tamFila = mat.Ccolumnas();
-
-	for(int i = 1; i <= tamFila; i++){
-
-		guarda2 = mat.Posicion(fila1, i);
-		guarda2 = mat.Posicion(fila2, i);
-
-		mat.Definir(guarda1, fila2, i);
-		mat.Definir(guarda2, fila1, i);
-
-		}
-
-	cout << endl << mat.Posicion(fila1,1) << mat.Posicion(fila1,2) <<mat.Posicion(fila1,3) << endl;
-	cout << endl << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(fila1,3) << endl;
-
-}*/
-
 Matriz EliminacionGaussiana (Matriz mat){
 
 	int filas = mat.Cfilas();
@@ -51,7 +25,6 @@ Matriz EliminacionGaussiana (Matriz mat){
 		}
 		else{
 		//caso que el elemento i de mi fila actual no valga 0
-
 			for(int j=i+1; j<=filas; j++){
 
 				if(mat.Posicion(j,i)!=0){
@@ -92,7 +65,7 @@ Matriz cargar() {
     int anchoParab;
 	int largoParab;
 	int h;
-    archivo >> anchoParab;
+    	archivo >> anchoParab;
 	archivo >> largoParab;
 	archivo >> h;
 	int ancho=(anchoParab/h)+1;
@@ -152,28 +125,36 @@ vector<double> ResolucionFosquiMan (Matriz mat){
 		for(int j=n-i+1; j <=n; j++) {
 			acum=acum-mat.Posicion(n-i, j)*x[j];
 		}
-	x[n-i] = acum;
+	x[n-i-1] = acum;
 	} return x;
+}
+
+void devolver (Matriz matr, vector<double> x) {
+	int h=matr.Granularidad();
+	int ap=matr.AnchoParab();
+	ofstream f2;
+	string input = "";
+    	cout << "Ingrese nombre de archivo de salida: ";
+    	getline(cin, input);
+    	f2.open(input.c_str(), ofstream::out);
+	for (int i=1;i<=matr.Cfilas();i++) {
+		/*int ry=((i-1)/(ap/h+1))*h; 
+		int rx;
+		if (i%(ap/h+1)==0) {rx = (ap/h+1);} else {rx=i%(ap/h+1);}
+		rx=(rx-1)*h;*/ // todo esto era al pedo, miren test1.expected
+		int ry=((i-1)/(ap/h+1))+1; 
+		int rx;
+		if (i%(ap/h+1)==0) {rx = (ap/h+1);} else {rx=i%(ap/h+1);} 
+		f2<< ry << " " << rx << " " << x[i-1] << endl;
+	} 
 }
 
 int main()
 {
 	Matriz matr = cargar();
 	matr=EliminacionGaussiana(matr);
-	matr.mostrar();
-	vector<double> x=ResolucionFosquiMan(matr);
-	int h=matr.Granularidad();
-	ofstream f2;
-	string input = "";
-    cout << "Ingrese nombre de archivo de salida: ";
-    getline(cin, input);
-    f2.open(input.c_str(), ofstream::out);
-	for (int i=1;i<=matr.Cfilas();i++) {
-		int ry=(i-1)/(matr.AnchoParab()/h+1)*h;
-		int rx;
-		if (i%(matr.AnchoParab()/h+1)==0) {rx = (matr.AnchoParab()/h+1);} else {rx=i%(matr.AnchoParab()/h+1);}
-		rx=(rx-1)*h;
-		f2<< ry << " " << rx << " " << x[i] << endl;
-	} 
+//	matr.mostrar();
+	//vector<double> x=ResolucionFosquiMan(matr);
+	//devolver(matr,x);
 	return 0;
 }
