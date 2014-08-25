@@ -3,12 +3,12 @@
     "g++ -c ./t1.cpp -o ./t1.o": {
         ".": "input-5058f1af8388633f609cadb75a75dc9d", 
         "aux/matriz.h": "input-153f38005a278bd47914eb730f88b3fc", 
-        "t1.cpp": "input-078d97f167d26d38fb7b79657b894575", 
-        "t1.o": "output-6eafb55474a038b3984d700c68466773"
+        "t1.cpp": "input-9c2dfba58401a4a12faedacde7c581bb", 
+        "t1.o": "output-99891e6f6b7b3905886a7212aa3f9bfd"
     }, 
     "g++ -o ./tp ./t1.o": {
         ".": "input-5058f1af8388633f609cadb75a75dc9d", 
-        "t1.o": "input-6eafb55474a038b3984d700c68466773", 
-        "tp": "output-971c314e8632debfdc0399c8f49afbd1"
+        "t1.o": "input-99891e6f6b7b3905886a7212aa3f9bfd", 
+        "tp": "output-75ce3ef4549e51f9297ed3fc355897c9"
     }
 }

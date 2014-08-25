@@ -6,7 +6,7 @@
 //#include "matrizBanda.cpp"
 using namespace std;
 
-Matriz EliminacionGaussiana (Matriz mat){
+void EliminacionGaussiana (Matriz &mat){
 
 	int filas = mat.Cfilas();
 
@@ -32,15 +32,16 @@ Matriz EliminacionGaussiana (Matriz mat){
 		}*/
 		
 		//caso que el elemento i de mi fila actual no valga 0
+
 		for(int j=i+1; j<=filas; j++){
+
 			if(mat.Posicion(j,i)!=0){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
 			}
 		}
-
 	}
-	return mat;
+	//return mat;
 }
 
 
@@ -117,19 +118,26 @@ Matriz cargar(char* in) {
 	return m;
 }
 
-vector<double> ResolucionFosquiMan (Matriz mat){
+vector<long double> ResolucionFosquiMan (Matriz &mat){
+/*	ofstream f1;
+	f1.open("averr.txt");int ap=mat.Cfilas();
+	for (int i=1;i<mat.Cfilas()*mat.Ccolumnas();i++) {
+		int ry=(i/ap); 
+		int rx=(i%ap);
+	f1<< ry << "\t" << rx << "\t" << mat.Posicion(ry+1, rx+1) << endl;}*/
+
 	int n = mat.Cfilas();
-	vector<double> x(n);
+	vector<long double> x(n);
 	for (int i=0; i < n; i++ ){
-		double acum=mat.PosIndep(n-i);
+		long double acum=mat.PosIndep(n-i);
 		for(int j=n-i+1; j <=n; j++) {
-			acum=acum-mat.Posicion(n-i, j)*x[j];
+			acum=acum-mat.Posicion(n-i, j)*x[j-1];
 		}
-	x[n-i-1] = acum;
+		x[n-i-1] = acum/mat.Posicion(n-i,n-i);
 	} return x;
 }
 
-void devolver (Matriz matr, vector<double> x, char* out) {
+void devolver (Matriz &matr, vector<long double> x, char* out) {
 	int h=matr.Granularidad();
 	int ap=matr.AnchoParab();
 	ofstream f2;
@@ -153,8 +161,8 @@ int main(int argc, char *argv[])
 	//for(int testI=1; testI< argc; testI+=2){
 
 	{Matriz matr = cargar(argv[1]);
-	matr=EliminacionGaussiana(matr);
-	vector<double> x=ResolucionFosquiMan(matr);
+	EliminacionGaussiana(matr);
+	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(matr,x,argv[2]);}
 
 	//}
