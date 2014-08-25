@@ -37,7 +37,7 @@ long double PosIndep(int fila);
 
 int posSinPivot(int fila);
 
-void DefGrandidad(int grano, int herpes);
+void DefGranulidad(int granos, int ancho);
 
 int Granularidad();
 
@@ -53,7 +53,7 @@ void mostrar();
 
 private:
 
-vector< vector<long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long double> > asi no se pasa por copia,  											segmentation fault si lo es...
+vector< vector<long double> > _array;		//	taria bueno que este fuera un puntero a vector< vector<long double> > asi no se pasa por copia, pero tira 											segmentation fault si lo es...
 int _Cfilas;
 
 int _Ccolumnas;
@@ -149,15 +149,15 @@ long double Matriz::PosIndep(int fila){
 
 }
 
-int posSinPivot(int fila){
+int Matriz::posSinPivot(int fila){
 
 	return _pos[fila -1];
 
 }
 
-void Matriz::DefGrandidad(int grano, int pustula) {
-	_h = grano;
-	_ancho = pustula;
+void Matriz::DefGranulidad(int granos, int ancho) {
+	_h = granos;
+	_ancho = ancho;
 }
 
 int Matriz::Granularidad() {
