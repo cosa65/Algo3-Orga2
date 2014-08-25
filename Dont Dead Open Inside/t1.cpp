@@ -6,46 +6,6 @@
 //#include "matrizBanda.cpp"
 using namespace std;
 
-void EliminacionGaussiana (Matriz &mat){
-
-	int filas = mat.Cfilas();
-
-	for(int i=1; i<=filas; i++){
-
-
-		if (mat.Posicion(i, i) == 0){
-		//casoA: que el elemento i de mi fila actual ya valga 0
-			for (int y = filas; y >i; y--){
-				if (mat.Posicion(y,i) !=0) {
-				mat.intercambiarFilas(y,i);
-				y = i;
-				}
-			}
-
-		}
-		//pivoteo parcial (TIRAN NaN cuando pongo esto!), debe tardar bastante mas que el casoA
-		/*for (int y = filas; y >i; y--){
-			if (mat.Posicion(y,i) > mat.Posicion(i,i)) {
-			mat.intercambiarFilas(y,i);
-			y = i;
-			}
-		}*/
-		
-		//caso que el elemento i de mi fila actual no valga 0
-
-		for(int j=i+1; j<=filas; j++){
-
-			if(mat.Posicion(j,i)!=0){
-				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
-				mat.restarFilas(j, i, mult);
-			}
-		}
-	}
-	//return mat;
-}
-
-
-
 bool enSanguijuela (vector <long double> vx, vector <long double> vy, int x, int y, int r) {
 	for(int i=0;i<vx.size();i++) {
 		if (sqrt((vx[i]-x)*(vx[i]-x)+(vy[i]-y)*(vy[i]-y)) <= r) { ///La distancia debe ser menor al radio
@@ -61,9 +21,9 @@ bool esBorde (int l, int a, int x, int y) {
 }
 
 Matriz cargar(char* in) {
-    ifstream archivo;
-    archivo.open(in);
-    int anchoParab;
+	ifstream archivo;
+	archivo.open(in);
+	int anchoParab;
 	int largoParab;
 	int h;
     	archivo >> anchoParab;
@@ -118,6 +78,44 @@ Matriz cargar(char* in) {
 	return m;
 }
 
+void EliminacionGaussiana (Matriz &mat){
+
+	int filas = mat.Cfilas();
+
+	for(int i=1; i<=filas; i++){
+
+
+		if (mat.Posicion(i, i) == 0){
+		//casoA: que el elemento i de mi fila actual ya valga 0
+			for (int y = filas; y >i; y--){
+				if (mat.Posicion(y,i) !=0) {
+				mat.intercambiarFilas(y,i);
+				y = i;
+				}
+			}
+
+		}
+		//pivoteo parcial (TIRAN NaN cuando pongo esto!), debe tardar bastante mas que el casoA
+		/*for (int y = filas; y >i; y--){
+			if (mat.Posicion(y,i) > mat.Posicion(i,i)) {
+			mat.intercambiarFilas(y,i);
+			y = i;
+			}
+		}*/
+		
+		//caso que el elemento i de mi fila actual no valga 0
+
+		for(int j=i+1; j<=filas; j++){
+
+			if(mat.Posicion(j,i)!=0){
+				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
+				mat.restarFilas(j, i, mult);
+			}
+		}
+	}
+	//return mat;
+}
+
 vector<long double> ResolucionFosquiMan (Matriz &mat){
 /*	ofstream f1;
 	f1.open("averr.txt");int ap=mat.Cfilas();
@@ -142,6 +140,8 @@ void devolver (Matriz &matr, vector<long double> x, char* out) {
 	int ap=matr.AnchoParab();
 	ofstream f2;
     	f2.open(out);
+	f2.setf(ios::fixed,ios::floatfield);
+	f2.precision(5);
 	for (int i=1;i<=matr.Cfilas();i++) {
 		/*int ry=((i-1)/(ap/h+1))*h; 
 		int rx;
@@ -158,14 +158,15 @@ int main(int argc, char *argv[])
 
 
 
-	//for(int testI=1; testI< argc; testI+=2){
+	//int a=cin >> "Normal (0) o banda (1): ";
+	//if (a==0) 
+	Matriz matr = cargar(argv[1]);
 
-	{Matriz matr = cargar(argv[1]);
+	//else {Matriz matr = cargarB(argv[1]);}
 	EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
-	devolver(matr,x,argv[2]);}
+	devolver(matr,x,argv[2]);
 
-	//}
 
 	return 0;
 }
