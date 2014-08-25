@@ -30,7 +30,7 @@ Matriz cargar(char* in) {
 	archivo >> largoParab;
 	archivo >> h;
 	int ancho=(anchoParab/h)+1;
-	int largo=(anchoParab/h)+1;
+	int largo=(largoParab/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
 	m.DefGranulidad(h,anchoParab);
 	int radio;
@@ -51,13 +51,13 @@ Matriz cargar(char* in) {
 		int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
 		int x;
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
-		if (enSanguijuela(Posx,Posy,(x-1)*h,(y-1)*h,radio) || esBorde (ancho,largo,x,y)) {
+		if (enSanguijuela(Posx,Posy,(x-1)*h,(y-1)*h,radio) || esBorde (largo,ancho,x,y)) {
 			for (int j=1;j<=ancho*largo;j++) { ///Defino la fila con un 1 en la diagonal
 				if (i==j) {	
 					m.Definir(1,i,j);
 				} else {					
 					m.Definir(0,i,j);
-				} if (esBorde(ancho,largo,x,y)) {
+				} if (esBorde(largo,ancho,x,y)) {
 					m.DefinirB(-100,i);
 				} else {
 					m.DefinirB(Temp,i);

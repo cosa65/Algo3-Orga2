@@ -1,14 +1,14 @@
 {
     ".deps_version": 2, 
-    "g++ -c ./t1.cpp -o ./t1.o": {
+    "g++ -c ./t.cpp -o ./t.o": {
         ".": "input-5058f1af8388633f609cadb75a75dc9d", 
         "aux/matriz.h": "input-153f38005a278bd47914eb730f88b3fc", 
-        "t1.cpp": "input-2b2da59bb12ee9594be7e817eeba8e01", 
-        "t1.o": "output-cda09ab7b549ec2e7bfcca7c2a76dd96"
+        "t.cpp": "input-275fe03424991b42b6de34c415429847", 
+        "t.o": "output-82d1eb57d57b4bfb795a1368a3e9c82f"
     }, 
-    "g++ -o ./tp ./t1.o": {
+    "g++ -o ./tp ./t.o": {
         ".": "input-5058f1af8388633f609cadb75a75dc9d", 
-        "t1.o": "input-cda09ab7b549ec2e7bfcca7c2a76dd96", 
-        "tp": "output-65c966ec7decf46137e825dcf91a409b"
+        "t.o": "input-82d1eb57d57b4bfb795a1368a3e9c82f", 
+        "tp": "output-d7bbac0e7ebe27e687f464881d4a4d0f"
     }
 }
