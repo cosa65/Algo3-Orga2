@@ -37,9 +37,9 @@ long double PosIndep(int fila);
 
 int posSinPivot(int fila);
 
-void DefGranulidad(int granos, int ancho);
+void DefGranulidad(double granos, int ancho);
 
-int Granularidad();
+double Granularidad();
 
 int AnchoParab();
 
@@ -58,7 +58,7 @@ int _Cfilas;
 
 int _Ccolumnas;
 
-int _h;
+double _h;
 
 int _ancho;
 
@@ -155,12 +155,12 @@ int Matriz::posSinPivot(int fila){
 
 }
 
-void Matriz::DefGranulidad(int granos, int ancho) {
+void Matriz::DefGranulidad(double granos, int ancho) {
 	_h = granos;
 	_ancho = ancho;
 }
 
-int Matriz::Granularidad() {
+double Matriz::Granularidad() {
 	return _h;
 }
 

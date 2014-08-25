@@ -25,15 +25,16 @@ Matriz cargar(char* in) {
 	archivo.open(in);
 	int anchoParab;
 	int largoParab;
-	int h;
-    	archivo >> anchoParab;
+	double h;
+    archivo >> anchoParab;
 	archivo >> largoParab;
 	archivo >> h;
+	cout << h << endl;
 	int ancho=(anchoParab/h)+1;
 	int largo=(largoParab/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
 	m.DefGranulidad(h,anchoParab);
-	int radio;
+	double radio;
 	archivo >> radio;
 	long double Temp;
 	archivo >> Temp;
@@ -136,19 +137,21 @@ vector<long double> ResolucionFosquiMan (Matriz &mat){
 }
 
 void devolver (Matriz &matr, vector<long double> x, char* out) {
-	int h=matr.Granularidad();
+	float h=matr.Granularidad();
 	int ap=matr.AnchoParab();
 	ofstream f2;
     	f2.open(out);
 	f2.setf(ios::fixed,ios::floatfield);
 	f2.precision(5);
+	cout << h << endl;
 	for (int i=1;i<=matr.Cfilas();i++) {
 		/*int ry=((i-1)/(ap/h+1))*h; 
 		int rx;
 		if (i%(ap/h+1)==0) {rx = (ap/h+1);} else {rx=i%(ap/h+1);}
 		rx=(rx-1)*h;*/ // todo esto era al pedo, miren test1.expected
-		int ry=((i-1)/(ap/h+1)); 
-		int rx=((i-1)%(ap/h+1));
+		int divis = ap/h+1;
+		int ry=((i-1)/(divis)); 
+		int rx=((i-1)%(divis));
 		f2<< ry << "\t" << rx << "\t" << x[i-1] << endl;
 	} 
 }
