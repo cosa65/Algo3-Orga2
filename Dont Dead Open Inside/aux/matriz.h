@@ -58,10 +58,6 @@ int _Cfilas;
 
 int _Ccolumnas;
 
-double _h;
-
-int _ancho;
-
 vector<long double> _indeps;
 
 vector<int> _pos;
@@ -153,19 +149,6 @@ int Matriz::posSinPivot(int fila){
 
 	return _pos[fila -1];
 
-}
-
-void Matriz::DefGranulidad(double granos, int ancho) {
-	_h = granos;
-	_ancho = ancho;
-}
-
-double Matriz::Granularidad() {
-	return _h;
-}
-
-int Matriz::AnchoParab(){
-	return _ancho;
 }
 
 int Matriz::Cfilas(){

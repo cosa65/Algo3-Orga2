@@ -58,7 +58,7 @@ int _Cfilas;
 
 int _Ccolumnas;
 
-int _h;
+double _h;
 
 int _ancho;
 
