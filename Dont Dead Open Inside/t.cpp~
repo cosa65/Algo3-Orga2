@@ -4,7 +4,6 @@
 #include "aux/matriz.h"
 #include "aux/Parabrisas.h"
 #include <math.h>
-//#include "matrizBanda.cpp"
 using namespace std;
 
 bool enSanguijuela (vector <long double> vx, vector <long double> vy, int x, int y, int r) {
@@ -21,7 +20,7 @@ bool esBorde (int l, int a, int x, int y) {
 	} return false;
 }
 
-Matriz cargar(char* in, Parabrisas &p) {
+Parabrisas cargar(char* in) {
 	ifstream archivo;
 	archivo.open(in);
 	int anchoParab;
@@ -36,25 +35,26 @@ Matriz cargar(char* in, Parabrisas &p) {
 	archivo >> radio;
 	archivo >> Temp;
 	archivo >> cant;
-	p=Parabrisas(largoParab, anchoParab,h,radio,Temp,cant);
-	int ancho=(anchoParab/h)+1;
-	int largo=(largoParab/h)+1;
-	Matriz m=Matriz(ancho*largo,ancho*largo);
-
-	int xs;int ys;
+	Parabrisas p=Parabrisas(largoParab, anchoParab,h,radio,Temp,cant);
+	long double xs;long double ys;
 	for (int i=0;i<cant;i++) {
 		archivo >> xs; 			//X de las sanguijuelas
 		archivo >> ys;			//Y de las sanguijuelas
 		p.agSanguijuela(xs,ys,i);
-	}
+	} return p;
 		// fin carga de argumentos
+}
 
+Matriz gMatriz(Parabrisas &p) {
+	int h=p.h();
+	int ancho=(p.ancho()/h)+1;
+	int largo=(p.largo()/h)+1;
+	Matriz m=Matriz(ancho*largo,ancho*largo);
 	for (int i=1;i<=ancho*largo;i++) {
 		int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
 		int x;
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
-		cout <<p.SangX() [0] << " " << p.SangY() [0];
-		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,radio) || esBorde (largo,ancho,x,y)) {
+		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,p.radio()) || esBorde (largo,ancho,x,y)) {
 			for (int j=1;j<=ancho*largo;j++) { ///Defino la fila con un 1 en la diagonal
 				if (i==j) {	
 					m.Definir(1,i,j);
@@ -63,7 +63,7 @@ Matriz cargar(char* in, Parabrisas &p) {
 				} if (esBorde(largo,ancho,x,y)) {
 					m.DefinirB(-100,i);
 				} else {
-					m.DefinirB(Temp,i);
+					m.DefinirB(p.temp(),i);
 				}
 			}
 		} else {
@@ -81,8 +81,44 @@ Matriz cargar(char* in, Parabrisas &p) {
 	return m;
 }
 
-void EliminacionGaussiana (Matriz &mat){
+Matriz gMatrizB(Parabrisas &p) {
+	int h=p.h();
+	int ancho=(p.ancho()/h)+1;
+	int largo=(p.largo()/h)+1;
+	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho);
+	for (int i=1;i<=ancho*largo;i++) {
+		int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
+		int x;
+		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
+		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,p.radio()) || esBorde (largo,ancho,x,y)) {
+			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) { ///Defino la fila con un 1 en la diagonal
+				if (i-ancho<1) {j=1;}
+				if (i==j) {	
+					m.Definir(1,i,j);
+				} else {
+					m.Definir(0,i,j);
+				} if (esBorde(largo,ancho,x,y)) {
+					m.DefinirB(-100,i);
+				} else {
+					m.DefinirB(p.temp(),i);
+				}
+			}
+		} else {
+			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) {
+				if (i==j) {
+					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
+				} else if (i==j-1 || i==j+1 || i-j==ancho || j-i==ancho) {
+					m.Definir(0.25,i,j); /// ...y 1/4 en las columnas de las celdas adyacentes del parabrisas.
+				} else { 
+					m.Definir(0,i,j);
+				} m.DefinirB(0,i); ///Agrega un 0 en los términos independientes
+			} 
+		}
+	}
+	return m;
+}
 
+void EliminacionGaussiana (Matriz &mat){
 	int filas = mat.Cfilas();
 
 	for(int i=1; i<=filas; i++){
@@ -148,11 +184,9 @@ void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 
 int main(int argc, char *argv[])
 {
-	Parabrisas p=Parabrisas();
-	Matriz matr = cargar(argv[1],p);
-
-	//else {Matriz matr = cargarB(argv[1]);}
-	EliminacionGaussiana(matr);
+	Parabrisas p= cargar(argv[1]);
+	Matriz matr=gMatriz(p);
+	} EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(p,matr,x,argv[2]);
 

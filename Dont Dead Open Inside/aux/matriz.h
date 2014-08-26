@@ -18,6 +18,8 @@ Matriz();
 //generador que te crea una matriz de una tamaño, no pide vectores
 Matriz( int cantfilas, int cantcolumnas);
 
+Matriz( int cantfilas, int cantcolumnas, int semiancho);
+
 //generador que te crea la matriz con los vectores que le pasaste
 Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos);
 
@@ -37,12 +39,6 @@ long double PosIndep(int fila);
 
 int posSinPivot(int fila);
 
-void DefGranulidad(double granos, int ancho);
-
-double Granularidad();
-
-int AnchoParab();
-
 int Cfilas();
 
 int Ccolumnas();
@@ -50,6 +46,8 @@ int Ccolumnas();
 int TamTotal();
 
 void mostrar();
+
+bool esBanda();
 
 private:
 
@@ -61,6 +59,10 @@ int _Ccolumnas;
 vector<long double> _indeps;
 
 vector<int> _pos;
+
+bool _banda;
+
+int _anchoBanda;
 
 };
 
@@ -77,7 +79,22 @@ Matriz::Matriz( int cantfilas, int cantcolumnas){
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
 	_indeps.resize(cantfilas);
-	
+	_banda=false;
+}
+
+Matriz::Matriz( int cantfilas, int cantcolumnas, int semiancho){
+	_array.resize(cantfilas); 
+	_pos.resize(cantfilas);
+	for (int i = 0; i < cantfilas; i++){
+
+		_array[i].resize(semiancho);
+		_pos[i]=i;
+	}
+	_Cfilas = cantfilas;
+	_Ccolumnas = cantcolumnas;
+	_anchoBanda=semiancho;
+	_indeps.resize(cantfilas);
+	_banda=true;
 }
 
 Matriz::Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos){
@@ -87,13 +104,17 @@ Matriz::Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolu
 	_Ccolumnas = cantcolumnas;
 	_indeps = indeps;
 	_pos = pos;
+	_banda=false;
 	
 
 }
 
 void Matriz::Definir(long double def,int fila, int columna) {
-
-	_array[fila - 1][columna - 1] = def; 
+	if (_banda) {
+		_array[fila-1][columna-fila+_anchoBanda]=def;
+	} else {
+		_array[fila - 1][columna - 1] = def; 
+	}
 
 }
 
@@ -107,7 +128,7 @@ void Matriz::DefinirP(int def,int fila){
 	_pos[fila-1] = def;
 }
 
-void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutaciones.
+void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutaciones y ojo a la banda.
 
 	vector<long double> guarda2 = _array[fila2-1];
 
@@ -126,16 +147,23 @@ void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutacione
 
 void Matriz::restarFilas(int filaRestada, int filaQueResta, long double multFilaARestar){
 
-	for (int i=0; i< _Ccolumnas; i++){
-		_array[filaRestada-1][i] = _array[filaRestada-1][i] - (_array[filaQueResta-1][i]* multFilaARestar);
+	for (int i=1; i<=_Ccolumnas; i++){
+		Definir(Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar,filaRestada,i);
 	}
 	_indeps[filaRestada-1] = _indeps[filaRestada-1] - (_indeps[filaQueResta-1]* multFilaARestar);
 
 }
 
 long double Matriz::Posicion(int fila, int columna){
-
-	return _array[fila - 1][columna - 1];
+	if (_banda) {
+		if (columna-fila+_anchoBanda>0 && columna-fila+_anchoBanda<_anchoBanda) {
+			return _array[fila-1][columna-fila+_anchoBanda];
+		} else {
+			return 0;
+		}
+	} else {
+		return _array[fila - 1][columna - 1];
+	}
 
 }
 
@@ -151,8 +179,11 @@ int Matriz::posSinPivot(int fila){
 
 }
 
-int Matriz::Cfilas(){
+bool Matriz::esBanda(){
+	return _banda;
+}
 
+int Matriz::Cfilas(){
 
 	return _Cfilas;
 

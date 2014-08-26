@@ -20,6 +20,7 @@ void elimSanguijuela(long double x, long double y);
 vector<long double> SangX();
 vector<long double> SangY();
 int largo();
+int radio();
 int ancho();
 long double h();
 int temp();
@@ -31,6 +32,7 @@ vector <long double> _sangx;
 vector <long double> _sangy;		
 int _largo;
 int _ancho;
+int _radio;
 long double _h;
 int _temp;
 int _k;
@@ -47,6 +49,7 @@ Parabrisas::Parabrisas(int largo, int ancho, long double h, int radio, int temp,
 	_sangy=B;
 	_largo=largo;
 	_ancho=ancho;
+	_radio=radio;
 	_h=h;
 	_temp=temp;
 	_k=cantidad;
@@ -57,7 +60,6 @@ void Parabrisas::agSanguijuela(long double x,long double y, int i) {
 
 	_sangx[i]=x; 
 	_sangy[i]=y;
-	cout << _sangy[0] << endl;
 
 }
 
@@ -87,6 +89,12 @@ int Parabrisas::largo(){
 int Parabrisas::ancho(){
 
 	return _ancho;
+
+}
+
+int Parabrisas::radio(){
+
+	return _radio;
 
 }
 
