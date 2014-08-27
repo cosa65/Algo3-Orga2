@@ -1,36 +1,10 @@
 //g++ main.cpp -o main
 #include <iostream>
 #include <fstream>
-#include "matriz.cpp"
+#include "aux/matriz.h"
 #include <math.h>
-#include "matrizBanda.cpp"
+//#include "matrizBanda.cpp"
 using namespace std;
-
-
-//va como una operacion de Matriz esta
-
-/*void intercambiarFilas(Matriz mat, int fila1, int fila2){
-
-	double guarda1;
-
-	double guarda2;
-
-	int tamFila = mat.Ccolumnas();
-
-	for(int i = 1; i <= tamFila; i++){
-
-		guarda2 = mat.Posicion(fila1, i);
-		guarda2 = mat.Posicion(fila2, i);
-
-		mat.Definir(guarda1, fila2, i);
-		mat.Definir(guarda2, fila1, i);
-
-		}
-
-	cout << endl << mat.Posicion(fila1,1) << mat.Posicion(fila1,2) <<mat.Posicion(fila1,3) << endl;
-	cout << endl << mat.Posicion(2,1) << mat.Posicion(2,2) <<mat.Posicion(fila1,3) << endl;
-
-}*/
 
 Matriz EliminacionGaussiana (Matriz mat){
 
@@ -51,11 +25,10 @@ Matriz EliminacionGaussiana (Matriz mat){
 		}
 		else{
 		//caso que el elemento i de mi fila actual no valga 0
-
 			for(int j=i+1; j<=filas; j++){
 
 				if(mat.Posicion(j,i)!=0){
-					double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
+					long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 					mat.restarFilas(j, i, mult);
 				}
 
@@ -69,7 +42,7 @@ Matriz EliminacionGaussiana (Matriz mat){
 
 
 
-bool enSanguijuela (vector <double> vx, vector <double> vy, int x, int y, int r) {
+bool enSanguijuela (vector <long double> vx, vector <long double> vy, int x, int y, int r) {
 	for(int i=0;i<vx.size();i++) {
 		if (sqrt((vx[i]-x)*(vx[i]-x)+(vy[i]-y)*(vy[i]-y)) <= r) { ///La distancia debe ser menor al radio
 			return true;
@@ -79,17 +52,13 @@ bool enSanguijuela (vector <double> vx, vector <double> vy, int x, int y, int r)
 
 bool esBorde (int l, int a, int x, int y) {
 	if (x==a || y==l || x==1 || y==1) {
-		cout << x <<" "<< y<< ": " << "En borde" << endl; ///Se entiende
 		return true;
 	} return false;
 }
 
-Matriz cargar() {
+Matriz cargar(char* in) {
     ifstream archivo;
-    string input = "";
-    cout << "Ingrese nombre de archivo existente: ";
-    getline(cin, input);
-    archivo.open(input.c_str());
+    archivo.open(in);
     int anchoParab;
 	int largoParab;
 	int h;
@@ -97,16 +66,17 @@ Matriz cargar() {
 	archivo >> largoParab;
 	archivo >> h;
 	int ancho=(anchoParab/h)+1;
-	int largo=(anchoParab/h)+1;
+	int largo=(largoParab/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
+	m.DefGranulidad(h,anchoParab);
 	int radio;
 	archivo >> radio;
-	double Temp;
+	long double Temp;
 	archivo >> Temp;
 	int cant;
 	archivo >> cant;
-	vector<double> Posx(cant);
-	vector<double> Posy(cant);
+	vector<long double> Posx(cant);
+	vector<long double> Posy(cant);
 	for (int i=0;i<cant;i++) {
 		archivo >> Posx[i]; 			//X de las sanguijuelas
 		archivo >> Posy[i];			//Y de las sanguijuelas
@@ -119,9 +89,9 @@ Matriz cargar() {
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
 		if (enSanguijuela(Posx,Posy,(x-1)*h,(y-1)*h,radio) || esBorde (ancho,largo,x,y)) {
 			for (int j=1;j<=ancho*largo;j++) { ///Defino la fila con un 1 en la diagonal
-				if (i==j) {	
+				if (i==j) {
 					m.Definir(1,i,j);
-				} else {					
+				} else {			
 					m.Definir(0,i,j);
 				} if (esBorde(ancho,largo,x,y)) {
 					m.DefinirB(-100,i);
@@ -130,10 +100,10 @@ Matriz cargar() {
 				}
 			}
 		} else {
-			for (int j=1;j<=ancho*largo;j++) { 
+			for (int j=1;j<=ancho*largo;j++) {
 				if (i==j) {
 					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
-				} else if (i==j-1 || i==j+1 || i-j==ancho-1 || j-i==ancho-1) {
+				} else if (i==j-1 || i==j+1 || i-j==ancho-1 || i+j==ancho-1) {
 					m.Definir(0.25,i,j); /// ...y 1/4 en las columnas de las celdas adyacentes del parabrisas.
 				} else { 
 					m.Definir(0,i,j);
@@ -141,25 +111,81 @@ Matriz cargar() {
 			} 
 		}
 	}
+	
+	{ofstream f1;
+	f1.open("averr.txt");
+	int ap=m.Cfilas();
+	for (int i=1;i<m.Cfilas()*m.Ccolumnas();i++) {
+		int ry=(i/ap); 
+		int rx=(i%ap);
+		f1<< ry << "\t" << rx << "\t" << m.Posicion(ry+1, rx+1) << endl;
+	}}
 	return m;
 }
 
+
+
 vector<double> ResolucionFosquiMan (Matriz mat){
+
+	
+
 	int n = mat.Cfilas();
 	vector<double> x(n);
 	for (int i=0; i < n; i++ ){
 		double acum=mat.PosIndep(n-i);
-		for(int j=1; j <=n; j++) {
-			acum=acum-mat.Posicion(n-i,n-i+j)*x[n-i+j];
+		for(int j=n-i+1; j <=n; j++) {
+			acum=acum-mat.Posicion(n-i, j)*x[j];
 		}
-	x[n-i] = acum;
-	} return x;
+	x[n-i-1] = acum;
+	}
+
+
+	for (int i=1; i<=n; i++){
+		if (mat.posSinPivot(i)==i){}
+		else{
+			for(int j=i; j<=n; j++){
+				if (mat.posSinPivot(j)==i)		{
+					double guarda = x[i-1];
+					x[i-1]=x[j-1];
+					x[j-1]=guarda;
+				}
+			}
+		}
+	}
+
+
+ return x;
 }
 
-int main()
+
+
+
+
+void devolver (Matriz matr, vector<double> x, char* out) {
+	int h=matr.Granularidad();
+	int ap=matr.AnchoParab();
+	ofstream f2;
+    	f2.open(out);
+	for (int i=1;i<matr.Cfilas();i++) {
+		/*int ry=((i-1)/(ap/h+1))*h; 
+		int rx;
+		if (i%(ap/h+1)==0) {rx = (ap/h+1);} else {rx=i%(ap/h+1);}
+		rx=(rx-1)*h;*/ // todo esto era al pedo, miren test1.expected
+		int ry=((i)/(ap/h+1)); 
+		int rx=((i)%(ap/h+1));
+		f2<< ry << "\t" << rx << "\t" << x[i-1] << endl;
+	}
+}
+
+int main(int argc, char *argv[])
 {
-	Matriz matr = cargar();
+
+
+	{Matriz matr = cargar(argv[1]);
 	matr=EliminacionGaussiana(matr);
-	matr.mostrar();
+	vector<double> x=ResolucionFosquiMan(matr);
+	devolver(matr,x,argv[2]);}
+
+
 	return 0;
 }

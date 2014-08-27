@@ -1,0 +1,15 @@
+{
+    ".deps_version": 2, 
+    "g++ -c ./t.cpp -o ./t.o": {
+        ".": "input-5058f1af8388633f609cadb75a75dc9d", 
+        "aux/Parabrisas.h": "input-d077732896d31f5ca57331b34052adfc", 
+        "aux/matriz.h": "input-ebfc1270747e0b274c68c5b12fb1527f", 
+        "t.cpp": "input-f2fa01a8cf4681a742cfaf96116f12db", 
+        "t.o": "output-3fc1a265c848b63bd13602f976c7cb8a"
+    }, 
+    "g++ -o ./tp ./t.o": {
+        ".": "input-5058f1af8388633f609cadb75a75dc9d", 
+        "t.o": "input-3fc1a265c848b63bd13602f976c7cb8a", 
+        "tp": "output-23facc91ef955da542736b7ae7806b53"
+    }
+}
