@@ -20,7 +20,7 @@ void elimSanguijuela(long double x, long double y);
 vector<long double> SangX();
 vector<long double> SangY();
 int largo();
-int radio();
+double radio();
 int ancho();
 long double h();
 int temp();
@@ -32,7 +32,7 @@ vector <long double> _sangx;
 vector <long double> _sangy;		
 int _largo;
 int _ancho;
-int _radio;
+double _radio;
 long double _h;
 int _temp;
 int _k;
@@ -92,7 +92,7 @@ int Parabrisas::ancho(){
 
 }
 
-int Parabrisas:radio(){
+double Parabrisas::radio(){
 
 	return _radio;
 

@@ -4,9 +4,10 @@
 #include "aux/matriz.h"
 #include "aux/Parabrisas.h"
 #include <math.h>
+#include <cmath>
 using namespace std;
 
-bool enSanguijuela (vector <long double> vx, vector <long double> vy, int x, int y, int r) {
+bool enSanguijuela (vector <long double> vx, vector <long double> vy, double x, double y, int r) {
 	for(int i=0;i<vx.size();i++) {
 		if (sqrt((vx[i]-x)*(vx[i]-x)+(vy[i]-y)*(vy[i]-y)) <= r) { ///La distancia debe ser menor al radio
 			return true;
@@ -46,7 +47,7 @@ Parabrisas cargar(char* in) {
 }
 
 Matriz gMatriz(Parabrisas &p) {
-	int h=p.h();
+	double h=p.h();
 	int ancho=(p.ancho()/h)+1;
 	int largo=(p.largo()/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo);
@@ -82,7 +83,7 @@ Matriz gMatriz(Parabrisas &p) {
 }
 
 Matriz gMatrizB(Parabrisas &p) {
-	int h=p.h();
+	double h=p.h();
 	int ancho=(p.ancho()/h)+1;
 	int largo=(p.largo()/h)+1;
 	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho);
@@ -119,6 +120,37 @@ Matriz gMatrizB(Parabrisas &p) {
 }
 
 void EliminacionGaussiana (Matriz &mat){
+
+	int filas = mat.Cfilas();
+
+	for(int i=1; i<=filas; i++){
+
+		for (int y = filas; y >i; y--){
+			if (abs (mat.Posicion(y,i)) > abs (mat.Posicion(i,i))) {
+			mat.intercambiarFilas(y,i);
+			//y = i;
+			}
+		}
+		
+		if (mat.Posicion(i, i) == 0){
+			i++;
+		}
+				
+		//caso que el elemento i de mi fila actual no valga 0
+
+		for(int j=i+1; j<=filas; j++){
+
+			if(mat.Posicion(j,i)!=0){
+				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
+				mat.restarFilas(j, i, mult);
+			}
+		}
+	}
+	//return mat;
+}
+
+
+/*void EliminacionGaussiana (Matriz &mat){
 	int filas = mat.Cfilas();
 
 	for(int i=1; i<=filas; i++){
@@ -140,7 +172,7 @@ void EliminacionGaussiana (Matriz &mat){
 			mat.intercambiarFilas(y,i);
 			y = i;
 			}
-		}*/
+		}
 		
 		//caso que el elemento i de mi fila actual no valga 0
 
@@ -153,7 +185,7 @@ void EliminacionGaussiana (Matriz &mat){
 		}
 	}
 	//return mat;
-}
+}*/
 
 vector<long double> ResolucionFosquiMan (Matriz &mat){
 	int n = mat.Cfilas();
@@ -168,7 +200,7 @@ vector<long double> ResolucionFosquiMan (Matriz &mat){
 }
 
 void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
-	float h=p.h();
+	double h=p.h();
 	int ap=p.ancho();
 	int divis = ap/h+1;
 	ofstream f2;
