@@ -86,15 +86,17 @@ Matriz gMatrizB(Parabrisas &p) {
 	double h=p.h();
 	int ancho=(p.ancho()/h)+1;
 	int largo=(p.largo()/h)+1;
+	
 	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho);
+
 	for (int i=1;i<=ancho*largo;i++) {
 		int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
 		int x;
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
 		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,p.radio()) || esBorde (largo,ancho,x,y)) {
 			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) { ///Defino la fila con un 1 en la diagonal
-				if (i-ancho<1) {j=1;}
-				if (i==j) {	
+				if (j<1) {j=1;}
+				if (i==j) {
 					m.Definir(1,i,j);
 				} else {
 					m.Definir(0,i,j);
@@ -106,6 +108,7 @@ Matriz gMatrizB(Parabrisas &p) {
 			}
 		} else {
 			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) {
+				if (j<1) {j=1;}
 				if (i==j) {
 					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
 				} else if (i==j-1 || i==j+1 || i-j==ancho || j-i==ancho) {
@@ -116,6 +119,7 @@ Matriz gMatrizB(Parabrisas &p) {
 			} 
 		}
 	}
+	m.mostrar();
 	return m;
 }
 
@@ -146,7 +150,6 @@ void EliminacionGaussiana (Matriz &mat){
 			}
 		}
 	}
-	//return mat;
 }
 
 
@@ -201,8 +204,7 @@ vector<long double> ResolucionFosquiMan (Matriz &mat){
 
 void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 	double h=p.h();
-	int ap=p.ancho();
-	int divis = ap/h+1;
+	int divis = p.ancho()/h+1;
 	ofstream f2;
     	f2.open(out);
 	f2.setf(ios::fixed,ios::floatfield);
@@ -217,9 +219,13 @@ void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 int main(int argc, char *argv[])
 {
 	Parabrisas p= cargar(argv[1]);
-	Matriz matr=gMatriz(p);
+	cout << "Parabrisas cargado" << endl;
+	Matriz matr=gMatrizB(p);
+	cout << "Matriz generada" << endl;
 	EliminacionGaussiana(matr);
+	cout << "Matriz triangulada" << endl;
 	vector<long double> x=ResolucionFosquiMan(matr);
+	cout << "Sistema resuelto" << endl;
 	devolver(p,matr,x,argv[2]);
 
 
