@@ -87,14 +87,14 @@ Matriz gMatrizB(Parabrisas &p) {
 	int ancho=(p.ancho()/h)+1;
 	int largo=(p.largo()/h)+1;
 	
-	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho);
+	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho+1);
 
 	for (int i=1;i<=ancho*largo;i++) {
 		int y=(i-1)/ancho+1; 	// x e y son el lugar del vector incógnita al que corresponde la fila i
 		int x;
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
 		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,p.radio()) || esBorde (largo,ancho,x,y)) {
-			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) { ///Defino la fila con un 1 en la diagonal
+			for (int j=i-ancho;(j<=ancho*largo && j<=i+ancho);j++) { ///Defino la fila con un 1 en la diagonal
 				if (j<1) {j=1;}
 				if (i==j) {
 					m.Definir(1,i,j);
@@ -104,10 +104,10 @@ Matriz gMatrizB(Parabrisas &p) {
 					m.DefinirB(-100,i);
 				} else {
 					m.DefinirB(p.temp(),i);
-				}
+				} 
 			}
 		} else {
-			for (int j=i-ancho;j<=ancho*largo || j<=i+ancho;j++) {
+			for (int j=i-ancho;(j<=ancho*largo && j<=i+ancho);j++) {
 				if (j<1) {j=1;}
 				if (i==j) {
 					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
@@ -119,16 +119,14 @@ Matriz gMatrizB(Parabrisas &p) {
 			} 
 		}
 	}
-	m.mostrar();
 	return m;
 }
 
 void EliminacionGaussiana (Matriz &mat){
-
 	int filas = mat.Cfilas();
 
 	for(int i=1; i<=filas; i++){
-
+		
 		for (int y = filas; y >i; y--){
 			if (abs (mat.Posicion(y,i)) > abs (mat.Posicion(i,i))) {
 			mat.intercambiarFilas(y,i);
@@ -219,13 +217,13 @@ void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 int main(int argc, char *argv[])
 {
 	Parabrisas p= cargar(argv[1]);
-	cout << "Parabrisas cargado" << endl;
-	Matriz matr=gMatrizB(p);
-	cout << "Matriz generada" << endl;
-	EliminacionGaussiana(matr);
-	cout << "Matriz triangulada" << endl;
+	Matriz matr;
+	if (*argv[3]=='1') {
+		matr=gMatrizB(p);
+	} else {
+		matr=gMatriz(p);
+	} EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
-	cout << "Sistema resuelto" << endl;
 	devolver(p,matr,x,argv[2]);
 
 
