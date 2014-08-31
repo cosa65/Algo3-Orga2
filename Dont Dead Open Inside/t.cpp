@@ -30,7 +30,7 @@ Parabrisas cargar(char* in) {
 	double radio;
 	int cant;
 	double Temp;
-    	archivo >> anchoParab;
+    archivo >> anchoParab;
 	archivo >> largoParab;
 	archivo >> h;
 	archivo >> radio;
@@ -57,7 +57,7 @@ Matriz gMatriz(Parabrisas &p) {
 		if (i%ancho==0) {x = ancho;} else {x=i%ancho;}
 		if (enSanguijuela(p.SangX(),p.SangY(),(x-1)*h,(y-1)*h,p.radio()) || esBorde (largo,ancho,x,y)) {
 			for (int j=1;j<=ancho*largo;j++) { ///Defino la fila con un 1 en la diagonal
-				if (i==j) {	
+				if (i==j) {
 					m.Definir(1,i,j);
 				} else {
 					m.Definir(0,i,j);
@@ -68,15 +68,15 @@ Matriz gMatriz(Parabrisas &p) {
 				}
 			}
 		} else {
-			for (int j=1;j<=ancho*largo;j++) { 
+			for (int j=1;j<=ancho*largo;j++) {
 				if (i==j) {
 					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
 				} else if (i==j-1 || i==j+1 || i-j==ancho || j-i==ancho) {
 					m.Definir(0.25,i,j); /// ...y 1/4 en las columnas de las celdas adyacentes del parabrisas.
-				} else { 
+				} else {
 					m.Definir(0,i,j);
 				} m.DefinirB(0,i); ///Agrega un 0 en los términos independientes
-			} 
+			}
 		}
 	}
 	return m;
@@ -86,7 +86,7 @@ Matriz gMatrizB(Parabrisas &p) {
 	double h=p.h();
 	int ancho=(p.ancho()/h)+1;
 	int largo=(p.largo()/h)+1;
-	
+
 	Matriz m=Matriz(ancho*largo,ancho*largo,2*ancho+1);
 
 	for (int i=1;i<=ancho*largo;i++) {
@@ -104,7 +104,7 @@ Matriz gMatrizB(Parabrisas &p) {
 					m.DefinirB(-100,i);
 				} else {
 					m.DefinirB(p.temp(),i);
-				} 
+				}
 			}
 		} else {
 			for (int j=i-ancho;(j<=ancho*largo && j<=i+ancho);j++) {
@@ -113,10 +113,10 @@ Matriz gMatrizB(Parabrisas &p) {
 					m.Definir(-1,i,j); ///Defino la fila con un -1 en la diagonal...
 				} else if (i==j-1 || i==j+1 || i-j==ancho || j-i==ancho) {
 					m.Definir(0.25,i,j); /// ...y 1/4 en las columnas de las celdas adyacentes del parabrisas.
-				} else { 
+				} else {
 					m.Definir(0,i,j);
 				} m.DefinirB(0,i); ///Agrega un 0 en los términos independientes
-			} 
+			}
 		}
 	}
 	return m;
@@ -126,18 +126,18 @@ void EliminacionGaussiana (Matriz &mat){
 	int filas = mat.Cfilas();
 
 	for(int i=1; i<=filas; i++){
-		
+
 		for (int y = filas; y >i; y--){
 			if (abs (mat.Posicion(y,i)) > abs (mat.Posicion(i,i))) {
 			mat.intercambiarFilas(y,i);
 			//y = i;
 			}
 		}
-		
+
 		if (mat.Posicion(i, i) == 0){
 			i++;
 		}
-				
+
 		//caso que el elemento i de mi fila actual no valga 0
 
 		for(int j=i+1; j<=filas; j++){
@@ -174,7 +174,7 @@ void EliminacionGaussiana (Matriz &mat){
 			y = i;
 			}
 		}
-		
+
 		//caso que el elemento i de mi fila actual no valga 0
 
 		for(int j=i+1; j<=filas; j++){
@@ -208,10 +208,10 @@ void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 	f2.setf(ios::fixed,ios::floatfield);
 	f2.precision(5);
 	for (int i=1;i<=matr.Cfilas();i++) {
-		int ry=((i-1)/(divis)); 
+		int ry=((i-1)/(divis));
 		int rx=((i-1)%(divis));
 		f2<< ry << "\t" << rx << "\t" << x[i-1] << endl;
-	} 
+	}
 }
 
 int main(int argc, char *argv[])
@@ -224,8 +224,18 @@ int main(int argc, char *argv[])
 		matr=gMatriz(p);
 	} EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
-	devolver(p,matr,x,argv[2]);
-
-
+	if (argc>3) {
+		int sx;int sy;
+		int centro=(x.size()/2);
+		ofstream f4;
+        f4.open("LSD.out");
+		while (x[centro]>235) {
+			p.elimSanguijuelaMasCercana(sx,sy);
+			matr=gMatrizB(p);
+			EliminacionGaussiana(matr);
+			x=ResolucionFosquiMan(matr);
+			f4 << sx << "\t" << sy << "\t" << x[centro] << endl;
+		}
+	} devolver(p,matr,x,argv[2]);
 	return 0;
 }
