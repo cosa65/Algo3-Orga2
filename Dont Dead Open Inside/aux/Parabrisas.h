@@ -1,6 +1,7 @@
 #include <vector>
-//#include "aux/Parabrisas.cpp"
+//#include "aux/Parabrisas[cpp"
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -16,7 +17,8 @@ Parabrisas();
 Parabrisas(int largo, int ancho, long double h, int radio, int temp, int cantidad);
 
 void agSanguijuela(long double x, long double y, int i);
-void elimSanguijuela(long double x, long double y);
+void elimSanguijuela(int i);
+void elimSanguijuelaMasCercana();
 vector<long double> SangX();
 vector<long double> SangY();
 int largo();
@@ -63,9 +65,26 @@ void Parabrisas::agSanguijuela(long double x,long double y, int i) {
 
 }
 
-void Parabrisas::elimSanguijuela(long double x,long double y) {
+void Parabrisas::elimSanguijuela(int i) {
+	for (int j=i;j<_k;j++) {
+		_sangx[i]=_sangx[i+1];
+		_sangy[i]=_sangy[i+1]; //Resize es necesario?
+	} _k--;
+}
 
-
+void Parabrisas::elimSanguijuelaMasCercana() {
+	double centrox=_ancho/2;
+	double centroy=_largo/2;
+	double dmin=_ancho+_largo;
+	double dist;
+	int smin;
+	for (int i=1;i<_k;i++){
+		dist=sqrt(pow((_sangx[i]-centrox),2)+pow((_sangx[i]-centrox),2));
+		if (dist<=dmin) {
+			dmin=dist;
+			smin=i;
+		}
+	} elimSanguijuela(smin);
 }
 
 vector <long double> Parabrisas::SangX() {

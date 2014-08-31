@@ -15,7 +15,7 @@ Matriz();
 
 //~Matriz();
 
-//generador que te crea una matriz de una tamaño, no pide vectores
+//generador que te crea una matriz de un tamaño, no pide vectores
 Matriz( int cantfilas, int cantcolumnas);
 
 Matriz( int cantfilas, int cantcolumnas, int semiancho);
@@ -46,8 +46,6 @@ int Ccolumnas();
 int TamTotal();
 
 void mostrar();
-
-bool esBanda();
 
 private:
 
@@ -97,7 +95,7 @@ Matriz::Matriz( int cantfilas, int cantcolumnas, int semiancho){
 	_banda=true;
 }
 
-Matriz::Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos){
+Matriz::Matriz(vector< vector<long double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos){
 
 	_array = filas;
 	_Cfilas = cantfilas;
@@ -111,7 +109,7 @@ Matriz::Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolu
 
 void Matriz::Definir(long double def,int fila, int columna) {
 	if (_banda) {
-		_array[fila-1][columna-fila+_anchoBanda]=def;
+		_array[fila-1][columna-fila+_anchoBanda/2]=def;
 	} else {
 		_array[fila - 1][columna - 1] = def; 
 	}
@@ -146,9 +144,15 @@ void Matriz::intercambiarFilas(int fila1, int fila2) { ///Ojo a las permutacione
 }
 
 void Matriz::restarFilas(int filaRestada, int filaQueResta, long double multFilaARestar){
-
-	for (int i=1; i<=_Ccolumnas; i++){
-		Definir(Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar,filaRestada,i);
+	if (_banda) {
+		for (int i=filaRestada-_anchoBanda/2; i<=filaRestada+_anchoBanda/2 && i<=_Ccolumnas; i++){
+			if (i<1) {i=1;}
+			Definir(Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar,filaRestada,i);
+		}
+	} else {
+		for (int i=1; i<=_Ccolumnas; i++){
+			Definir(Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar,filaRestada,i);
+		}
 	}
 	_indeps[filaRestada-1] = _indeps[filaRestada-1] - (_indeps[filaQueResta-1]* multFilaARestar);
 
@@ -156,8 +160,8 @@ void Matriz::restarFilas(int filaRestada, int filaQueResta, long double multFila
 
 long double Matriz::Posicion(int fila, int columna){
 	if (_banda) {
-		if (columna-fila+_anchoBanda>0 && columna-fila+_anchoBanda<_anchoBanda) {
-			return _array[fila-1][columna-fila+_anchoBanda];
+		if (columna-fila+_anchoBanda/2>=0 && columna-fila+_anchoBanda/2<_anchoBanda) {
+			return _array[fila-1][columna-fila+_anchoBanda/2];
 		} else {
 			return 0;
 		}
@@ -177,10 +181,6 @@ int Matriz::posSinPivot(int fila){
 
 	return _pos[fila -1];
 
-}
-
-bool Matriz::esBanda(){
-	return _banda;
 }
 
 int Matriz::Cfilas(){
