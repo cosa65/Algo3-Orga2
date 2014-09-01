@@ -222,10 +222,22 @@ int main(int argc, char *argv[])
 		matr=gMatrizB(p);
 	} else {
 		matr=gMatriz(p);
-	} EliminacionGaussiana(matr);
+	}  matr.mostrar();
+	EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(p,matr,x,argv[2]);
-
-
-	return 0;
+	if (argc>3) {
+		int centro=x.size()/2;		
+		ofstream f3;
+	    	f3.open("LSD.out");
+		int sx; int sy;
+		while (x[centro]>235.0) {
+			p.elimSanguijuelaMasCercana(sx, sy);
+			matr=gMatrizB(p);
+			EliminacionGaussiana(matr);
+			x=ResolucionFosquiMan(matr);
+			f3 << sx << " " << sy << " " << x[centro] << endl;
+		}
+	
+	} return 0;
 }

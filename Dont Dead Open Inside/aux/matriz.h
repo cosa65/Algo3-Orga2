@@ -204,7 +204,7 @@ int Matriz::TamTotal(){
 void Matriz::mostrar() {
     for (int i=1;i<=_Cfilas;i++) {
 	    for (int j=1;j<=_Ccolumnas;j++){
-           cout << Posicion(i,j) << " ";
+           cout << Posicion(i,j) << "\t";
 	    }  cout << "|" << _indeps[i-1] <<endl;
     }
 }

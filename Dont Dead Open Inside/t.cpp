@@ -222,7 +222,8 @@ int main(int argc, char *argv[])
 		matr=gMatrizB(p);
 	} else {
 		matr=gMatriz(p);
-	} EliminacionGaussiana(matr);
+	} matr.mostrar();
+	EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(p,matr,x,argv[2]);
 	if (argc>3) {
