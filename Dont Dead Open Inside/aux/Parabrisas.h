@@ -31,7 +31,7 @@ int cantidad();
 private:
 
 vector <long double> _sangx;
-vector <long double> _sangy;
+vector <long double> _sangy;		
 int _largo;
 int _ancho;
 int _radio;
@@ -44,7 +44,7 @@ int _k;
 Parabrisas::Parabrisas(){}
 
 Parabrisas::Parabrisas(int largo, int ancho, long double h, int radio, int temp, int cantidad){
-
+	
 	vector<long double> A(cantidad);
 	vector<long double> B(cantidad);
 	_sangx=A;
@@ -55,12 +55,12 @@ Parabrisas::Parabrisas(int largo, int ancho, long double h, int radio, int temp,
 	_h=h;
 	_temp=temp;
 	_k=cantidad;
-
+	
 }
 
 void Parabrisas::agSanguijuela(long double x,long double y, int i) {
 
-	_sangx[i]=x;
+	_sangx[i]=x; 
 	_sangy[i]=y;
 
 }
@@ -68,8 +68,8 @@ void Parabrisas::agSanguijuela(long double x,long double y, int i) {
 void Parabrisas::elimSanguijuela(int i) {
 	for (int j=i;j<_k-1;j++) {
 		_sangx[j]=_sangx[j+1];
-		_sangy[j]=_sangy[j+1];
-	}  _sangx.resize(_sangx.size()-1);
+		_sangy[j]=_sangy[j+1]; //Resize es necesario?	
+	} _sangx.resize(_sangx.size()-1);
 	_sangy.resize(_sangy.size()-1);
 	_k--;
 }
@@ -80,15 +80,15 @@ void Parabrisas::elimSanguijuelaMasCercana(int &x, int &y) {
 	double dmin=_ancho+_largo;
 	double dist;
 	int smin;
-	for (int i=1;i<_k;i++){
+	for (int i=0;i<_k;i++){
 		dist=sqrt(pow((_sangx[i]-centrox),2)+pow((_sangy[i]-centroy),2));
 		if (dist<=dmin) {
 			dmin=dist;
 			smin=i;
 		}
-	} x=_sangx[smin];
+	x=_sangx[smin];
 	y=_sangy[smin];
-	elimSanguijuela(smin);
+	} elimSanguijuela(smin);
 }
 
 vector <long double> Parabrisas::SangX() {
