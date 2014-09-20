@@ -1,0 +1,3 @@
+Para obtener únicamente el valor de la temperatura en cada punto, escribir ./tp [archivo de entrada] [archivo de salida] [0 para eliminación gaussiana común, 1 para banda]
+Para obtener, además, las coordenadas de las sanguijuelas eliminadas, escribir ./tp [archivo de entrada] [archivo de salida] [0 para eliminación gaussiana común, 1 para banda] [archivo donde devolver las coordenadas]
+Notar que el tercer parámetro no influye al recalcular el sistema después de la eliminación de cada sanguijuela, ya que esto se realiza siampre con el método banda.
