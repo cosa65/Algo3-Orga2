@@ -1,103 +1,10 @@
-
-
-% Paquetes generales
-\usepackage{ifthen}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{multicol}
-\usepackage[absolute]{textpos}
-\usepackage{hyperref}
-
-
-% Cuestiones de enunciados
-
-% Primero definiciones de cosas al estilo title, author, date
-\def\materia#1{\gdef\@materia{#1}}
-\def\@materia{M\'{e}todos Num\'{e}ricos}
-\def\lamateria{\@materia}
-
-\def\cuatrimestre#1{\gdef\@cuatrimestre{#1}}
-\def\@cuatrimestre{No especifi\'o el cuatrimestre}
-\def\elcuatrimestre{\@cuatrimestre}
-
-\def\anio#1{\gdef\@anio{#1}}
-\def\@anio{No especifi\'o el anio}
-\def\elanio{\@anio}
-
-\def\fecha#1{\gdef\@fecha{#1}}
-\def\@fecha{\today}
-\def\lafecha{\@fecha}
-
-\def\nombre#1{\gdef\@nombre{#1}}
-\def\@nombre{No especific'o el nombre}
-\def\elnombre{\@nombre}
-
-\def\practica#1{\gdef\@practica{#1}}
-\def\@practica{No especifi\'o el n\'umero de pr\'actica}
-\def\lapractica{\@practica}
-
-% Esta macro convierte el numero de cuatrimestre a palabras
-\newcommand{\cuatrimestreLindo}{
-  \ifthenelse{\equal{\elcuatrimestre}{1}}
-  {Primer cuatrimestre}
-  {\ifthenelse{\equal{\elcuatrimestre}{2}}
-  {Segundo cuatrimestre}
-  {Verano}}
-}
-
-\newcommand{\depto}{{UBA -- Facultad de Ciencias Exactas y Naturales --
-      Departamento de Computaci\'on}}
-
-\newcommand{\titulopractica}{
-  \centerline{\depto}
-  \vspace{1ex}
-  \centerline{{\Large\lamateria}}
-  \vspace{0.5ex}
-  \centerline{\cuatrimestreLindo de \elanio}
-  \vspace{2ex}
-  \centerline{{\huge Pr\'actica \lapractica -- \elnombre}}
-  \vspace{5ex}
-  \arreglarincisos
-  \newcounter{ejercicio}
-  \newenvironment{ejercicio}{\stepcounter{ejercicio}\textbf{Ejercicio
-      \theejercicio}%
-    \renewcommand\@currentlabel{\theejercicio}%
-  }{\vspace{0.2cm}}
-}  
-
-\newcommand{\titulotp}{
-  \centerline{\depto}
-  \vspace{1ex}
-  \centerline{{\Large\lamateria}}
-  \vspace{0.5ex}
-  \centerline{\cuatrimestreLindo de \elanio}
-  \vspace{0.5ex}
-  \centerline{\lafecha}
-  \vspace{2ex}
-  \centerline{{\huge\elnombre}}
-  \vspace{5ex}
-}
-
-\usepackage[spanish]{babel}
-\selectlanguage{spanish}
-\usepackage[utf8]{inputenc}
-%\usepackage{bbm}
-\usepackage{framed}
-
-
-\newcommand{\comen}[2]{%
-\begin{framed}
-\noindent \textsf{#1:} #2
-\end{framed}
-}
-
 % **************************************************************************
 %
-%  Package 'caratula', version 0.5 (para componer caratulas de TPs del DC).
+% Package 'caratula', version 0.5 (para componer caratulas de TPs del DC).
 %
-%  En caso de dudas, problemas o sugerencias sobre este package escribir a
-%  Brian J. Cardiff (bcardif arroba gmail.com).
-%  Nico Rosner (nrosner arroba dc.uba.ar).
+% En caso de dudas, problemas o sugerencias sobre este package escribir a
+% Brian J. Cardiff (bcardif arroba gmail.com).
+% Nico Rosner (nrosner arroba dc.uba.ar).
 %
 % **************************************************************************
 
@@ -125,6 +32,7 @@
 \newboolean{showLU}
 \newboolean{showEntregas}
 \newboolean{showDirectores}
+\newboolean{showCoDirectores}
 
 % ----- Comandos para que el usuario defina las variables ------------------
 
@@ -152,6 +60,12 @@
 \setcounter{directoresCount}{0}
 \newtoks\direcTabNombre\direcTabNombre={}
 \newtoks\direcTabEmail\direcTabEmail={}
+
+\newcounter{coDirectoresCount}
+\setcounter{coDirectoresCount}{0}
+\newtoks\codirecTabNombre\codirecTabNombre={}
+\newtoks\codirecTabEmail\codirecTabEmail={}
+
 
 % ----- Comando para que el usuario agregue integrantes --------------------
 
@@ -182,6 +96,18 @@
     \addtocounter{directoresCount}{1}%
 }
 
+\def\codirector#1#2{%
+    \ifthenelse{\value{coDirectoresCount} > 0}{%
+        \codirecTabNombre=\expandafter{\the\codirecTabNombre & #1}%
+        \codirecTabEmail=\expandafter{\the\codirecTabEmail & \tt #2}%
+    }{
+        \codirecTabNombre=\expandafter{\the\codirecTabNombre #1}%
+        \codirecTabEmail=\expandafter{\the\codirecTabEmail \tt #2}%
+    }%
+    \addtocounter{coDirectoresCount}{1}%
+}
+
+
 % ----- Macro para generar la tabla de integrantes -------------------------
 
 \newcommand{\tablaIntegrantes}{\ }
@@ -190,7 +116,7 @@
 \ifthenelse{\boolean{showLU}}{%
     \begin{tabular}[t]{| l @{\hspace{4ex}} c @{\hspace{4ex}} l|}
         \hline
-        \multicolumn{1}{|c}{\rule{0pt}{1.2em} \LabelIntegrantes} & LU &  \multicolumn{1}{c|}{Correo electr\'onico} \\[0.2em]
+        \multicolumn{1}{|c}{\rule{0pt}{1.2em} \LabelIntegrantes} & LU & \multicolumn{1}{c|}{Correo electr\'onico} \\[0.2em]
         \hline \hline
         \the\intlist
         \hline
@@ -198,7 +124,7 @@
 }{
     \begin{tabular}[t]{| l @{\hspace{4ex}} @{\hspace{4ex}} l|}
         \hline
-        \multicolumn{1}{|c}{\rule{0pt}{1.2em} \LabelIntegrantes} &  \multicolumn{1}{c|}{Correo electr\'onico} \\[0.2em]
+        \multicolumn{1}{|c}{\rule{0pt}{1.2em} \LabelIntegrantes} & \multicolumn{1}{c|}{Correo electr\'onico} \\[0.2em]
         \hline \hline
         \the\intlistSinLU
         \hline
@@ -218,13 +144,26 @@
 
 \newcommand{\tablaDirectores}{%
 \ifthenelse{\boolean{showDirectores}}{%
-    \bigskip
-    Directores
+\bigskip
+Directores
 
-    \smallskip
+\smallskip
     \begin{tabular}[t]{ *{\value{directoresCount}}{c} }
     \the\direcTabNombre \\%
     \the\direcTabEmail %
+    \end{tabular}%
+}{}%
+}
+
+\newcommand{\tablaCoDirectores}{%
+\ifthenelse{\boolean{showCoDirectores}}{%
+\bigskip
+Co-Directores
+
+\smallskip
+    \begin{tabular}[t]{ *{\value{coDirectoresCount}}{c} }
+    \the\codirecTabNombre \\%
+    \the\codirecTabEmail %
     \end{tabular}%
 }{}%
 }
@@ -260,7 +199,7 @@
   \setcounter{page}{1}
 }
 
-% ----- \maketitletxt correspondiente a la versi�n v0.2.1 (texto v0.2 + fecha ) ---------
+% ----- \maketitletxt correspondiente a la versión v0.2.1 (texto v0.2 + fecha ) ---------
 
 \def\maketitletxt{%
     \ifsetuperror\errmessage{Faltan datos de la caratula! Ingresar 'h' para mas informacion.}\fi
@@ -309,7 +248,7 @@
     \vspace*{\stretch{4}}
     \newpage\aftermaketitle}
 
-% ----- \maketitlegraf correspondiente a la versi�n v0.3 (gr�fica) -------------
+% ----- \maketitlegraf correspondiente a la versión v0.3 (gráfica) -------------
 
 \def\maketitlegraf{%
     \ifsetuperror\errmessage{Faltan datos de la caratula! Ingresar 'h' para mas informacion.}\fi
@@ -320,7 +259,7 @@
 
     \vspace*{.06 \textheight}
 
-    \noindent \textbf{\huge \Titulo}  \medskip \\
+    \noindent \textbf{\huge \Titulo} \medskip \\
     \ifx\Subtitulo\relax\else\noindent\textbf{\large \Subtitulo} \\ \fi%
     \noindent \rule{\textwidth}{1 pt}
 
@@ -333,6 +272,8 @@
         \tablaIntegrantes
 
         \tablaDirectores
+
+        \tablaCoDirectores
 
         \tablaEntregas
     \end{center}%
@@ -349,8 +290,8 @@
             Ciudad Universitaria - (Pabell\'on I/Planta Baja) \\
                 Intendente G\"uiraldes 2160 - C1428EGA \\
             Ciudad Aut\'onoma de Buenos Aires - Rep. Argentina \\
-                Tel/Fax: (54 11) 4576-3359 \\
-            http://www.fcen.uba.ar \\
+                Tel/Fax: (++54 +11) 4576-3300 \\
+            http://www.exactas.uba.ar \\
             }
         \end{minipage}
     \end{minipage}%
@@ -363,11 +304,11 @@
 % ----- Dependiendo de las opciones ---------
 %
 % opciones:
-%   txt     : caratula solo texto.
-%   txtlogo : caratula txt con logo del DC y del grupo (opcional).
-%   graf    : (default) caratula grafica con logo del DC, UBA y del grupo (opcional).
+% txt : caratula solo texto.
+% txtlogo : caratula txt con logo del DC y del grupo (opcional).
+% graf : (default) caratula grafica con logo del DC, UBA y del grupo (opcional).
 %
-%\@makeother\*% some package redefined it as a letter (as color.sty)
+\@makeother\*% some package redefined it as a letter (as color.sty)
 %
 % Layout general de la caratula
 %
@@ -390,6 +331,8 @@
 \DeclareOption{sinEntregas}{\setboolean{showEntregas}{false}}
 \DeclareOption{showDirectores}{\setboolean{showDirectores}{true}}
 \DeclareOption{hideDirectores}{\setboolean{showDirectores}{false}}
+\DeclareOption{showCoDirectores}{\setboolean{showCoDirectores}{true}}
+\DeclareOption{hideCoDirectores}{\setboolean{showCoDirectores}{false}}
 %
 % Opciones predeterminadas
 %
@@ -398,6 +341,9 @@
 \ExecuteOptions{integrante}%
 \ExecuteOptions{conLU}%
 \ExecuteOptions{hideDirectores}%
+\ExecuteOptions{hideCoDirectores}%
 \ExecuteOptions{sinEntregas}%
 %
 \ProcessOptions\relax
+
+

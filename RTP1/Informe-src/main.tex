@@ -7,30 +7,12 @@
 \usepackage{multicol}
 \usepackage[absolute]{textpos}
 \usepackage{hyperref}
+\usepackage{graphicx}
 
-\include{macros}
+\include{caratula}
 \begin{document}
 
-\materia{}
 
-\titulo{M\'{e}todos Num\'{e}ricos}
-\subtitulo{TP 1: "No creo que a  \'{e}l le gustara eso"}
-
-\fecha{\today}
-
-
-\grupo{}
-
-\integrante{Fosco, Martin Esteban}{449/13}{mfosco2005@yahoo.com.ar}
-\integrante{Minces Müller, Javier Nicolás}{231/13}{javijavi1994@gmail.com}
-\integrante{Chibana, Christian Ezequiel}{586/13}{christian.chiba93@gmail.com}
-
-
-\maketitle
-
-\clearpage
-
-\nombre{\LARGE }
 
 \LARGE \textbf{Resumen} \\
 \normalsize
@@ -85,8 +67,8 @@ Para poder modelar el parabrisas se tomó una discretización, con granularidad 
 
 Aplicando el modelo de aproximación por diferencias finitas se puede ver que la temperatura de cada punto desconocido puede expresarse como el promedio de cada uno de los puntos adyacentes. Es decir, la temperatura de cada punto del parabrisas se puede expresar como una ecuación lineal: \footnote{Consideramos que un punto 'es sanguijuela" si la distancia al centro de una sanguijuela es menor o igual al radio de las sanguijuelas. La distancia entre el punto $p=(p_x, p_y)$ y la sanguijuela con centro en $s=(s_x, s_y)$ se calcula como $\| p-s  \|_{2}= \sqrt{(p_x-s_x)^2+(p_y-s_y)2}$. Si el punto está en el borde, no es sanguijuela, pero si el centro de la sanguijuela está en el borde, sigue modificando los puntos de alrededor.} \newline 
 
-$\left \{\begin{array}{ll}
-\frac{1}{4}x_{i+1,j}+\frac{1}{4}x_{i,j+1}+\frac{1}{4}x_{i-1,j}+\frac{1}{4}x_{i,j-1}-x_{i,j}=0 & \text{si el punto es desconocido} \\  x_{i,j}=-100 & \text{si el punto es borde} \\ x_{i,j}=temp & \text{ si el punto es sanguijuela} \end{array}$ \newline
+%$\left \{\begin{array}{ll}
+%\frac{1}{4}x_{i+1,j}+\frac{1}{4}x_{i,j+1}+\frac{1}{4}x_{i-1,j}+\frac{1}{4}x_{i,j-1}-x_{i,j}=0 & \text{si el punto es desconocido} \\  %x_{i,j}=-100 & \text{si el punto es borde} \\ x_{i,j}=temp & \text{ si el punto es sanguijuela} \end{array}$ \newline
 
 Considerando todos los puntos desconocidos de la matriz, se obtuvo entonces un sistema de ecuaciones lineales de $a+l \times a+l$, siendo $a$ y $l$ el ancho y el largo de la matriz parabrisas, respectivamente.
 
