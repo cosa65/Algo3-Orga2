@@ -192,10 +192,11 @@ int main(int argc, char *argv[])
 	Matriz matr;
 	if (*argv[3]=='1') {
 		matr=gMatrizB(p);
+		EliminacionGaussianaB(matr);
 	} else {
 		matr=gMatriz(p);
+		EliminacionGaussiana(matr);
 	} 
-	EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(p,matr,x,argv[2]);
 	if (argc>3) {
@@ -206,7 +207,7 @@ int main(int argc, char *argv[])
 		while (x[centro]>235.0) {
 			p.elimSanguijuelaMasCercana(sx, sy);
 			matr=gMatrizB(p);
-			EliminacionGaussiana(matr);
+			EliminacionGaussianaB(matr);
 			x=ResolucionFosquiMan(matr);
 			f3 << sx << " " << sy << " " << x[centro] << endl;
 		}

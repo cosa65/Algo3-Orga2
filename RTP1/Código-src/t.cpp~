@@ -150,8 +150,7 @@ void EliminacionGaussianaB (Matriz &mat){
 
 	for(int i=1; i<=filas; i++){
 		
-		for(int j=[algo]; j<=filas && j<[algo]; j++){
-			if (j<i+1) {j=i+1;}
+		for(int j=i+1; j<=filas && j<mat.anchoBanda(); j++){
 			if(mat.Posicion(j,i)!=0){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
