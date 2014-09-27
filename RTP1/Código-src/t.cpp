@@ -7,9 +7,11 @@
 #include <cmath>
 using namespace std;
 
+int tol=pow(10,-10);
+
 bool enSanguijuela (vector <long double> vx, vector <long double> vy, double x, double y, int r) {
 	for(unsigned int i=0;i<vx.size();i++) {
-		if (sqrt((vx[i]-x)*(vx[i]-x)+(vy[i]-y)*(vy[i]-y)) <= r) { ///La distancia debe ser menor al radio
+		if (sqrt((vx[i]-x)*(vx[i]-x)+(vy[i]-y)*(vy[i]-y)) <= r+tol) { ///La distancia debe ser menor al radio
 			return true;
 		}
 	} return false;
@@ -127,19 +129,12 @@ void EliminacionGaussiana (Matriz &mat){
 
 	for(int i=1; i<=filas; i++){
 		
-		for (int y = filas; y >i; y--){
-			if (abs (mat.Posicion(y,i)) > abs (mat.Posicion(i,i))) {
-			mat.intercambiarFilas(y,i);
-			}
-		}
-		
-		//caso que el elemento i de mi fila actual no valga 0
-
 		for(int j=i+1; j<=filas; j++){
 
-			if(mat.Posicion(j,i)!=0){ //Y yo que pensaba que esta optimización alcanzaba
+			if(abs(mat.Posicion(j,i))>=tol){ 
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
+				mat.Definir(0,i,i);
 			}
 		}
 	}
@@ -150,10 +145,11 @@ void EliminacionGaussianaB (Matriz &mat){
 
 	for(int i=1; i<=filas; i++){
 		
-		for(int j=i+1; j<=filas && j<mat.anchoBanda(); j++){
-			if(mat.Posicion(j,i)!=0){
+		for(int j=i+1; j<=filas && j<i+mat.anchoBanda(); j++){
+			if(abs(mat.Posicion(j,i))>=tol){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
+				mat.Definir(0,i,i);
 			}
 		}
 	}
