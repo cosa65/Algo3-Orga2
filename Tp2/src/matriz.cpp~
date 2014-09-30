@@ -31,24 +31,19 @@ void Definir(double adefinir, int fila, int columna) {
 		_inicioFila[i]++;
 	}
 
-	int i =	_posValores[_inicioFilas[fila-1]-1];
-	int j =	_posValores[_inicioFilas[fila]-1];
+	int i =	_inicioFilas[fila-1]-1;
+	int j =	_inicioFilas[fila]-1;
 	int lugar;
 	for (int k=i;k<j;k++) {
 		if (_posValores[k]>columna) {
 			lugar=k;	
 		}
 	} 
-
-	int posTemp = _posValores[lugar];
-	double temp = _valores[lugar];
-
-	for (int k=lugar;k<Cfilas;k++) {
-		posTemp = _posValores[k+1];
-		temp = _valores[k+1];
-		_valores[k+1]=temp;
-		_posValores[k+1]=posTemp;		
-	}
+	for (int k=_valores.size()-1;k>lugar;k--) {
+		_valores[k+1]=_valores[k];
+		_posValores[k+1]=_posvalores[k];		
+	} _valores[lugar]=adefinir;
+	_posValores[lugar]=columna;
 }
 
 

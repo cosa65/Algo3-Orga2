@@ -12,7 +12,7 @@ Datos cargar(char* in) {
 	archivo >> path;
 	archivo >> tolerancia;
 	Datos d=Datos(metodo,c,tipo,path,tolerancia)
-	return 
+	return d;
 }
 
 Matriz Generar(Datos d) {
@@ -31,4 +31,11 @@ Matriz Generar(Datos d) {
 		archivo >> dst;
 		mat.Definir(src,dst,1);
 	} return mat;
+}
+
+int main(int argc, char *argv[])
+{
+	Datos d= cargar(argv[1]);
+	Matriz matr=matr.Generar(d);
+	} return 0;
 }
