@@ -1,5 +1,4 @@
-#include <vector>
-#include <iostream>
+
 
 using namespace std;
 
@@ -29,18 +28,14 @@ void mostrar();
 
 private:
 
-vector< vector<long double> > _array;
+vector <double> valores;
+
+vector <int> posValores;
+
+vector <int> inicioFilas;
 
 int _Cfilas;
 
 int _Ccolumnas;
-
-vector<long double> _indeps;
-
-vector<int> _pos;
-
-bool _banda;
-
-int _anchoBanda;
 
 };
