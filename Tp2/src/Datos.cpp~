@@ -1,0 +1,16 @@
+#include "Datos.h"
+#include <iostream>
+
+using namespace std;
+
+Datos::Datos(){}
+
+Datos(int metodo, int c, long tipo, int path, int tolerancia){
+	
+_metodo
+c
+tipo
+path
+tolerancia
+	
+}
