@@ -9,22 +9,22 @@
 vector<double> Producto (Matriz& A, vector<double> x) {
 	int lim=x.size();
 	vector<double> res(lim);
-	for (int i=0;i<lim;i++) {
-		int suma=0;
-		for (int j=0;j<lim;j++) {
-			suma+=A.Posicion(i,j)*x[j];
-		} res[i]=suma;
+	for (int i=1;i<=lim;i++) {
+		double suma=0;
+		for (int j=1;j<=lim;j++) {
+			suma+=A.Posicion(i,j)*x[j-1];
+		} res[i-1]=suma;
 	} return res;
 } //probablemente haya que hacer una versión para la esparsa
 
 vector<double> Ptransp (Matriz& A, vector<double> x) { //transpuesto, no transepsual
 	int lim=x.size();
 	vector<double> res(lim);
-	for (int i=0;i<lim;i++) {
+	for (int i=1;i<=lim;i++) {
 		int suma=0;
 		for (int j=0;j<lim;j++) {
-			suma+=A.Posicion(j,i)*x[j]; //¿soy un picarón o no?
-		} res[i]=suma;
+			suma+=A.Posicion(j,i)*x[j-1]; //¿soy un picarón o no?
+		} res[i-1]=suma;
 	} return res;
 }
 
@@ -44,13 +44,13 @@ double Norma2 (vector<double> v) {
 }
 
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
-	int autoval=0;
+	double autoval=0;
 	for (int i=0;abs(autoval-1)>tolerancia;i++) {
-		xi=Producto(A, xi);
 		autoval=Norma2(xi);
 		porCte(xi,1/autoval);
+		xi=Producto(A, xi);
 	} return xi;
-} //este está bien que sea una matriz común, pero no sé si es necesario devolver el autovalor
+} 
 
 
 Datos cargar(char* in) {
@@ -97,7 +97,7 @@ Matriz Generar(Datos d) {
 	Matriz mat=Matriz(d._nodos,d._nodos);
 
 	for (int i=1;i<=mat.Cfilas();i++) {
-		for (int j=1;i<=mat.Ccolumnas();j++) {
+		for (int j=1;j<=mat.Ccolumnas();j++) {
 			mat.Definir(0,i,j);
 		}
 	}
@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
 
 		int n=matr.Cfilas();
 		int suma=0;
-		for (int i=0;i<n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+		for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
 			suma=0;
 			for (int j=1;j<=n;j++) {
 				suma+=matr.Posicion(i,j);
@@ -133,11 +133,11 @@ int main(int argc, char *argv[])
 					matr.Definir(1/n,i,j); //asignar 1/n a todas las filas de los que tienen grado 0
 				}
 			}				
-		} for (int i=0;i<matr.Cfilas();i++) { //multiplicar toda la matriz por c y sumarle (1-c)*n
+		} for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)*n
 			for (int j=1;j<=n;j++) {
 				matr.Definir(matr.Posicion(i,j)*d._c+(1-d._c)*n,i,j);
 			} 				
-		} 		
+		}	
 		vector<double> res(matr.Cfilas());
 		for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
 		res=Potencias(matr,res,d._tolerancia);
