@@ -25,6 +25,8 @@ void Definir(double adefinir, int fila, int columna);
 
 double Posicion(int fila, int columna);
 
+int Cfilas();
+
 void mostrar();
 
 private:

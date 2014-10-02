@@ -19,11 +19,11 @@ Matriz();
 Matriz( int CFilas, int Ccolumnas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas, vector<long double> indeps, vector<int> pos);
+Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas, vector<double> indeps, vector<int> pos);
 
 void Definir(double adefinir, int fila, int columna);
 
-long double Posicion(int fila, int columna);
+double Posicion(int fila, int columna);
 
 void mostrar();
 

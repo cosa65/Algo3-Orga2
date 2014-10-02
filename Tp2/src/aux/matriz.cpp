@@ -60,7 +60,14 @@ double Matriz::Posicion(int fila, int columna) {
 	} return 0;
 }
 
+int Matriz::Cfilas(){
+	return _Cfilas;
+}
+
 void Matriz::mostrar(){
-
-
+	for (int i=0;i<_Ccolumnas;i++) {
+		for (int j=0;j<_Cfilas;j++) {
+			cout << Posicion(i,j) << " ";
+		} cout << endl;
+	}
 }

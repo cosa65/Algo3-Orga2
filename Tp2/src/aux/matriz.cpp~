@@ -41,7 +41,7 @@ void Matriz::Definir(double adefinir, int fila, int columna) {
 	} 
 	for (int k=_valores.size()-1;k>lugar;k--) {
 		_valores[k+1]=_valores[k];
-		_posValores[k+1]=_posvalores[k];		
+		_posValores[k+1]=_posValores[k];		
 	} _valores[lugar]=adefinir;
 	_posValores[lugar]=columna;
 }
@@ -60,7 +60,14 @@ double Matriz::Posicion(int fila, int columna) {
 	} return 0;
 }
 
+int Matriz::Cfilas(){
+	return _CFilas;
+}
+
 void Matriz::mostrar(){
-
-
+	for (int i=0;i<_CColumnas;i++) {
+		for (int j=0;j<_CFilas;j++) {
+			cout << Posicion(i,j) << " ";
+		} cout << endl;
+	}
 }
