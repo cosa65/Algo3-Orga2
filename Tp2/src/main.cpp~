@@ -95,8 +95,15 @@ Datos cargar(char* in) {
 
 Matriz Generar(Datos d) {
 	Matriz mat=Matriz(d._nodos,d._nodos);
+
+	for (int i=0;i<mat.Cfilas();i++) {
+		for (int j=0;i<mat.Ccolumnas();j++) {
+			mat.Definir(0,i,j);
+		}
+	}
+
 	for (unsigned int i=0;i<d._inlinks.size();i++) {
-		mat.Definir(d._inlinks[i],d._outlinks[i],1);
+		mat.Definir(1,d._inlinks[i],d._outlinks[i]);
 	} return mat;
 }
 
@@ -104,15 +111,33 @@ int main(int argc, char *argv[])
 {
 	Datos d= cargar(argv[1]);
 	Matriz matr=Generar(d); //Genera la de CONECTIVIDAD {0,1}^nxn
-	///debería decir MatrizE, pero primero testeemos con una que sabemos que está bi
+	///debería decir MatrizE, pero primero testeemos con una que sabemos que está bien
 	ofstream salida;
 	salida.open(argv[2]);
 	if (d._metodo==0) {
+		//Matriz mat=copiar(matr); 		//deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
 		//Actualizar matriz según algoritmo:
-		//En cada columna, calcular el grado y dividir cada elemento por él
-		//asignar 1/n a todas las filas de los que tienen grado 0
-		//multiplicar toda la matriz por c y sumarle (1-c)*n
-		//deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
+
+		int n=matr.Cfilas();
+		int suma=0;
+		for (int i=0;i<n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+			suma=0;
+			for (int j=0;j<n;j++) {
+				suma+=matr.Posicion(i,j);
+			} if (suma>0) {
+				for (int j=0;j<n;j++) {
+					matr.Definir(matr.Posicion(i,j)/suma,i,j);
+				}
+			} else {
+				for (int j=0;j<n;j++) {
+					matr.Definir(1/n,i,j); //asignar 1/n a todas las filas de los que tienen grado 0
+				}
+			}				
+		} for (int i=0;i<matr.Cfilas();i++) { //multiplicar toda la matriz por c y sumarle (1-c)*n
+			for (int j=0;j<n;j++) {
+				matr.Definir(matr.Posicion(i,j)*d._c+(1-d._c)*n,i,j);
+			} 				
+		} 		
 		vector<double> res(matr.Cfilas());
 		for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
 		res=Potencias(matr,res,d._tolerancia);
