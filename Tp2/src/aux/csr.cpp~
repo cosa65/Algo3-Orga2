@@ -1,10 +1,10 @@
-#include "matriz.h"
+#include "csr.h"
 #include <vector>
 #include <iostream>
 
 using namespace std;
 
-typedef vector<double> fila;
+typedef vector<long double> fila;
 
 //generador basico, no se usa
 //Matriz();
@@ -20,7 +20,7 @@ MatrizE::MatrizE(int Cfilas, int Ccolumnas){
 	for (int i = 0; i<_Cfilas; i++){_inicioFilas[i]=1;}
 }
 
-void MatrizE::Definir(double adefinir, int fila, int columna) {
+void MatrizE::Definir(long double adefinir, int fila, int columna) {
 
 	int size = _valores.size()+1;
 
@@ -47,7 +47,7 @@ void MatrizE::Definir(double adefinir, int fila, int columna) {
 }
 
 
-double MatrizE::Posicion(int fila, int columna) {
+long double MatrizE::Posicion(int fila, int columna) {
 
 	int i =	_posValores[_inicioFilas[fila-1]-1];
 

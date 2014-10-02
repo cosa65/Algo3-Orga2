@@ -38,14 +38,14 @@ double Norma2 (vector<double> v) {
 	unsigned int lim=v.size();
 	double suma=0;
 	for (unsigned int i=0;i<lim;i++) {
-		suma+=v[i];
+		suma+=abs(v[i]);
 	} 
-	return sqrt(suma);
+	return suma;
 }
 
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 	double autoval=0;
-	for (int i=0;abs(autoval-1)>tolerancia;i++) {
+	for (int i=0;abs(autoval-1)>=tolerancia;i++) {
 		autoval=Norma2(xi);
 		porCte(xi,1/autoval);
 		xi=Producto(A, xi);
@@ -93,6 +93,36 @@ Datos cargar(char* in) {
 	return d;
 }
 
+vector<double> pageRank(Datos d, Matriz &matr) {
+	//Matriz mat=copiar(matr); 		//deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
+	//Actualizar matriz según algoritmo:
+
+	int n=matr.Cfilas();
+	int suma=0;
+	for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+		suma=0;
+		for (int j=1;j<=n;j++) {
+			suma+=matr.Posicion(j,i);
+		} if (suma>0) {
+			for (int j=1;j<=n;j++) {
+				matr.Definir(matr.Posicion(j,i)/suma,j,i);
+			}
+		} else {
+			for (int j=1;j<=n;j++) {
+				matr.Definir(1/n,j,i); //asignar 1/n a todas las filas de los que tienen grado 0
+			}
+		}				
+	} for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)/n
+		for (int j=1;j<=n;j++) {
+			matr.Definir(matr.Posicion(i,j)*d._c+(1-d._c)/n,i,j);
+		} 				
+	}	
+	vector<double> res(matr.Cfilas());
+	for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
+	res=Potencias(matr,res,d._tolerancia);
+	return res;
+}
+
 Matriz Generar(Datos d) {
 	Matriz mat=Matriz(d._nodos,d._nodos);
 
@@ -103,7 +133,7 @@ Matriz Generar(Datos d) {
 	}
 
 	for (unsigned int i=0;i<d._inlinks.size();i++) {
-		mat.Definir(1,d._inlinks[i],d._outlinks[i]);
+		mat.Definir(1,d._outlinks[i],d._inlinks[i]);
 	} return mat;
 }
 
@@ -115,32 +145,7 @@ int main(int argc, char *argv[])
 	ofstream salida;
 	salida.open(argv[2]);
 	if (d._metodo==0) {
-		//Matriz mat=copiar(matr); 		//deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
-		//Actualizar matriz según algoritmo:
-
-		int n=matr.Cfilas();
-		int suma=0;
-		for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
-			suma=0;
-			for (int j=1;j<=n;j++) {
-				suma+=matr.Posicion(i,j);
-			} if (suma>0) {
-				for (int j=1;j<=n;j++) {
-					matr.Definir(matr.Posicion(i,j)/suma,i,j);
-				}
-			} else {
-				for (int j=1;j<=n;j++) {
-					matr.Definir(1/n,i,j); //asignar 1/n a todas las filas de los que tienen grado 0
-				}
-			}				
-		} for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)*n
-			for (int j=1;j<=n;j++) {
-				matr.Definir(matr.Posicion(i,j)*d._c+(1-d._c)*n,i,j);
-			} 				
-		}	
-		vector<double> res(matr.Cfilas());
-		for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
-		res=Potencias(matr,res,d._tolerancia);
+		vector<double> res=pageRank(d, matr);
 		for (unsigned int i=0;i<res.size();i++) {
 			salida << res[i] << endl; 
 		}
