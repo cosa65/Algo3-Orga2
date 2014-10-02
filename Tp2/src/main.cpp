@@ -45,12 +45,13 @@ double Norma2 (vector<double> v) {
 
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 	int autoval=0;
-	for (int i=0;abs(autoval-1)<tolerancia;i++) {
+	for (int i=0;abs(autoval-1)>tolerancia;i++) {
 		xi=Producto(A, xi);
 		autoval=Norma2(xi);
 		porCte(xi,1/autoval);
 	} return xi;
 } //este está bien que sea una matriz común, pero no sé si es necesario devolver el autovalor
+
 
 Datos cargar(char* in) {
 	ifstream archivo;
@@ -58,25 +59,28 @@ Datos cargar(char* in) {
 	int metodo;
 	double c;
 	int tipo;
-	char *path;
+	string path;
 	double tolerancia;
     	archivo >> metodo;
 	archivo >> c;
 	archivo >> tipo;
 	archivo >> path;
 	archivo >> tolerancia;
+	const char* pathEspi=path.c_str();
 	
 	ifstream archivo2;
-	archivo2.open(path);
+	archivo2.open(pathEspi);
 	string basura;
 	int nodos,links;
-	getline (archivo2, basura);
-	getline (archivo2, basura);
+	getline (archivo2,basura);
+	getline (archivo2,basura);
+	archivo2 >> basura;
 	archivo2 >> basura;
 	archivo2 >> nodos;
 	archivo2 >> basura;
 	archivo2 >> links;
-	getline (archivo2, basura);
+	getline (archivo2,basura);
+	getline (archivo2,basura);
 
 	Datos d=Datos(metodo,c,tipo,tolerancia,nodos,links);
 	int a,b;
@@ -91,6 +95,13 @@ Datos cargar(char* in) {
 
 Matriz Generar(Datos d) {
 	Matriz mat=Matriz(d._nodos,d._nodos);
+
+	for (int i=0;i<mat.Cfilas();i++) {
+		for (int j=0;i<mat.Ccolumnas();j++) {
+			mat.Definir(i,j,0);
+		}
+	}
+
 	for (unsigned int i=0;i<d._inlinks.size();i++) {
 		mat.Definir(d._inlinks[i],d._outlinks[i],1);
 	} return mat;
@@ -110,9 +121,8 @@ int main(int argc, char *argv[])
 		//multiplicar toda la matriz por c y sumarle (1-c)*n
 		//deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
 		vector<double> res(matr.Cfilas());
-		int autoval;
-		int k=10000; //esto seguro que hay que ver qué onda la tolerancia, es la parte que me falta cachar
-		res=Potencias(matr,res,k,autoval);
+		for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
+		res=Potencias(matr,res,d._tolerancia);
 		for (unsigned int i=0;i<res.size();i++) {
 			salida << res[i] << endl; 
 		}

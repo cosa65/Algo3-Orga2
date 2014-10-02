@@ -1,12 +1,12 @@
 CC=g++
 
-CFLAGS=-g -Wall
+CFLAGS=-g -Wall -ggdb
 
 LDFLAGS=
 
 INCDIR=
 
-SOURCES=main.cpp aux/matriz.cpp aux/Datos.h
+SOURCES=main.cpp aux/matriz.cpp aux/csr.cpp aux/Datos.h
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
