@@ -5,20 +5,21 @@ using namespace std;
 
 typedef vector<double> fila;
 
-struct Matriz
+struct MatrizE
 {
 public:
 
 //generador basico, no se usa
-Matriz();
+MatrizE();
 
 //~Matriz();
 
 //generador que te crea una matriz de un tamaño, no pide vectores
-Matriz( int cantfilas, int cantcolumnas);
+
+MatrizE( int CFilas, int Ccolumnas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas);
+MatrizE( vector< double > valores, int cantfilas, int cantcolumnas, vector<int> posvalores, vector<int> inicioFilas);
 
 void Definir(double adefinir, int fila, int columna);
 
@@ -26,15 +27,15 @@ double Posicion(int fila, int columna);
 
 int Cfilas();
 
-int Ccolumnas();
-
-int TamTotal();
-
 void mostrar();
 
 private:
 
-vector< vector<double> > _array;
+vector <double> _valores;
+
+vector <int> _posValores;
+
+vector <int> _inicioFilas;
 
 int _Cfilas;
 

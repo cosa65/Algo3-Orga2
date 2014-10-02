@@ -1,73 +1,53 @@
-#include "matriz.h"
 #include <vector>
+#include "matriz.h"
 #include <iostream>
 
 using namespace std;
 
 typedef vector<double> fila;
 
-//generador basico, no se usa
-//Matriz();
+Matriz::Matriz(){}
 
-//~Matriz();
-
-//generador que te crea una matriz de un tamaño, no pide vectores
-
-Matriz::Matriz(int Cfilas, int Ccolumnas){
-	_Cfilas = Cfilas;
-	_Ccolumnas = Ccolumnas;
-	_inicioFilas.resize(Cfilas);
-	for (int i = 0; i<_Cfilas; i++){_inicioFilas[i]=1;}
-}
-
-void Matriz::Definir(double adefinir, int fila, int columna) {
-
-	int size = _valores.size()+1;
-
-	_valores.resize(size);
-	_posValores.resize(size);
-
-	for (int i=fila;i<_Cfilas;i++) {
-		_inicioFilas[i]++;
+Matriz::Matriz( int cantfilas, int cantcolumnas){
+	_array.resize(cantfilas); 
+	for (int i = 0; i < cantfilas; i++){
+		_array[i].resize(cantcolumnas);
 	}
+	_Cfilas = cantfilas;
+	_Ccolumnas = cantcolumnas;
+}
 
-	int i =	_inicioFilas[fila-1]-1;
-	int j =	_inicioFilas[fila]-1;
-	int lugar;
-	for (int k=i;k<j;k++) {
-		if (_posValores[k]>columna) {
-			lugar=k;	
-		}
-	} 
-	for (int k=_valores.size()-1;k>lugar;k--) {
-		_valores[k+1]=_valores[k];
-		_posValores[k+1]=_posValores[k];		
-	} _valores[lugar]=adefinir;
-	_posValores[lugar]=columna;
+Matriz::Matriz(vector< vector<double> > filas, int cantfilas, int cantcolumnas){
+	_array = filas;
+	_Cfilas = cantfilas;
+	_Ccolumnas = cantcolumnas;
+}
+
+void Matriz::Definir(double def,int fila, int columna) {
+	_array[fila - 1][columna - 1] = def; 
 }
 
 
-double Matriz::Posicion(int fila, int columna) {
-
-	int i =	_posValores[_inicioFilas[fila-1]-1];
-
-	int j =	_posValores[_inicioFilas[fila]-1];
-
-	for (int k=i;k<j;k++) {
-		if (_posValores[k]==columna) {
-			return _valores[k];
-		}
-	} return 0;
+double Matriz::Posicion(int fila, int columna){
+	return _array[fila - 1][columna - 1];
 }
 
 int Matriz::Cfilas(){
 	return _Cfilas;
 }
 
-void Matriz::mostrar(){
-	for (int i=0;i<_Ccolumnas;i++) {
-		for (int j=0;j<_Cfilas;j++) {
-			cout << Posicion(i,j) << " ";
+int Matriz::Ccolumnas(){
+	return _Ccolumnas;
+}
+
+int Matriz::TamTotal(){
+	return (_Cfilas * _Ccolumnas);
+}
+
+void Matriz::mostrar() {
+	for (int i=1;i<=_Cfilas;i++) {
+		for (int j=1;j<=_Ccolumnas;j++){
+           		cout << Posicion(i,j) << "\t";
 		} cout << endl;
 	}
 }
