@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <math.h>
+#include <cmath.h>
 
 vector<double> Producto (Matriz& A, vector<double> x) {
 	int lim=x.size();
@@ -14,7 +15,7 @@ vector<double> Producto (Matriz& A, vector<double> x) {
 			suma+=A.Posicion(i,j)*x[j];
 		} res[i]=suma;
 	} return res;
-}
+} //probablemente haya que hacer una versión para la esparsa
 
 vector<double> Ptransp (Matriz& A, vector<double> x) { //transpuesto, no transepsual
 	int lim=x.size();
@@ -42,13 +43,14 @@ double Norma2 (vector<double> v) {
 	return sqrt(suma);
 }
 
-vector<double> Potencias (Matriz &A, vector<double> xi, int k, int autoval) {
-	for (int i=0;i<k;i++) {
+vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
+	int autoval=0;
+	for (int i=0;abs(autoval-1)<tolerancia;i++) {
 		xi=Producto(A, xi);
 		autoval=Norma2(xi);
 		porCte(xi,1/autoval);
 	} return xi;
-}
+} //este está bien que sea una matriz común, pero no sé si es necesario devolver el autovalor
 
 Datos cargar(char* in) {
 	ifstream archivo;
@@ -98,7 +100,7 @@ int main(int argc, char *argv[])
 {
 	Datos d= cargar(argv[1]);
 	Matriz matr=Generar(d); //Genera la de CONECTIVIDAD {0,1}^nxn
-	///debería decir MatrizE, pero primero testeemos con una que sabemos que está bien.
+	///debería decir MatrizE, pero primero testeemos con una que sabemos que está bi
 	ofstream salida;
 	salida.open(argv[2]);
 	if (d._metodo==0) {
@@ -128,6 +130,6 @@ int main(int argc, char *argv[])
 			salida << y[i] << endl; 
 		}
 	} else {
-		//éste último consiste en definir el ranking de las páginas utilizando solamente la cantidad de ejes entrantes a cada una de ellas, ordenándolos en forma decreciente. 
+		//"éste último consiste en definir el ranking de las páginas utilizando solamente la cantidad de ejes entrantes a cada una de ellas, ordenándolos en forma decreciente."
 	} return 0;
 }

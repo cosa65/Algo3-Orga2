@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <math.h>
+#include <cmath>
 
 vector<double> Producto (Matriz& A, vector<double> x) {
 	int lim=x.size();
@@ -42,13 +43,14 @@ double Norma2 (vector<double> v) {
 	return sqrt(suma);
 }
 
-vector<double> Potencias (Matriz &A, vector<double> xi, int k, int autoval) {
-	for (int i=0;i<k;i++) {
+vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
+	int autoval=0;
+	for (int i=0;abs(autoval-1)<tolerancia;i++) {
 		xi=Producto(A, xi);
 		autoval=Norma2(xi);
 		porCte(xi,1/autoval);
 	} return xi;
-} //este etá bienq ue sea una matriz común, pero no sé si es necesario devolver el autovalor
+} //este está bien que sea una matriz común, pero no sé si es necesario devolver el autovalor
 
 Datos cargar(char* in) {
 	ifstream archivo;
