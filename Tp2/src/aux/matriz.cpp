@@ -51,3 +51,6 @@ void Matriz::mostrar() {
 		} cout << endl;
 	}
 }
+
+
+

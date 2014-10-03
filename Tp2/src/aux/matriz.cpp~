@@ -1,10 +1,12 @@
+#include <math.h>
+#include <cmath>
 #include <vector>
 #include "matriz.h"
 #include <iostream>
 
 using namespace std;
 
-typedef vector<long double> fila;
+typedef vector<double> fila;
 
 Matriz::Matriz(){}
 
@@ -17,18 +19,18 @@ Matriz::Matriz( int cantfilas, int cantcolumnas){
 	_Ccolumnas = cantcolumnas;
 }
 
-Matriz::Matriz(vector< vector<long double> > filas, int cantfilas, int cantcolumnas){
+Matriz::Matriz(vector< vector<double> > filas, int cantfilas, int cantcolumnas){
 	_array = filas;
 	_Cfilas = cantfilas;
 	_Ccolumnas = cantcolumnas;
 }
 
-void Matriz::Definir(long double def,int fila, int columna) {
+void Matriz::Definir(double def,int fila, int columna) {
 	_array[fila - 1][columna - 1] = def; 
 }
 
 
-long double Matriz::Posicion(int fila, int columna){
+double Matriz::Posicion(int fila, int columna){
 	return _array[fila - 1][columna - 1];
 }
 
@@ -51,3 +53,62 @@ void Matriz::mostrar() {
 		} cout << endl;
 	}
 }
+
+//==AUXILIARES==
+
+vector<double> Producto (Matriz& A, vector<double> x) {
+	int lim=x.size();
+	vector<double> res(lim);
+	for (int i=1;i<=lim;i++) {
+		double suma=0;
+		for (int j=1;j<=lim;j++) {
+			suma+=A.Posicion(i,j)*x[j-1];
+		} res[i-1]=suma;
+	} return res;
+} //probablemente haya que hacer una versión para la esparsa
+
+vector<double> Ptransp (Matriz& A, vector<double> x) { //transpuesto, no transepsual
+	int lim=x.size();
+	vector<double> res(lim);
+	for (int i=1;i<=lim;i++) {
+		int suma=0;
+		for (int j=0;j<lim;j++) {
+			suma+=A.Posicion(j,i)*x[j-1]; //¿soy un picarón o no?
+		} res[i-1]=suma;
+	} return res;
+}
+
+void porCte(vector<double> &v, double a) {
+	for (unsigned int i=0;i<v.size();i++) {
+		v[i]=v[i]*a;
+	}
+}
+
+double Norma1 (vector<double> v) {
+	unsigned int lim=v.size();
+	double suma=0;
+	for (unsigned int i=0;i<lim;i++) {
+		suma+=abs(v[i]);
+	} 
+	return suma;
+}
+
+double Norma2 (vector<double> v) {
+	unsigned int lim=v.size();
+	double suma=0;
+	for (unsigned int i=0;i<lim;i++) {
+		suma+=v[i]*v[i];
+	} 
+	return sqrt(suma);
+}
+
+/*double NormaInf (vector<double> v) {
+	double res=0;
+	unsigned int lim=v.size();
+	for (unsigned int i=0;i<lim;i++) {
+		if (abs(v[i])>res) {
+			res=abs(v[i]);
+		}
+	} 
+	return res;
+}*/

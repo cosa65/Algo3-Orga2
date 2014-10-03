@@ -34,7 +34,7 @@ void porCte(vector<double> &v, double a) {
 	}
 }
 
-double Norma2 (vector<double> v) {
+double Norma1 (vector<double> v) {
 	unsigned int lim=v.size();
 	double suma=0;
 	for (unsigned int i=0;i<lim;i++) {
@@ -43,15 +43,72 @@ double Norma2 (vector<double> v) {
 	return suma;
 }
 
+double Norma2 (vector<double> v) {
+	unsigned int lim=v.size();
+	double suma=0;
+	for (unsigned int i=0;i<lim;i++) {
+		suma+=v[i]*v[i];
+	} 
+	return sqrt(suma);
+}
+
+/*double NormaInf (vector<double> v) {
+	double res=0;
+	unsigned int lim=v.size();
+	for (unsigned int i=0;i<lim;i++) {
+		if (abs(v[i])>res) {
+			res=abs(v[i]);
+		}
+	} 
+	return res;
+}*/
+
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
-	double autoval=0;
-	for (int i=0;abs(autoval-1)>=tolerancia;i++) {
-		autoval=Norma2(xi);
+	double autoval=0; double delta=tolerancia+1;
+	for (int i=0;delta>tolerancia;i++) {
+		autoval=Norma1(xi);
 		porCte(xi,1/autoval);
-		xi=Producto(A, xi);
-	} return xi;
+		vector<double> ximas1=Producto(A, xi);
+		for (unsigned int j=0;j<xi.size();j++) {
+			xi[j]=xi[j]-ximas1[j];
+		}
+		delta=Norma2(xi);
+		xi=ximas1;
+	} 
+	return xi;
 } 
 
+void cargarSNAP (Datos& d, const char* path) {
+
+	ifstream archivo2;
+	archivo2.open(path);
+
+	string basura;
+	int nodos,links;
+	getline (archivo2,basura);
+	getline (archivo2,basura);
+	archivo2 >> basura;
+	archivo2 >> basura;
+	archivo2 >> nodos;
+	d._nodos=nodos;
+	archivo2 >> basura;
+	archivo2 >> links;
+	d.DefLinks(links);
+	getline (archivo2,basura);
+	getline (archivo2,basura); //mejorar esto para que corra todos los tests
+	int a,b;
+	for (int i=0;i<links;i++) {
+		archivo2 >> a;
+		archivo2 >> b;
+		d.agLink(a,b,i);
+	}
+
+}
+
+void cargarToronto (Datos& d, const char* path) {
+	ifstream archivo2;
+	archivo2.open(path);
+}
 
 Datos cargar(char* in) {
 	ifstream archivo;
@@ -66,30 +123,15 @@ Datos cargar(char* in) {
 	archivo >> tipo;
 	archivo >> path;
 	archivo >> tolerancia;
+	Datos d=Datos(metodo,c,tolerancia);
+
 	const char* pathEspi=path.c_str();
 	
-	ifstream archivo2;
-	archivo2.open(pathEspi);
-	string basura;
-	int nodos,links;
-	getline (archivo2,basura);
-	getline (archivo2,basura);
-	archivo2 >> basura;
-	archivo2 >> basura;
-	archivo2 >> nodos;
-	archivo2 >> basura;
-	archivo2 >> links;
-	getline (archivo2,basura);
-	getline (archivo2,basura);
-
-	Datos d=Datos(metodo,c,tipo,tolerancia,nodos,links);
-	int a,b;
-	for (int i=0;i<links;i++) {
-		archivo2 >> a;
-		archivo2 >> b;
-		d.agLink(a,b,i);
+	if (tipo==0) {
+		cargarSNAP(d,pathEspi);
+	} else {
+		cargarToronto(d,pathEspi);
 	}
-
 	return d;
 }
 
@@ -144,8 +186,9 @@ int main(int argc, char *argv[])
 	///debería decir MatrizE, pero primero testeemos con una que sabemos que está bien
 	ofstream salida;
 	salida.open(argv[2]);
+	vector<double> res(matr.Cfilas());
 	if (d._metodo==0) {
-		vector<double> res=pageRank(d, matr);
+		res=pageRank(d, matr);
 		for (unsigned int i=0;i<res.size();i++) {
 			salida << res[i] << endl; 
 		}
@@ -154,15 +197,23 @@ int main(int argc, char *argv[])
 		vector<double> y(matr.Cfilas());
 		for (int i=0;i<10000;i++) {
 			x=Ptransp(matr,y);
-			porCte(x,1/Norma2(x));
+			porCte(x,1/Norma1(x));
 			y=Producto(matr,x);
-			porCte(y,1/Norma2(y));
+			porCte(y,1/Norma1(y));
 		} for (unsigned int i=0;i<x.size();i++) {
 			salida << x[i] << endl; 
 		} for (unsigned int i=0;i<y.size();i++) {
 			salida << y[i] << endl; 
+		} return 0;
+	} else { //"IN-DEG consiste en definir el ranking de las páginas utilizando solamente la cantidad de ejes entrantes a cada una de ellas, ordenándolos en forma decreciente."
+
+		for (int i=1;i<=matr.Cfilas();i++) {
+			int suma=0;
+			for (int j=1;j<=matr.Ccolumnas();j++) {
+				suma+=matr.Posicion(i,j);
+			} res[i-1]=suma;
 		}
-	} else {
-		//"éste último consiste en definir el ranking de las páginas utilizando solamente la cantidad de ejes entrantes a cada una de ellas, ordenándolos en forma decreciente."
+	} for (unsigned int i=0;i<res.size();i++) {
+		salida << res[i] << endl; 
 	} return 0;
 }
