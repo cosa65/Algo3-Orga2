@@ -1,5 +1,5 @@
 #include "aux/matriz.h"
-#include "aux/csr.h"
+#include "aux/csc.h"
 #include "aux/Datos.h"
 #include "aux/ops.cpp"
 #include <fstream>
@@ -35,8 +35,12 @@ void cargarSNAP (Datos& d, const char* path) {
 }
 
 void cargarToronto (Datos& d, const char* path) {
-	ifstream archivo2;
-	archivo2.open(path);
+	ifstream archivo;
+	archivo.open(path);
+	int nodos;
+	archivo>>nodos;
+	d._nodos=nodos;
+//	esto va a haber que ver muy bien como leer
 }
 
 Datos cargar(char* in) {
@@ -64,6 +68,14 @@ Datos cargar(char* in) {
 	return d;
 }
 
+MatrizE Generar(Datos& d) {
+	MatrizE mat=MatrizE(d._nodos,d._nodos);
+
+	for (unsigned int i=0;i<d._inlinks.size();i++) {
+		mat.Definir(1,d._outlinks[i],d._inlinks[i]);
+	} return mat;
+}
+
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 	double autoval=0; double delta=tolerancia+1;
 	for (int i=0;delta>tolerancia;i++) {
@@ -81,28 +93,23 @@ vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 
 vector<double> pageRank(Datos& d, MatrizE &matre) {
 	int n=matre.Cfilas(); //deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
-	int suma=0; //Actualizar matriz según algoritmo:
+	int suma; //Actualizar matriz según algoritmo:
 	for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
-		suma=0;
-		for (int j=1;j<=n;j++) {
-			suma+=matre.Posicion(j,i);
-		} if (suma>0) {
-			for (int j=1;j<=n;j++) {
-				if (matre.Posicion(j,i)>0) {
-					matre.Redefinir(matre.Posicion(j,i)/suma,j,i); //esto es mucho mejor si guardamos por columna
-				}
-			}
+		suma=matre.contarCol(i);
+		if (suma>0) {
+			matre.divColCte(i,suma);
 		} else {
 			for (int j=1;j<=n;j++) {
 				matre.Definir(1/n,j,i); //asignar 1/n a todas las filas de los que tienen grado 0
 			}
-		}				
+		}
+				
 	} Matriz mat(n,n);
 	for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)/n
 		for (int j=1;j<=n;j++) {
 			mat.Definir(matre.Posicion(i,j)*d._c+(1-d._c)/n,i,j);
 		} 				
-	} mat.mostrar();
+	} 
 	vector<double> res(mat.Cfilas());
 	for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
 	res=Potencias(mat,res,d._tolerancia);
@@ -136,12 +143,11 @@ vector<double> HITS(Datos& d, MatrizE& matr) {
 	} return res;
 }
 
-MatrizE Generar(Datos& d) {
-	MatrizE mat=MatrizE(d._nodos,d._nodos);
-
-	for (unsigned int i=0;i<d._inlinks.size();i++) {
-		mat.Definir(1,d._outlinks[i],d._inlinks[i]);
-	} return mat;
+vector<double> InDeg(MatrizE& matr) {
+	vector<double> res(matr.Cfilas());
+	for (int i=1;i<=matr.Cfilas();i++) {
+		res[i-1]=matr.contarCol(i);
+	} return res;
 }
 
 int main(int argc, char *argv[])
@@ -155,13 +161,8 @@ int main(int argc, char *argv[])
 		res=pageRank(d, matr);
 	} else if (d._metodo==1) {
 		res=HITS(d,matr);
-	} else { //"IN-DEG consiste en definir el ranking de las páginas utilizando solamente la cantidad de ejes entrantes a cada una de ellas, ordenándolos en forma decreciente."
-		for (int i=1;i<=matr.Cfilas();i++) {
-			int suma=0;
-			for (int j=1;j<=matr.Cfilas();j++) {
-				suma+=matr.Posicion(i,j);
-			} res[i-1]=suma;
-		}
+	} else { //Según el ayudante, devolver el grado de cada pág
+		res=InDeg(matr);
 	} for (unsigned int i=0;i<res.size();i++) {
 		salida << res[i] << endl; 
 	} return 0;
