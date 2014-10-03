@@ -1,4 +1,4 @@
-#include <math.h>
+//#include <math.h>
 #include <cmath>
 
 void porCte(vector<double> &v, double a) {

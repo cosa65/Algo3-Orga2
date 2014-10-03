@@ -16,15 +16,14 @@ MatrizE();
 
 //generador que te crea una matriz de un tamaño, no pide vectores
 
-MatrizE( int CColumnas, int CFilas);
+MatrizE( int Ccolumnas, int Cfilas);
 
 //generador que te crea la matriz con los vectores que le pasaste
 MatrizE( vector< double > valores, int cantColumnas, int cantFilas, vector<int> posvalores, vector<int> inicioColumnas);
 
-void Definir(double adefinir, int Columna, int Fila);
-void Redefinir(double adefinir, int Columna, int Fila);
+void Definir(double adefinir, int columna, int fila);
 
-double Posicion(int Columna, int Fila);
+double Posicion(int columna, int fila);
 
 int Cfilas();
 
@@ -44,8 +43,8 @@ vector <int> _posValores;
 
 vector <int> _inicioColumnas;
 
-int _CColumnas;
+int _Ccolumnas;
 
-int _CFilas;
+int _Cfilas;
 
 };

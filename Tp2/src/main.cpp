@@ -4,8 +4,6 @@
 #include "aux/ops.cpp"
 #include <fstream>
 #include <iostream>
-#include <math.h>
-#include <cmath>
 
 void cargarSNAP (Datos& d, const char* path) {
 

@@ -13,25 +13,25 @@ typedef vector<double> Columna;
 
 //generador que te crea una matriz de un tamaño, no pide vectores
 
-MatrizE::MatrizE(int CColumnas, int CFilas){
-	_CColumnas = CColumnas;
-	_CFilas = CFilas;
-	_inicioColumnas.resize(CColumnas+1);
-	for (int i = 0; i<=_CColumnas; i++){_inicioColumnas[i]=1;}
+MatrizE::MatrizE(int Ccolumnas, int Cfilas){
+	_Ccolumnas = Ccolumnas;
+	_Cfilas = Cfilas;
+	_inicioColumnas.resize(Ccolumnas+1);
+	for (int i = 0; i<=_Ccolumnas; i++){_inicioColumnas[i]=1;}
 }
 
-void MatrizE::Definir(double adefinir, int Fila, int Columna) {
+void MatrizE::Definir(double adefinir, int fila, int columna) {
 	if (adefinir>0) {
 		int size = _valores.size()+1;
 
 		_valores.resize(size);
 		_posValores.resize(size);
 
-		int i =	_inicioColumnas[Columna-1]-1;
-		int j = _inicioColumnas[Columna];
+		int i =	_inicioColumnas[columna-1]-1;
+		int j = _inicioColumnas[columna];
 		int lugar=j-1;
 		for (int k=i;k<j;k++) {
-			if (_posValores[k]>Fila) {
+			if (_posValores[k]>fila) {
 				lugar=k;
 				k=j;	
 			}
@@ -41,44 +41,34 @@ void MatrizE::Definir(double adefinir, int Fila, int Columna) {
 			_valores[k]=_valores[k-1];
 			_posValores[k]=_posValores[k-1];		
 		} _valores[lugar]=adefinir;
-		_posValores[lugar]=Fila;
+		_posValores[lugar]=fila;
 
-		for (int i=Columna;i<=_CColumnas;i++) {
+		for (int i=columna;i<=_Ccolumnas;i++) {
 			_inicioColumnas[i]++;
 		}
 	} 
 }
 
-void MatrizE::Redefinir(double valor, int Fila, int Columna) {
-	int i =	_inicioColumnas[Columna-1]-1;
-	int j =	_inicioColumnas[Columna]-1;
-	for (int k=i;k<j;k++) {
-		if (_posValores[k]==Fila) {
-			_valores[k]=valor;
-		}
-	} 
-}
+double MatrizE::Posicion(int fila, int columna) {
 
-double MatrizE::Posicion(int Fila, int Columna) {
+	int i =	_inicioColumnas[columna-1]-1;
 
-	int i =	_inicioColumnas[Columna-1]-1;
-
-	int j =	_inicioColumnas[Columna]-1;
+	int j =	_inicioColumnas[columna]-1;
 
 	for (int k=i;k<j;k++) {
-		if (_posValores[k]==Fila) {
+		if (_posValores[k]==fila) {
 			return _valores[k];
 		}
 	} return 0;
 }
 
 int MatrizE::Cfilas(){
-	return _CColumnas;
+	return _Cfilas;
 }
 
 void MatrizE::mostrar(){
-	for (int i=1;i<=_CFilas;i++) {
-		for (int j=1;j<=_CColumnas;j++) {
+	for (int i=1;i<=_Cfilas;i++) {
+		for (int j=1;j<=_Ccolumnas;j++) {
 			cout << Posicion(i,j) << " ";
 		} cout << endl;
 	}
