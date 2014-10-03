@@ -3,7 +3,7 @@
 
 using namespace std;
 
-typedef vector<long double> fila;
+typedef vector<double> fila;
 
 struct Matriz
 {
@@ -18,11 +18,11 @@ Matriz();
 Matriz( int cantfilas, int cantcolumnas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-Matriz( vector< vector<long double> > filas, int cantfilas, int cantcolumnas);
+Matriz( vector< vector<double> > filas, int cantfilas, int cantcolumnas);
 
-void Definir(long double adefinir, int fila, int columna);
+void Definir(double adefinir, int fila, int columna);
 
-long double Posicion(int fila, int columna);
+double Posicion(int fila, int columna);
 
 int Cfilas();
 
@@ -32,9 +32,12 @@ int TamTotal();
 
 void mostrar();
 
+vector<double> Producto (vector<double> x);
+vector<double> Ptransp (vector<double>& x);
+
 private:
 
-vector< vector<long double> > _array;
+vector< vector<double> > _array;
 
 int _Cfilas;
 

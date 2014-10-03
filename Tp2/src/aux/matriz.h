@@ -32,6 +32,8 @@ int TamTotal();
 
 void mostrar();
 
+vector<double> Producto (vector<double> x);
+
 private:
 
 vector< vector<double> > _array;

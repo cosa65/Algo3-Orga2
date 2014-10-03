@@ -52,5 +52,13 @@ void Matriz::mostrar() {
 	}
 }
 
-
-
+vector<double> Matriz::Producto (vector<double> x) {
+	int lim=x.size();
+	vector<double> res(lim);
+	for (int i=1;i<=lim;i++) {
+		double suma=0;
+		for (int j=1;j<=lim;j++) {
+			suma+=Posicion(i,j)*x[j-1];
+		} res[i-1]=suma;
+	} return res;
+}

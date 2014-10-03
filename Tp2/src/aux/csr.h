@@ -22,12 +22,18 @@ MatrizE( int CFilas, int Ccolumnas);
 MatrizE( vector< double > valores, int cantfilas, int cantcolumnas, vector<int> posvalores, vector<int> inicioFilas);
 
 void Definir(double adefinir, int fila, int columna);
+void Redefinir(double adefinir, int fila, int columna);
 
 double Posicion(int fila, int columna);
 
 int Cfilas();
 
 void mostrar();
+
+vector<double> Producto (vector<double> x);
+vector<double> Ptransp (vector<double> x);
+
+//void divFila(int fila, int valor);
 
 private:
 
