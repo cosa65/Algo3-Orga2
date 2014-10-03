@@ -117,15 +117,17 @@ vector<double> HITS(Datos& d, MatrizE& matr) {
 	for (unsigned int i=0;i<y.size();i++) {y[i]=1;}
 	vector<double> res(matr.Cfilas()*2);
 	double delta=d._tolerancia+1;
+	porCte(y,1/Norma1(y));
 	for (int i=0;delta>d._tolerancia;i++) {
-		porCte(y,1/Norma1(y));
-		xmas1=matr.Ptransp(y);
-		porCte(xmas1,1/Norma1(xmas1));
+
+		xmas1=matr.Producto(y);
+		porCte(xmas1,1/Norma2(xmas1));
 		for (unsigned int j=0;j<x.size();j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
 		x=xmas1;
-		y=matr.Producto(x);
+		y=matr.Ptransp(x);
+		porCte(y,1/Norma2(y));
 
 	} for (unsigned int i=0;i<x.size();i++) {
 		res[i]=x[i]; 
