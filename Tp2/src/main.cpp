@@ -119,13 +119,14 @@ vector<double> HITS(Datos& d, MatrizE& matr) {
 	double delta;
 	for (int i=0;delta<d._tolerancia;i++) {
 		xmas1=matr.Ptransp(y);
+		porCte(y,1/Norma1(y));
 		porCte(xmas1,1/Norma1(xmas1));
 		for (unsigned int j=0;j<x.size();j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
 		x=xmas1;
 		y=matr.Producto(x);
-		porCte(y,1/Norma1(y));
+
 	} for (unsigned int i=0;i<x.size();i++) {
 		res[i]=x[i]; 
 	} for (unsigned int i=0;i<y.size();i++) {
