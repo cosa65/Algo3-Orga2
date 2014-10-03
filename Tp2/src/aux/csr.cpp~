@@ -92,7 +92,7 @@ void MatrizE::mostrar(){
 	}
 }
 
-vector<double> MatrizE::Producto (vector<double>& x) {
+vector<double> MatrizE::Producto (vector<double> x) {
 	int lim=x.size();
 	vector<double> res(lim);
 	for (int i=1;i<=lim;i++) {
@@ -108,7 +108,7 @@ vector<double> MatrizE::Ptransp (vector<double> x) { //transpuesto, no transepsu
 	vector<double> res(lim);
 	for (int i=1;i<=lim;i++) {
 		int suma=0;
-		for (int j=0;j<lim;j++) {
+		for (int j=1;j<=lim;j++) {
 			suma+=Posicion(j,i)*x[j-1]; //¿soy un picarón o no?
 		} res[i-1]=suma;
 	} return res;

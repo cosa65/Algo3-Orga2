@@ -107,8 +107,8 @@ vector<double> MatrizE::Ptransp (vector<double> x) { //transpuesto, no transepsu
 	int lim=x.size();
 	vector<double> res(lim);
 	for (int i=1;i<=lim;i++) {
-		int suma=0;
-		for (int j=0;j<lim;j++) {
+		double suma=0;
+		for (int j=1;j<=lim;j++) {
 			suma+=Posicion(j,i)*x[j-1]; //¿soy un picarón o no?
 		} res[i-1]=suma;
 	} return res;
