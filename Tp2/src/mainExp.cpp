@@ -49,7 +49,7 @@ Datos cargar(char* in) {
 	int tipo;
 	string path;
 	double tolerancia;
-    archivo >> metodo;
+    	archivo >> metodo;
 	archivo >> c;
 	archivo >> tipo;
 	archivo >> path;
