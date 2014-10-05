@@ -3,13 +3,15 @@
 
 using namespace std;
 
-// ejemplo :   ".\snapper a b"  a = c, b = tolerancia
+// ejemplo :   ".\snapper A B C"  A = c, B = tolerancia, C = nombredearchivos.txt
 
 
 int main(int argc, char *argv[]){
 
 	char *c = argv[1];
 	char *tolerancia = argv[2];
+	char *nombre = argv[3];
+
 
 	ifstream nodes;
 	nodes.open("nodes");
@@ -19,7 +21,7 @@ int main(int argc, char *argv[]){
 	nodes >> nodos;
 
 	ofstream saltxt;
-	saltxt.open("salida.txt");	
+	saltxt.open(nombre);	
 	saltxt << "# Directed graph (each unordered pair of nodes is saved once): " << endl
 			<< "# Example shown in the Bryan and Leise." << endl
 			<< "# Nodes: " << nodos << " Edges: " << endl
@@ -47,8 +49,8 @@ int main(int argc, char *argv[]){
 	saltxt << endl;
 
 	ofstream salin;
-	salin.open("salida.in");
-	salin << "1 " << c << " 1 " << "salida.txt " << tolerancia << endl;
+	salin.open("renombrame.in");
+	salin << "1 " << c << " 1 " << nombre << " " << tolerancia << endl;
 
 	return 0;
 
