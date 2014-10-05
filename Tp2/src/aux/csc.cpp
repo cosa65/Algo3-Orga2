@@ -7,7 +7,7 @@ using namespace std;
 typedef vector<double> Columna;
 
 //generador basico, no se usa
-//Matriz();
+MatrizE::MatrizE(){}
 
 //~Matriz();
 

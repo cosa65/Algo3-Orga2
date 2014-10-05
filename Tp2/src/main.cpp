@@ -1,5 +1,4 @@
 #include "aux/matriz.h"
-#include "aux/csc.h"
 #include "aux/Datos.h"
 #include "aux/ops.cpp"
 #include <fstream>
@@ -11,34 +10,31 @@ void cargarSNAP (Datos& d, const char* path) {
 	archivo2.open(path);
 
 	string basura;
-	int nodos,links;
+	int nodos;
 	getline (archivo2,basura);
 	getline (archivo2,basura);
 	archivo2 >> basura;
 	archivo2 >> basura;
 	archivo2 >> nodos;
-	d._nodos=nodos;
+	d.defNodos(nodos);
 	archivo2 >> basura;
-	archivo2 >> links;
-	d.DefLinks(links);
+	archivo2 >> basura;
 	getline (archivo2,basura);
 	getline (archivo2,basura); //mejorar esto para que corra todos los tests
-	int a,b;
-	for (int i=0;i<links;i++) {
+	int a;int b;
+	int aant=1; int bant=1; bool listo=false;
+	for (int i=0;!listo;i++) {
+		aant=a;
+		bant=b;
 		archivo2 >> a;
 		archivo2 >> b;
-		d.agLink(a,b,i);
+		if (a!=aant||b!=bant) {
+			d.agLink(a,b);
+		} else {
+			listo=true;
+		}
 	}
 
-}
-
-void cargarToronto (Datos& d, const char* path) {
-	ifstream archivo;
-	archivo.open(path);
-	int nodos;
-	archivo>>nodos;
-	d._nodos=nodos;
-//	esto va a haber que ver muy bien como leer
 }
 
 Datos cargar(char* in) {
@@ -49,7 +45,7 @@ Datos cargar(char* in) {
 	int tipo;
 	string path;
 	double tolerancia;
-    archivo >> metodo;
+        archivo >> metodo;
 	archivo >> c;
 	archivo >> tipo;
 	archivo >> path;
@@ -58,20 +54,9 @@ Datos cargar(char* in) {
 
 	const char* pathEspi=path.c_str();
 	
-	if (tipo==0) {
-		cargarSNAP(d,pathEspi);
-	} else {
-		cargarToronto(d,pathEspi);
-	}
+	cargarSNAP(d,pathEspi);
+
 	return d;
-}
-
-MatrizE Generar(Datos& d) {
-	MatrizE mat=MatrizE(d._nodos,d._nodos);
-
-	for (unsigned int i=0;i<d._inlinks.size();i++) {
-		mat.Definir(1,d._outlinks[i],d._inlinks[i]);
-	} return mat;
 }
 
 vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
@@ -89,7 +74,8 @@ vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 	return xi;
 } 
 
-vector<double> pageRank(Datos& d, MatrizE &matre) {
+vector<double> pageRank(Datos& d) {
+	MatrizE& matre=d._links;
 	int n=matre.Cfilas(); //deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
 	int suma; //Actualizar matriz según algoritmo:
 	for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
@@ -114,7 +100,8 @@ vector<double> pageRank(Datos& d, MatrizE &matre) {
 	return res;
 }
 
-vector<double> HITS(Datos& d, MatrizE& matr) {
+vector<double> HITS(Datos& d) {
+	MatrizE& matr=d._links;
 	vector<double> x(matr.Cfilas());
 	for (unsigned int i=0;i<x.size();i++) {x[i]=1;}
 	vector<double> xmas1=x;
@@ -151,16 +138,15 @@ vector<double> InDeg(MatrizE& matr) {
 int main(int argc, char *argv[])
 {
 	Datos d= cargar(argv[1]);
-	MatrizE matr=Generar(d); //Genera la de CONECTIVIDAD {0,1}^nxn
 	ofstream salida;
 	salida.open(argv[2]);
-	vector<double> res(matr.Cfilas());
+	vector<double> res(d._nodos);
 	if (d._metodo==0) {
-		res=pageRank(d, matr);
+		res=pageRank(d);
 	} else if (d._metodo==1) {
-		res=HITS(d,matr);
+		res=HITS(d);
 	} else { //Según el ayudante, devolver el grado de cada pág
-		res=InDeg(matr);
+		res=InDeg(d._links);
 	} for (unsigned int i=0;i<res.size();i++) {
 		salida << res[i] << endl; 
 	} return 0;
