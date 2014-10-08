@@ -59,7 +59,7 @@ void MatrizE::DefinirCol(double adefinir, int columna) {
 		int i =	_inicioColumnas[columna-1]-1;
 		int j = _inicioColumnas[columna];
 	
-		for (int k=size-1;k>j;k--) {
+		for (int k=size-1;k>j+_Cfilas;k--) {
 			_valores[k]=_valores[k-_Cfilas];
 			_posValores[k]=_posValores[k-_Cfilas];		
 		} 
