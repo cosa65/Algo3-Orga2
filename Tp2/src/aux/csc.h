@@ -22,6 +22,7 @@ MatrizE( int Ccolumnas, int Cfilas);
 MatrizE( vector< double > valores, int cantColumnas, int cantFilas, vector<int> posvalores, vector<int> inicioColumnas);
 
 void Definir(double adefinir, int columna, int fila);
+void DefinirCol(double adefinir, int columna);
 
 double Posicion(int columna, int fila);
 

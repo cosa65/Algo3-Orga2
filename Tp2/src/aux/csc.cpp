@@ -49,6 +49,31 @@ void MatrizE::Definir(double adefinir, int fila, int columna) {
 	} 
 }
 
+void MatrizE::DefinirCol(double adefinir, int columna) {
+	if (adefinir>0) {
+		int size = _valores.size()+_Cfilas;
+
+		_valores.resize(size);
+		_posValores.resize(size);
+
+		int i =	_inicioColumnas[columna-1]-1;
+		int j = _inicioColumnas[columna];
+	
+		for (int k=size-1;k>j;k--) {
+			_valores[k]=_valores[k-_Cfilas];
+			_posValores[k]=_posValores[k-_Cfilas];		
+		} 
+		for (int k=0;k<_Cfilas;k++) {
+			_valores[i+k]=adefinir;
+			_posValores[i+k]=k+1;
+		}
+		for (int k=columna;k<=_Ccolumnas;k++) {
+			_inicioColumnas[k]+=_Cfilas;
+		}
+	} 
+}
+
+
 double MatrizE::Posicion(int fila, int columna) {
 
 	int i =	_inicioColumnas[columna-1]-1;
