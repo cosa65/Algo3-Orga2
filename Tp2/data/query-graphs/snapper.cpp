@@ -51,9 +51,9 @@ int main(int argc, char *argv[]){
 	ofstream salin;
 	salin.open(nombrein);
 	if (c[0]=='-') {
-		salin << "0 " << c << " 1 " << "salida.txt " << tolerancia << endl;
+		salin << "1 " << c << " 1 " << nombretxt << " " << tolerancia << endl;
 	} else {
-		salin << "1 " << c << " 1 " << "salida.txt " << tolerancia << endl;
+		salin << "0 " << c << " 1 " << nombretxt << " " << tolerancia << endl;
 	} return 0;
 
 }
