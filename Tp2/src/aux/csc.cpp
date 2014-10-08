@@ -50,14 +50,14 @@ void MatrizE::Definir(double adefinir, int fila, int columna) {
 }
 
 void MatrizE::DefinirCol(double adefinir, int columna) {
-	if (adefinir>0) {
+	if (adefinir>0) {/*
 		int size = _valores.size()+_Cfilas;
 
 		_valores.resize(size);
 		_posValores.resize(size);
 
 		int i =	_inicioColumnas[columna-1]-1;
-		int j = _inicioColumnas[columna];
+		int j = _inicioColumnas[columna]-1;
 	
 		for (int k=size-1;k>j+_Cfilas;k--) {
 			_valores[k]=_valores[k-_Cfilas];
@@ -69,7 +69,13 @@ void MatrizE::DefinirCol(double adefinir, int columna) {
 		}
 		for (int k=columna;k<=_Ccolumnas;k++) {
 			_inicioColumnas[k]+=_Cfilas;
+	*/
+		for (int i = 1; i<=_Cfilas; i++){
+
+			Definir(adefinir, i,columna);
+
 		}
+
 	} 
 }
 

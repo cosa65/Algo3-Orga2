@@ -89,13 +89,16 @@ vector<double> pageRank(Datos& d) {
 		if (suma>0) {
 			matre.divColCte(i,suma);
 		} else {
-			matre.DefinirCol(1/(float)n,i); //asignar 1/n a todas las filas de los que tienen grado 0
+			matre.DefinirCol(1/(double)n,i); //asignar 1/n a todas las filas de los que tienen grado 0
 		}
 				
-	} Matriz mat(n,n);
+	} 
+	double aDef;
+	Matriz mat(n,n);
 	for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)/n
 		for (int j=1;j<=n;j++) {
-			mat.Definir(matre.Posicion(i,j)*d._c+(1-d._c)/n,i,j);
+			aDef = matre.Posicion(i,j)*(d._c)+(1-(d._c))/n;
+			mat.Definir(aDef,i,j);
 		} 				
 	} 
 	vector<double> res(mat.Cfilas());
@@ -148,7 +151,7 @@ int main(int argc, char *argv[])
 	salida.open(argv[2]);
 	cout << "Por algún motivo está 2 horas haciendo un vector vacío..." << endl;
 	vector<double> res(1);
-	cout << "Calculando...";
+	cout << "Calculando..." <<endl;
 	if (d._metodo==0) {
 		res=pageRank(d);
 	} else if (d._metodo==1) {
