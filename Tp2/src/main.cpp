@@ -118,6 +118,7 @@ vector<double> HITS(Datos& d) {
 		} delta=Norma2(x);
 		x=xmas1;
 		y=matr.Ptransp(x);
+		cout << Norma1(x) << '\t' << Norma1(y) << endl;
 		porCte(y,1/Norma2(y));
 
 	} for (unsigned int i=0;i<x.size();i++) {
