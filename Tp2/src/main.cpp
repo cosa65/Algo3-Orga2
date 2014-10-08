@@ -10,18 +10,23 @@ void cargarSNAP (Datos& d, const char* path) {
 	archivo2.open(path);
 
 	string basura;
+	string aCmp = "Nodes:";
+	string primerString;
+	string segundoString;
 	int nodos;
-	getline (archivo2,basura);
-	getline (archivo2,basura);
-	archivo2 >> basura;
-	archivo2 >> basura;
-	archivo2 >> nodos;
-	d.defNodos(nodos);
-	archivo2 >> basura;
-	archivo2 >> basura;
-	getline (archivo2,basura);
-	getline (archivo2,basura); //mejorar esto para que corra todos los tests
-	int a;int b;
+	char numeral = archivo2.peek();
+	while(numeral == '#'){
+		archivo2 >> primerString;
+		archivo2 >> segundoString;
+		if (segundoString == aCmp){
+			archivo2 >> nodos;
+			d.defNodos(nodos);
+		}
+		getline (archivo2,basura);
+		numeral = archivo2.peek();
+	}
+	int a;
+	int b;
 	int aant=1; int bant=1; bool listo=false;
 	for (int i=0;!listo;i++) {
 		aant=a;
@@ -118,7 +123,6 @@ vector<double> HITS(Datos& d) {
 		} delta=Norma2(x);
 		x=xmas1;
 		y=matr.Ptransp(x);
-		cout << Norma1(x) << '\t' << Norma1(y) << endl;
 		porCte(y,1/Norma2(y));
 
 	} for (unsigned int i=0;i<x.size();i++) {
