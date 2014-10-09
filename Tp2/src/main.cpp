@@ -79,6 +79,8 @@ vector<double> pageRank(Datos& d) {
 	vector<double> xi(n) ; for (int i=0;i<n;i++) {xi[i]=inv;}
 	vector<double> yi(n);
 //	vector<double> v(n) ; for (int i=0;i<n;i++) {v[i]=inv;}
+	ofstream normas;
+	normas.open("Normas",ios_base::app);
 	double w=d._tolerancia+1;
 	while (w>d._tolerancia) {
 		yi=matre.Producto(xi);
@@ -90,6 +92,7 @@ vector<double> pageRank(Datos& d) {
 		} for (int i=0;i<n;i++)  {
 			xi[i]=xi[i]-yi[i];
 		} w=Norma2(xi);
+		normas << w;
 		for (int j=0;j<n;j++) {
 			xi[j]=yi[j]/Norma1(yi); 
 		}
@@ -106,6 +109,8 @@ vector<double> HITS(Datos& d) {
 	vector<double> res(matr.Cfilas()*2);
 	double delta=d._tolerancia+1;
 	porCte(y,1/Norma1(y));
+	ofstream normas;
+	normas.open("Normas",ios_base::app);
 	for (int i=0;delta>d._tolerancia;i++) {
 
 		xmas1=matr.Producto(y);
@@ -113,6 +118,7 @@ vector<double> HITS(Datos& d) {
 		for (unsigned int j=0;j<x.size();j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
+		normas << delta;
 		x=xmas1;
 		y=matr.Ptransp(x);
 		porCte(y,1/Norma2(y));
