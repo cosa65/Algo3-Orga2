@@ -126,7 +126,7 @@ vector<double> HITS(Datos& d) {
 		for (unsigned int j=0;j<y.size();j++) {
 			y[j]=ymas1[j]-y[j];
 		} deltay=Norma2(y);
-		ymas1=y;
+		y=ymas1;
 		normas << deltay << endl;
 
 	} for (unsigned int i=0;i<x.size();i++) {
@@ -145,6 +145,7 @@ vector<double> InDeg(MatrizE& matr) {
 
 int main(int argc, char *argv[])
 {
+	remove("Normas");
 	clock_t t;
 	cout << "Cargando...";
 	Datos d= cargar(argv[1]);
