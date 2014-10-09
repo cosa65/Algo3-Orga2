@@ -2,6 +2,12 @@
 #include <cmath>
 
 
+void mostrar(vector<double> &v) {
+	for (unsigned int i=0;i<v.size();i++) {
+		cout << v[i];
+	}
+}
+
 void porCte(vector<double> &v, double a) {
 	for (unsigned int i=0;i<v.size();i++) {
 		v[i]=v[i]*a;

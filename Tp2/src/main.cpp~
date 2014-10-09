@@ -78,7 +78,7 @@ vector<double> pageRank(Datos& d) {
 	double inv=1/(double)n;
 	vector<double> xi(n) ; for (int i=0;i<n;i++) {xi[i]=inv;}
 	vector<double> yi(n);
-//	vector<double> v(n) ; for (int i=0;i<n;i++) {v[i]=inv;}
+	vector<double> v(n) ; for (int i=0;i<n;i++) {v[i]=inv;}
 	double w=d._tolerancia+1;
 	while (w>d._tolerancia) {
 		yi=matre.Producto(xi);
@@ -86,7 +86,7 @@ vector<double> pageRank(Datos& d) {
 			yi[j]=yi[j]*d._c; //c*P^T*x
 		} w=Norma1(xi)-Norma1(yi);
 		for (int j=0;j<n;j++) {
-			yi[j]+=w*inv; //y+=wv
+			yi[j]+=w*v[j]; //y+=wv
 		} for (int i=0;i<n;i++)  {
 			xi[i]=xi[i]-yi[i];
 		} w=Norma2(xi);

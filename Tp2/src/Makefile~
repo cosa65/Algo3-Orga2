@@ -6,7 +6,7 @@ LDFLAGS=
 
 INCDIR=
 
-SOURCES=main.cpp aux/csc.cpp aux/Datos.h
+SOURCES=main.cpp aux/matriz.cpp aux/csc.cpp aux/Datos.h
 
 OBJECTS=$(SOURCES:.cpp=.o)
 

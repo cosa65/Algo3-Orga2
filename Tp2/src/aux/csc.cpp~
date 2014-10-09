@@ -52,6 +52,21 @@ void MatrizE::Definir(double adefinir, int fila, int columna) {
 void MatrizE::DefinirCol(double adefinir, int columna) {
 	if (adefinir>0) {
 
+		cout << "Valores: ";
+		for (unsigned int i=0;i<_valores.size();i++) {
+			cout << _valores[i] << ' ';
+		} cout << endl;
+
+		cout << "PosValores: ";
+		for (unsigned int i=0;i<_posValores.size();i++) {
+			cout << _posValores[i] << ' ';
+		} cout << endl;
+
+		cout << "Inicio: ";
+		for (unsigned int i=0;i<_inicioColumnas.size();i++) {
+			cout << _inicioColumnas[i] << ' ';
+		} cout << endl;
+
 		int size = _valores.size()+_Cfilas;
 
 		_valores.resize(size);
@@ -64,15 +79,65 @@ void MatrizE::DefinirCol(double adefinir, int columna) {
 			_valores[k]=_valores[k-_Cfilas];
 			_posValores[k]=_posValores[k-_Cfilas];		
 		} 
+		cout << "Valores: ";
+		for (unsigned int i=0;i<_valores.size();i++) {
+			cout << _valores[i] << ' ';
+		} cout << endl;
+
+		cout << "PosValores: ";
+		for (unsigned int i=0;i<_posValores.size();i++) {
+			cout << _posValores[i] << ' ';
+		} cout << endl;
+
+		cout << "Inicio: ";
+		for (unsigned int i=0;i<_inicioColumnas.size();i++) {
+			cout << _inicioColumnas[i] << ' ';
+		} cout << endl;
 
 		for (int k=0;k<_Cfilas;k++) {
 			_valores[i+k]=adefinir;
 			_posValores[i+k]=k+1;
 		}
+
+		cout << "Valores: ";
+		for (unsigned int i=0;i<_valores.size();i++) {
+			cout << _valores[i] << ' ';
+		} cout << endl;
+
+		cout << "PosValores: ";
+		for (unsigned int i=0;i<_posValores.size();i++) {
+			cout << _posValores[i] << ' ';
+		} cout << endl;
+
+		cout << "Inicio: ";
+		for (unsigned int i=0;i<_inicioColumnas.size();i++) {
+			cout << _inicioColumnas[i] << ' ';
+		} cout << endl;
+
 		for (int k=columna;k<=_Ccolumnas;k++) {
 			_inicioColumnas[k]+=_Cfilas;
+	/*
+		for (int i = 1; i<=_Cfilas; i++){
 
+			Definir(adefinir, i,columna);
+*/
 		}
+
+		cout << "Valores: ";
+		for (unsigned int i=0;i<_valores.size();i++) {
+			cout << _valores[i] << ' ';
+		} cout << endl;
+
+		cout << "PosValores: ";
+		for (unsigned int i=0;i<_posValores.size();i++) {
+			cout << _posValores[i] << ' ';
+		} cout << endl;
+
+		cout << "Inicio: ";
+		for (unsigned int i=0;i<_inicioColumnas.size();i++) {
+			cout << _inicioColumnas[i] << ' ';
+		} cout << endl;
+
 	} 
 }
 
