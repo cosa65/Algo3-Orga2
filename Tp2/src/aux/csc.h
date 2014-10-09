@@ -27,11 +27,13 @@ void DefinirCol(double adefinir, int columna);
 double Posicion(int columna, int fila);
 
 int Cfilas();
+int Ccolumnas();
 
 void mostrar();
 
 void divColCte(int col, double cte);
 int contarCol(int col);
+double contarFila(int fila);
 
 vector<double> Producto (vector<double> x);
 vector<double> Ptransp (vector<double> x);

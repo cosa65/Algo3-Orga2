@@ -94,6 +94,10 @@ int MatrizE::Cfilas(){
 	return _Cfilas;
 }
 
+int MatrizE::Ccolumnas(){
+	return _Ccolumnas;
+}
+
 void MatrizE::mostrar(){
 	for (int i=1;i<=_Cfilas;i++) {
 		for (int j=1;j<=_Ccolumnas;j++) {
@@ -114,6 +118,16 @@ int MatrizE::contarCol(int col){
 	int i =	_inicioColumnas[col-1]-1;
 	int j =	_inicioColumnas[col]-1;
 	return j-i;
+}
+
+double MatrizE::contarFila(int fila){
+	double suma =0;
+	for (int i=0; i<_Ccolumnas; i++){
+		if(_posValores[i]==fila){
+			suma+=_valores[i];
+		}
+	}
+	return suma;
 }
 
 vector<double> MatrizE::Producto (vector<double> x) {

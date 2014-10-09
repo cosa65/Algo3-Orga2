@@ -131,9 +131,9 @@ vector<double> HITS(Datos& d) {
 }
 
 vector<double> InDeg(MatrizE& matr) {
-	vector<double> res(matr.Cfilas());
-	for (int i=1;i<=matr.Cfilas();i++) {
-		res[i-1]=matr.contarCol(i);
+	vector<double> res(matr.Ccolumnas());
+	for (int i=1;i<=matr.Ccolumnas();i++) {
+		res[i-1]=matr.contarFila(i);
 	} return res;
 }
 
