@@ -1,4 +1,5 @@
 #include "aux/matriz.h"
+#include <time.h>
 #include "aux/Datos.h"
 #include "aux/ops.cpp"
 #include <fstream>
@@ -11,7 +12,7 @@ void cargarSNAP (Datos& d, const char* path) {
 
 	string basura;
 	string aCmp = "Nodes:";
-	string primerString;
+	string primerString; 
 	string segundoString;
 	int nodos;
 	char numeral = archivo2.peek();
@@ -64,7 +65,7 @@ Datos cargar(char* in) {
 	return d;
 }
 
-vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
+/*vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 	double autoval=0; double delta=tolerancia+1;
 	for (int i=0;delta>tolerancia;i++) {
 		autoval=Norma1(xi);
@@ -78,7 +79,7 @@ vector<double> Potencias (Matriz &A, vector<double> xi, double tolerancia) {
 		xi=ximas1;
 	} 
 	return xi;
-} 
+} */
 
 vector<double> pageRank(Datos& d) {
 	MatrizE& matre=d._links; //deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
@@ -88,24 +89,49 @@ vector<double> pageRank(Datos& d) {
 		suma=matre.contarCol(i);
 		if (suma>0) {
 			matre.divColCte(i,suma);
+		}
+	}
+	double inv=1/(double)n;
+	vector<double> xi(n) ; for (int i=0;i<n;i++) {xi[i]=inv;}
+	vector<double> yi(n);
+	vector<double> v(n) ; for (int i=0;i<n;i++) {v[i]=inv;}
+	double w=d._tolerancia+1;
+	int i=0;
+	while (w>d._tolerancia) {
+		yi=matre.Producto(xi);
+		for (int j=0;j<n;j++) {
+			yi[j]=yi[j]*d._c; //c*P^T*x
+		} w=Norma1(xi)-Norma1(yi);
+		for (int j=0;j<n;j++) {
+			yi[j]+=w*v[j]; //y+=wv
+		} for (int i=0;i<n;i++)  {
+			xi[i]=xi[i]-yi[i];
+		} w=Norma2(xi);
+		for (int j=0;j<n;j++) {
+			xi[j]=yi[j]/Norma1(yi); 
+		}
+	} return xi;
+}
+
+
+
+/*
+		
 		} else {
-			matre.DefinirCol(1/(double)n,i); //asignar 1/n a todas las filas de los que tienen grado 0
+			matre.DefinirCol(1/(float)n,i); //asignar 1/n a todas las filas de los que tienen grado 0
 		}
 				
-	} 
-	double aDef;
-	Matriz mat(n,n);
+	} Matriz mat(n,n);
 	for (int i=1;i<=n;i++) { //multiplicar toda la matriz por c y sumarle (1-c)/n
 		for (int j=1;j<=n;j++) {
-			aDef = matre.Posicion(i,j)*(d._c)+(1-(d._c))/n;
-			mat.Definir(aDef,i,j);
+			mat.Definir(matre.Posicion(i,j)*d._c+(1-d._c)/n,i,j);
 		} 				
 	} 
 	vector<double> res(mat.Cfilas());
 	for (unsigned int i=0;i<res.size();i++) {res[i]=1;}
 	res=Potencias(mat,res,d._tolerancia);
 	return res;
-}
+}*/
 
 vector<double> HITS(Datos& d) {
 	MatrizE& matr=d._links;
@@ -144,21 +170,30 @@ vector<double> InDeg(MatrizE& matr) {
 
 int main(int argc, char *argv[])
 {
+	clock_t t;
+	t = clock();
 	cout << "Cargando...";
 	Datos d= cargar(argv[1]);
 	cout << " ok" << endl;
 	ofstream salida;
 	salida.open(argv[2]);
-	cout << "Por algún motivo está 2 horas haciendo un vector vacío..." << endl;
 	vector<double> res(1);
-	cout << "Calculando..." <<endl;
+	cout << "Calculando...";
 	if (d._metodo==0) {
 		res=pageRank(d);
 	} else if (d._metodo==1) {
 		res=HITS(d);
-	} else { //Según el ayudante, devolver el grado de cada pág
+	} else { //Devolver el grado de cada pág
 		res=InDeg(d._links);
 	} for (unsigned int i=0;i<res.size();i++) {
 		salida << res[i] << endl; 
-	} return 0;
+	}
+		
+	ofstream tiempo;
+	t = clock() - t;
+	tiempo.open("Tiempo");
+	tiempo << "Clocks: "<< (int)t << " segundos: " << ((int)t)/CLOCKS_PER_SEC;
+
+	  return 0;
+
 }
