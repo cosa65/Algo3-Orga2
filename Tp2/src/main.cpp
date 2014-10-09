@@ -84,9 +84,8 @@ vector<double> pageRank(Datos& d) {
 	double w=d._tolerancia+1;
 	while (w>d._tolerancia) {
 		yi=matre.Producto(xi);
-		for (int j=0;j<n;j++) {
-			yi[j]=yi[j]*d._c; //c*P^T*x
-		} w=Norma1(xi)-Norma1(yi);
+		porCte(yi,d._c); //c*P^T*x
+		w=Norma1(xi)-Norma1(yi);
 		for (int j=0;j<n;j++) {
 			yi[j]+=w*inv; //y+=wv
 		} for (int i=0;i<n;i++)  {
@@ -104,10 +103,11 @@ vector<double> HITS(Datos& d) {
 	vector<double> x(matr.Cfilas());
 	for (unsigned int i=0;i<x.size();i++) {x[i]=1;}
 	vector<double> xmas1=x;
+	vector<double> ymas1=x;
 	vector<double> y(matr.Cfilas());
 	for (unsigned int i=0;i<y.size();i++) {y[i]=1;}
 	vector<double> res(matr.Cfilas()*2);
-	double delta=d._tolerancia+1;
+	double delta=d._tolerancia+1;double deltay;
 	porCte(y,1/Norma1(y));
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
@@ -118,10 +118,16 @@ vector<double> HITS(Datos& d) {
 		for (unsigned int j=0;j<x.size();j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
-		normas << delta << endl;
+		normas << delta << '\t';
 		x=xmas1;
-		y=matr.Ptransp(x);
-		porCte(y,1/Norma2(y));
+
+		ymas1=matr.Ptransp(x);
+		porCte(ymas1,1/Norma2(ymas1));
+		for (unsigned int j=0;j<y.size();j++) {
+			y[j]=ymas1[j]-y[j];
+		} deltay=Norma2(y);
+		ymas1=y;
+		normas << deltay << endl;
 
 	} for (unsigned int i=0;i<x.size();i++) {
 		res[i]=x[i]; 
