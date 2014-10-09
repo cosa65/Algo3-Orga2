@@ -92,7 +92,7 @@ vector<double> pageRank(Datos& d) {
 		} for (int i=0;i<n;i++)  {
 			xi[i]=xi[i]-yi[i];
 		} w=Norma2(xi);
-		normas << w;
+		normas << w << endl;
 		for (int j=0;j<n;j++) {
 			xi[j]=yi[j]/Norma1(yi); 
 		}
@@ -118,7 +118,7 @@ vector<double> HITS(Datos& d) {
 		for (unsigned int j=0;j<x.size();j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
-		normas << delta;
+		normas << delta << endl;
 		x=xmas1;
 		y=matr.Ptransp(x);
 		porCte(y,1/Norma2(y));
@@ -140,7 +140,6 @@ vector<double> InDeg(MatrizE& matr) {
 int main(int argc, char *argv[])
 {
 	clock_t t;
-	t = clock();
 	cout << "Cargando...";
 	Datos d= cargar(argv[1]);
 	cout << " ok" << endl;
@@ -148,6 +147,7 @@ int main(int argc, char *argv[])
 	salida.open(argv[2]);
 	vector<double> res(1);
 	cout << "Calculando...";
+	t = clock();
 	if (d._metodo==0) {
 		res=pageRank(d);
 	} else if (d._metodo==1) {
