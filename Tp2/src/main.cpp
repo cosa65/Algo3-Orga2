@@ -102,9 +102,9 @@ vector<double> pageRank(Datos& d) {
 		} 
 		w=Norma2(xi);
 		normas << w << endl;
-		w=Norma1(yi);
+		double aux=Norma1(yi);
 		for (int j=0;j<n;j++) {
-			xi[j]=yi[j]/w; 
+			xi[j]=yi[j]/aux; 
 		}
 	} return xi;
 }
