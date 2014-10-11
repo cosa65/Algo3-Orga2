@@ -85,10 +85,8 @@ vector<double> pageRank(Datos& d) {
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
 	double w=d._tolerancia+1;
-	int k=0;
 	while (w>d._tolerancia) {
-		if (k%100==0) {cout << k<<endl;k++;}
-		cout << k << endl;k++;
+
 		yi=matre.Producto(&(xi));
 		
 		porCte(yi,d._c); //c*P^T*x
@@ -182,7 +180,7 @@ int main(int argc, char *argv[])
 	ofstream tiempo;
 	t = clock() - t;
 	tiempo.open("Tiempo");
-	tiempo << "Clocks: "<< (int)t << " segundos: " << ((int)t)/CLOCKS_PER_SEC << endl;
+	tiempo << "Clocks: "<< (int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 
 	if (argc==4) { //No sé si es la mejor forma de hacerlo, pero es mejor que tener 5 txt iguales.
 		double ces[5];
@@ -194,7 +192,7 @@ int main(int argc, char *argv[])
 			for (unsigned int i=0;i<res.size();i++) {
 				salida << res[i] << endl; 
 			} t = clock() - t;
-			tiempo << "Clocks: "<< (int)t << " segundos: " << ((int)t)/CLOCKS_PER_SEC << endl;
+			tiempo << "Clocks: "<< (int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 		}
 	}
 
