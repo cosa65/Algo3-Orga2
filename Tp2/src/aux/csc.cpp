@@ -131,14 +131,17 @@ double MatrizE::contarFila(int fila){
 }
 
 vector<double> MatrizE::Producto (vector<double> x) {
-	int lim=x.size();
-	vector<double> res(lim);
-	for (int i=1;i<=lim;i++) {
-		double suma=0;
-		for (int j=1;j<=lim;j++) {
-			suma+=Posicion(i,j)*x[j-1];
-		} res[i-1]=suma;
-	} return res;
+	int tam=x.size();
+	vector<double> res(tam);
+	for (int i=0;i<tam;i++) {
+		res[i]=0;
+	}
+	for (int k=0;k<_Ccolumnas;k++) {
+		for (int i=_inicioColumnas[k];i<_inicioColumnas[k+1];i++) {
+			res[_posValores[i-1]-1]+=_valores[i-1]*x[k];
+		}
+	}
+ return res;
 }
 
 vector<double> MatrizE::Ptransp (vector<double> x) { //transpuesto, no transepsual
