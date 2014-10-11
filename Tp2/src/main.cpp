@@ -30,6 +30,9 @@ void cargarSNAP (Datos& d, const char* path) {
 	int b;
 	int aant=1; int bant=1; bool listo=false;
 	for (int i=0;!listo;i++) {
+		if (i%3000==0) {
+			cout << i << endl;
+		}
 		aant=a;
 		bant=b;
 		archivo2 >> a;
@@ -66,9 +69,9 @@ Datos cargar(char* in) {
 }
 
 vector<double> pageRank(Datos& d) {
-	MatrizE& matre=d._links; //deja de ser esparsa, hay que mirar el paper que no miré (kanvar) para ver qué onda eso
+	MatrizE& matre=d._links; 
 	int n=matre.Cfilas(); 
-	int suma; //Actualizar matriz según algoritmo:
+	int suma; 
 	for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
 		suma=matre.contarCol(i);
 		if (suma>0) {
@@ -82,57 +85,67 @@ vector<double> pageRank(Datos& d) {
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
 	double w=d._tolerancia+1;
+	int k=0;
 	while (w>d._tolerancia) {
-		yi=matre.Producto(xi);
+		if (k%100==0) {cout << k<<endl;k++;}
+		cout << k << endl;k++;
+		yi=matre.Producto(&(xi));
+		
 		porCte(yi,d._c); //c*P^T*x
 		w=Norma1(xi)-Norma1(yi);
+
 		for (int j=0;j<n;j++) {
 			yi[j]+=w*inv; //y+=wv
-		} for (int i=0;i<n;i++)  {
+		} 
+		for (int i=0;i<n;i++)  {
 			xi[i]=xi[i]-yi[i];
-		} w=Norma2(xi);
+		} 
+		w=Norma2(xi);
 		normas << w << endl;
+		w=Norma1(yi);
 		for (int j=0;j<n;j++) {
-			xi[j]=yi[j]/Norma1(yi); 
+			xi[j]=yi[j]/w; 
 		}
 	} return xi;
 }
 
 vector<double> HITS(Datos& d) {
 	MatrizE& matr=d._links;
-	vector<double> x(matr.Cfilas());
-	for (unsigned int i=0;i<x.size();i++) {x[i]=1;}
+	int n=matr.Cfilas(); 
+	vector<double> x(n);
+	for (int i=0;i<n;i++) {x[i]=1;}
 	vector<double> xmas1=x;
 	vector<double> ymas1=x;
 	vector<double> y(matr.Cfilas());
-	for (unsigned int i=0;i<y.size();i++) {y[i]=1;}
-	vector<double> res(matr.Cfilas()*2);
+	for (int i=0;i<n;i++) {y[i]=1;}
+	vector<double> res(n*2);
 	double delta=d._tolerancia+1;double deltay;
 	porCte(y,1/Norma1(y));
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
-	for (int i=0;delta>d._tolerancia;i++) {
+	while (delta>d._tolerancia) {
+		xmas1=matr.Producto(&(y));
 
-		xmas1=matr.Producto(y);
 		porCte(xmas1,1/Norma2(xmas1));
-		for (unsigned int j=0;j<x.size();j++) {
+		for (int j=0;j<n;j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
+
 		normas << delta << '\t';
 		x=xmas1;
 
-		ymas1=matr.Ptransp(x);
+		ymas1=matr.Ptransp(&(x));
+
 		porCte(ymas1,1/Norma2(ymas1));
-		for (unsigned int j=0;j<y.size();j++) {
+		for (int j=0;j<n;j++) {
 			y[j]=ymas1[j]-y[j];
 		} deltay=Norma2(y);
 		y=ymas1;
 		normas << deltay << endl;
 
-	} for (unsigned int i=0;i<x.size();i++) {
+	} for (int i=0;i<n;i++) {
 		res[i]=x[i]; 
-	} for (unsigned int i=0;i<y.size();i++) {
-		res[x.size()+i]=y[i]; 
+		res[n+i]=y[i]; 
 	} return res;
 }
 

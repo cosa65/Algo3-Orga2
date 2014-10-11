@@ -49,6 +49,32 @@ void MatrizE::Definir(double adefinir, int fila, int columna) {
 	} 
 }
 
+void MatrizE::DefinirUnos(int fila, int columna) {
+	int size = _valores.size()+1;
+
+	_valores.resize(size);
+	_posValores.resize(size);
+
+	int i =	_inicioColumnas[columna-1]-1;
+	int j = _inicioColumnas[columna];
+	int lugar=j-1;
+	for (int k=i;k<j;k++) {
+		if (_posValores[k]>fila) {
+			lugar=k;
+			k=j;	
+		}
+	} 
+
+	for (int k=size-1;k>lugar;k--) {
+		_posValores[k]=_posValores[k-1];		
+	} _valores[size-1]=1;
+	_posValores[lugar]=fila;
+
+	for (int i=columna;i<=_Ccolumnas;i++) {
+		_inicioColumnas[i]++;
+	}
+}
+
 void MatrizE::DefinirCol(double adefinir, int columna) {
 	if (adefinir>0) {
 
@@ -130,27 +156,27 @@ double MatrizE::contarFila(int fila){
 	return suma;
 }
 
-vector<double> MatrizE::Producto (vector<double> x) {
-	int tam=x.size();
+vector<double> MatrizE::Producto (vector<double>* x) {
+	int tam=x->size();
 	vector<double> res(tam);
 	for (int i=0;i<tam;i++) {
 		res[i]=0;
 	}
 	for (int k=0;k<_Ccolumnas;k++) {
 		for (int i=_inicioColumnas[k];i<_inicioColumnas[k+1];i++) {
-			res[_posValores[i-1]-1]+=_valores[i-1]*x[k];
+			res[_posValores[i-1]-1]+=_valores[i-1]*(*x)[k];
 		}
 	}
  return res;
 }
 
-vector<double> MatrizE::Ptransp (vector<double> x) { //transpuesto, no transepsual
-	int tam=x.size();
+vector<double> MatrizE::Ptransp (vector<double>* x) { //transpuesto, no transepsual
+	int tam=x->size();
 	vector<double> res(tam);
 	for (int k=0;k<_Ccolumnas;k++) {
 		double suma=0;
 		for (int i=_inicioColumnas[k];i<_inicioColumnas[k+1];i++) {
-			suma+=_valores[i-1]*x[_posValores[i-1]-1];
+			suma+=_valores[i-1]*(*x)[_posValores[i-1]-1];
 		} res[k]=suma;
 	} return res;
 }

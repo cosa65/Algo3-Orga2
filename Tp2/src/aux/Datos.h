@@ -28,5 +28,5 @@ void Datos::defNodos(int n) {
 }
 
 void Datos::agLink(int src, int dst) {
-	_links.Definir(1,dst,src);
+	_links.DefinirUnos(dst,src);
 }

@@ -8,7 +8,7 @@ void porCte(vector<double> &v, double a) {
 	}
 }
 
-double Norma1 (vector<double> v) {
+double Norma1 (vector<double>& v) {
 	unsigned int lim=v.size();
 	double suma=0;
 	for (unsigned int i=0;i<lim;i++) {
@@ -17,7 +17,7 @@ double Norma1 (vector<double> v) {
 	return suma;
 }
 
-double Norma2 (vector<double> v) {
+double Norma2 (vector<double>& v) {
 	unsigned int lim=v.size();
 	double suma=0;
 	for (unsigned int i=0;i<lim;i++) {
