@@ -16,25 +16,24 @@ MatrizE();
 
 //generador que te crea una matriz de un tamaño, no pide vectores
 
-MatrizE( int Ccolumnas, int Cfilas);
+MatrizE( long int Ccolumnas, long int Cfilas);
 
 //generador que te crea la matriz con los vectores que le pasaste
-MatrizE( vector< double > valores, int cantColumnas, int cantFilas, vector<int> posvalores, vector<int> inicioColumnas);
+MatrizE( vector< double > valores, long int cantColumnas, long int cantFilas, vector<long int> posvalores, vector<long int> inicioColumnas);
 
-void Definir(double adefinir, int columna, int fila);
-void DefinirUnos(int columna, int fila);
-void DefinirCol(double adefinir, int columna);
+void Definir(double adefinir, long int columna, long int fila);
+void DefinirCol(long int columna, vector<long int>* filas);
 
-double Posicion(int columna, int fila);
+double Posicion(long int columna, long int fila);
 
-int Cfilas();
-int Ccolumnas();
+long int Cfilas();
+long int Ccolumnas();
 
 void mostrar();
 
-void divColCte(int col, double cte);
-int contarCol(int col);
-double contarFila(int fila);
+void divColCte(long int col, double cte);
+long int contarCol(long int col);
+double contarFila(long int fila);
 
 vector<double> Producto (vector<double>* x);
 vector<double> Ptransp (vector<double>* x);
@@ -43,12 +42,12 @@ private:
 
 vector <double> _valores;
 
-vector <int> _posValores;
+vector <long int> _posValores;
 
-vector <int> _inicioColumnas;
+vector <long int> _inicioColumnas;
 
-int _Ccolumnas;
+long int _Ccolumnas;
 
-int _Cfilas;
+long int _Cfilas;
 
 };

@@ -1,4 +1,3 @@
-//#include "aux/matriz.h"
 #include <time.h>
 #include "aux/Datos.h"
 #include "aux/ops.cpp"
@@ -14,7 +13,7 @@ void cargarSNAP (Datos& d, const char* path) {
 	string aCmp = "Nodes:";
 	string primerString; 
 	string segundoString;
-	int nodos;
+	long int nodos;
 	char numeral = archivo2.peek();
 	while(numeral == '#'){
 		archivo2 >> primerString;
@@ -26,22 +25,26 @@ void cargarSNAP (Datos& d, const char* path) {
 		getline (archivo2,basura);
 		numeral = archivo2.peek();
 	}
-	int a;
-	int b;
-	int aant=1; int bant=1; bool listo=false;
-	for (int i=0;!listo;i++) {
-		if (i%3000==0) {
-			cout << i << endl;
-		}
+	long int a=1;
+	long int b=-1;
+	long int aant; long int bant; bool listo=false;
+	for (long int i=0;!listo;i++) {
+		if (i%1000==0) {cout << i << endl;}
+		vector<long int> filas;
 		aant=a;
-		bant=b;
-		archivo2 >> a;
-		archivo2 >> b;
-		if (a!=aant||b!=bant) {
-			d.agLink(a,b);
-		} else {
-			listo=true;
-		}
+		for (long int j=0;a==aant;j++) {
+			aant=a;
+			bant=b;
+			archivo2 >> a;
+			archivo2 >> b;
+			if (bant>-1) {
+				filas.push_back(bant);
+			}
+			if (a==aant && b==bant) {
+				a=aant+1;
+				listo=true;
+			}
+		} d.agMuchosLinks(aant,&(filas));
 	}
 
 }
@@ -70,18 +73,17 @@ Datos cargar(char* in) {
 
 vector<double> pageRank(Datos& d) {
 	MatrizE& matre=d._links; 
-	int n=matre.Cfilas(); 
-	int suma; 
-	for (int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+	long int n=matre.Cfilas(); 
+	long int suma; 
+	for (long int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
 		suma=matre.contarCol(i);
 		if (suma>0) {
 			matre.divColCte(i,suma);
 		}
 	}
 	double inv=1/(double)n;
-	vector<double> xi(n) ; for (int i=0;i<n;i++) {xi[i]=inv;}
+	vector<double> xi(n) ; for (long int i=0;i<n;i++) {xi[i]=inv;}
 	vector<double> yi(n);
-//	vector<double> v(n) ; for (int i=0;i<n;i++) {v[i]=inv;}
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
 	double w=d._tolerancia+1;
@@ -92,16 +94,16 @@ vector<double> pageRank(Datos& d) {
 		porCte(yi,d._c); //c*P^T*x
 		w=Norma1(xi)-Norma1(yi);
 
-		for (int j=0;j<n;j++) {
+		for (long int j=0;j<n;j++) {
 			yi[j]+=w*inv; //y+=wv
 		} 
-		for (int i=0;i<n;i++)  {
+		for (long int i=0;i<n;i++)  {
 			xi[i]=xi[i]-yi[i];
 		} 
 		w=Norma2(xi);
 		normas << w << endl;
 		double aux=Norma1(yi);
-		for (int j=0;j<n;j++) {
+		for (long int j=0;j<n;j++) {
 			xi[j]=yi[j]/aux; 
 		}
 	} return xi;
@@ -109,13 +111,13 @@ vector<double> pageRank(Datos& d) {
 
 vector<double> HITS(Datos& d) {
 	MatrizE& matr=d._links;
-	int n=matr.Cfilas(); 
+	long int n=matr.Cfilas(); 
 	vector<double> x(n);
-	for (int i=0;i<n;i++) {x[i]=1;}
+	for (long int i=0;i<n;i++) {x[i]=1;}
 	vector<double> xmas1=x;
 	vector<double> ymas1=x;
 	vector<double> y(matr.Cfilas());
-	for (int i=0;i<n;i++) {y[i]=1;}
+	for (long int i=0;i<n;i++) {y[i]=1;}
 	vector<double> res(n*2);
 	double delta=d._tolerancia+1;double deltay;
 	porCte(y,1/Norma1(y));
@@ -125,7 +127,7 @@ vector<double> HITS(Datos& d) {
 		xmas1=matr.Producto(&(y));
 
 		porCte(xmas1,1/Norma2(xmas1));
-		for (int j=0;j<n;j++) {
+		for (long int j=0;j<n;j++) {
 			x[j]=xmas1[j]-x[j];
 		} delta=Norma2(x);
 
@@ -135,13 +137,13 @@ vector<double> HITS(Datos& d) {
 		ymas1=matr.Ptransp(&(x));
 
 		porCte(ymas1,1/Norma2(ymas1));
-		for (int j=0;j<n;j++) {
+		for (long int j=0;j<n;j++) {
 			y[j]=ymas1[j]-y[j];
 		} deltay=Norma2(y);
 		y=ymas1;
 		normas << deltay << endl;
 
-	} for (int i=0;i<n;i++) {
+	} for (long int i=0;i<n;i++) {
 		res[i]=x[i]; 
 		res[n+i]=y[i]; 
 	} return res;
@@ -149,7 +151,7 @@ vector<double> HITS(Datos& d) {
 
 vector<double> InDeg(MatrizE& matr) {
 	vector<double> res(matr.Ccolumnas());
-	for (int i=1;i<=matr.Ccolumnas();i++) {
+	for (long int i=1;i<=matr.Ccolumnas();i++) {
 		res[i-1]=matr.contarFila(i);
 	} return res;
 }
@@ -173,26 +175,26 @@ int main(int argc, char *argv[])
 	} else { //Devolver el grado de cada pág
 		res=InDeg(d._links);
 	} cout << " ok" << endl;
-	for (unsigned int i=0;i<res.size();i++) {
+	for (unsigned long int i=0;i<res.size();i++) {
 		salida << res[i] << endl; 
 	} 
 		
 	ofstream tiempo;
 	t = clock() - t;
 	tiempo.open("Tiempo");
-	tiempo << "Clocks: "<< (int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
+	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 
 	if (argc==4) { //No sé si es la mejor forma de hacerlo, pero es mejor que tener 5 txt iguales.
 		double ces[5];
 		ces[0]=0.5;ces[1]=0.7;ces[2]=0.85;ces[3]=0.95;
-		for (int i=0;i<=3;i++) {
+		for (long int i=0;i<=3;i++) {
 			t = clock();			
 			d._c=ces[i];
 			res=pageRank(d);
-			for (unsigned int i=0;i<res.size();i++) {
+			for (unsigned long int i=0;i<res.size();i++) {
 				salida << res[i] << endl; 
 			} t = clock() - t;
-			tiempo << "Clocks: "<< (int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
+			tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 		}
 	}
 

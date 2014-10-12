@@ -3,6 +3,7 @@
 #include <fstream>
 #include "aux/matriz.h"
 #include "aux/Parabrisas.h"
+#include <time.h>
 #include <math.h>
 #include <cmath>
 using namespace std;
@@ -178,6 +179,9 @@ void devolver (Parabrisas p, Matriz &matr, vector<long double> x, char* out) {
 
 int main(int argc, char *argv[])
 {
+	clock_t t;
+	t = clock();
+
 	Parabrisas p= cargar(argv[1]);
 	Matriz matr;
 	if (*argv[3]=='1') {
@@ -188,6 +192,12 @@ int main(int argc, char *argv[])
 	EliminacionGaussiana(matr);
 	vector<long double> x=ResolucionFosquiMan(matr);
 	devolver(p,matr,x,argv[2]);
+
+	ofstream tiempo;
+	t = clock() - t;
+	tiempo.open("Tiempo");
+	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
+
 	if (argc>3) {
 		int centro=x.size()/2;		
 		ofstream f3;
@@ -200,6 +210,8 @@ int main(int argc, char *argv[])
 			x=ResolucionFosquiMan(matr);
 			f3 << sx << " " << sy << " " << x[centro] << endl;
 		}
-	
+	t = clock() - t;
+	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
+
 	} return 0;
 }
