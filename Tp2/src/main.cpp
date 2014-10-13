@@ -25,11 +25,11 @@ void cargarSNAP (Datos& d, const char* path) {
 		getline (archivo2,basura);
 		numeral = archivo2.peek();
 	}
-	long int a=1;
+	long int a=0;
 	long int b=-1;
 	long int aant; long int bant; bool listo=false;
 	for (long int i=0;!listo;i++) {
-		if (i%1000==0) {cout << i << endl;}
+		if (i%1000==999) {cout << i+1 << endl;}
 		vector<long int> filas;
 		aant=a;
 		for (long int j=0;a==aant;j++) {
@@ -44,8 +44,8 @@ void cargarSNAP (Datos& d, const char* path) {
 				a=aant+1;
 				listo=true;
 			}
-		} d.agMuchosLinks(aant,&(filas));
-	}
+		} d._links.DefinirCol(aant,&(filas));
+	} 
 
 }
 
@@ -75,7 +75,7 @@ vector<double> pageRank(Datos& d) {
 	MatrizE& matre=d._links; 
 	long int n=matre.Cfilas(); 
 	long int suma; 
-	for (long int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+	for (long int i=0;i<n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
 		suma=matre.contarCol(i);
 		if (suma>0) {
 			matre.divColCte(i,suma);
@@ -151,8 +151,8 @@ vector<double> HITS(Datos& d) {
 
 vector<double> InDeg(MatrizE& matr) {
 	vector<double> res(matr.Ccolumnas());
-	for (long int i=1;i<=matr.Ccolumnas();i++) {
-		res[i-1]=matr.contarFila(i);
+	for (long int i=0;i<matr.Ccolumnas();i++) {
+		res[i]=matr.contarFila(i);
 	} return res;
 }
 
