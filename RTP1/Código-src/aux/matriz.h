@@ -26,8 +26,6 @@ void Definir(long double adefinir, int fila, int columna);
 
 void DefinirB(long double def,int fila);
 
-void intercambiarFilas(int fila1, int fila2);
-
 void restarFilas(int filaRestada, int filaQueResta, long double multFilaARestar);
 
 long double Posicion(int fila, int columna);
@@ -39,6 +37,8 @@ int Cfilas();
 int Ccolumnas();
 
 int TamTotal();
+
+int anchoBanda();	 
 
 void mostrar();
 

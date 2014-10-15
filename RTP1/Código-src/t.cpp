@@ -8,7 +8,7 @@
 #include <cmath>
 using namespace std;
 
-int tol=pow(10,-10);
+float tol=pow(10,-10);
 
 bool enSanguijuela (vector <long double> vx, vector <long double> vy, double x, double y, int r) {
 	for(unsigned int i=0;i<vx.size();i++) {
@@ -81,8 +81,7 @@ Matriz gMatriz(Parabrisas &p) {
 				} m.DefinirB(0,i); ///Agrega un 0 en los términos independientes
 			} 
 		}
-	}
-	return m;
+	} return m;
 }
 
 Matriz gMatrizB(Parabrisas &p) {
@@ -132,11 +131,12 @@ void EliminacionGaussiana (Matriz &mat){
 		
 		for(int j=i+1; j<=filas; j++){
 
-			if(abs(mat.Posicion(j,i))>=tol){ 
+			if(abs(mat.Posicion(i,i))>=tol && abs(mat.Posicion(j,i))>=tol){ 
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
-				mat.Definir(0,i,i);
-			}
+			} /* else {
+				mat.Definir(0,j,i)
+			} */
 		}
 	}
 }
@@ -147,11 +147,12 @@ void EliminacionGaussianaB (Matriz &mat){
 	for(int i=1; i<=filas; i++){
 		
 		for(int j=i+1; j<=filas && j<i+mat.anchoBanda(); j++){
-			if(abs(mat.Posicion(j,i))>=tol){
+			if(abs(mat.Posicion(i,i))>=tol && abs(mat.Posicion(j,i))>=tol){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
-				mat.Definir(0,i,i);
-			}
+			} /* else {
+				mat.Definir(0,j,i)
+			} */
 		}
 	}
 }
@@ -205,7 +206,7 @@ int main(int argc, char *argv[])
 	tiempo.open("Tiempo");
 	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 
-	if (argc>3) {
+	if (argc>4) {
 		int centro=x.size()/2;		
 		ofstream f3;
 	    	f3.open(argv[4]);
@@ -216,10 +217,7 @@ int main(int argc, char *argv[])
 			EliminacionGaussianaB(matr);
 			x=ResolucionFosquiMan(matr);
 			f3 << sx << " " << sy << " " << x[centro] << endl;
-		}
-
-	t = clock() - t;
-	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
-
+		} t = clock() - t;
+		tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 	} return 0;
 }
