@@ -1,3 +1,4 @@
+//#include "aux/matriz.h"
 #include <time.h>
 #include "aux/Datos.h"
 #include "aux/ops.cpp"
@@ -25,36 +26,35 @@ void cargarSNAP (Datos& d, const char* path) {
 		getline (archivo2,basura);
 		numeral = archivo2.peek();
 	}
-	long int a=0;
-	long int b=-1;
-	long int aant; long int bant; bool listo=false;
+	long int a;
+	long int b;
+	long long int aant=1;long long int bant=1; 
+	bool listo=false;
 	for (long int i=0;!listo;i++) {
-		if (i%1000==999) {cout << i+1 << endl;}
-		vector<long int> filas;
+		if (i%3000==0) {
+			cout << i << endl;
+		}
 		aant=a;
-		for (long int j=0;a==aant;j++) {
-			aant=a;
-			bant=b;
-			archivo2 >> a;
-			archivo2 >> b;
-			if (bant>-1) {
-				filas.push_back(bant);
-			}
-			if (a==aant && b==bant) {
-				a=aant+1;
-				listo=true;
-			}
-		} d._links.DefinirCol(aant,&(filas));
-	} 
+		bant=b;
+		archivo2 >> a;
+		archivo2 >> b;
+		if (a!=aant || b!=bant) {
+			d.agLink(a,b);
+		} else {
+			listo=true;
+		}
+
+
+	}
 
 }
 
 Datos cargar(char* in) {
 	ifstream archivo;
 	archivo.open(in);
-	int metodo;
+	long int metodo;
 	double c;
-	int tipo;
+	long int tipo;
 	string path;
 	double tolerancia;
         archivo >> metodo;
@@ -75,7 +75,7 @@ vector<double> pageRank(Datos& d) {
 	MatrizE& matre=d._links; 
 	long int n=matre.Cfilas(); 
 	long int suma; 
-	for (long int i=0;i<n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
+	for (long int i=1;i<=n;i++) { //En cada columna, calcular el grado y dividir cada elemento por él
 		suma=matre.contarCol(i);
 		if (suma>0) {
 			matre.divColCte(i,suma);
@@ -84,6 +84,7 @@ vector<double> pageRank(Datos& d) {
 	double inv=1/(double)n;
 	vector<double> xi(n) ; for (long int i=0;i<n;i++) {xi[i]=inv;}
 	vector<double> yi(n);
+//	vector<double> v(n) ; for (long int i=0;i<n;i++) {v[i]=inv;}
 	ofstream normas;
 	normas.open("Normas",ios_base::app);
 	double w=d._tolerancia+1;
@@ -151,8 +152,8 @@ vector<double> HITS(Datos& d) {
 
 vector<double> InDeg(MatrizE& matr) {
 	vector<double> res(matr.Ccolumnas());
-	for (long int i=0;i<matr.Ccolumnas();i++) {
-		res[i]=matr.contarFila(i);
+	for (long int i=1;i<=matr.Ccolumnas();i++) {
+		res[i-1]=matr.contarFila(i);
 	} return res;
 }
 

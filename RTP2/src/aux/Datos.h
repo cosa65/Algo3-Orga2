@@ -7,6 +7,7 @@ struct Datos
 {
 	Datos(long int metodo, double c, double tolerancia);
 	void defNodos(long int n);
+	void agLink(long int src, long int dst);
 
 	long int _metodo;
 	double _c;
@@ -24,4 +25,8 @@ Datos::Datos(long int metodo, double c, double tolerancia){
 void Datos::defNodos(long int n) {
 	_nodos=n;
 	_links=MatrizE(n,n);
+}
+
+void Datos::agLink(long int src, long int dst) {
+	_links.DefinirUnos(dst,src);
 }
