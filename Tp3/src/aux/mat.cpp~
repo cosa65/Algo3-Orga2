@@ -21,6 +21,8 @@ Matriz::Matriz(vector< vector<pixel> > filas, int cantfilas, int cantcolumnas){
 
 }
 
+
+
 uint Matriz::sumarVec(int x, int y, int dirx, int diry){
 
 	uint res;

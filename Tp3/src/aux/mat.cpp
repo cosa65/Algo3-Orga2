@@ -21,7 +21,14 @@ Matriz::Matriz(vector< vector<pixel> > filas, int cantfilas, int cantcolumnas){
 
 }
 
+void Matriz::Definir( def,int fila, int columna) {
+	if (_banda) {
+		_array[fila-1][columna-fila+_anchoBanda/2]=def;
+	} else {
+		_array[fila - 1][columna - 1] = def; 
+	}
 
+}
 
 uint Matriz::sumarVec(int x, int y, int dirx, int diry){
 
