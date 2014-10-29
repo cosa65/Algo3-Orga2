@@ -40,7 +40,7 @@ int TamTotal();
 
 void mostrar();
 
-uint sumarVec(int x, int y, dirx, diry)
+uint sumarVec(int x, int y, int dirx, int diry)
 
 private:
 

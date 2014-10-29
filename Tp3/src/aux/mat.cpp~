@@ -3,6 +3,12 @@
 
 using namespace std;
 
+void sumarcolor(pixel in, uint &res, char color){
+	if(color == 'r'){res += res.red;}
+	if(color == 'g'){res += res.green;}
+	if(color == 'b'){res += res.blue;}
+}
+
 Matriz::Matriz( int cantfilas, int cantcolumnas){
 	_array.resize(cantfilas); 
 	for (int i = 0; i < cantfilas; i++){
@@ -21,22 +27,33 @@ Matriz::Matriz(vector< vector<pixel> > filas, int cantfilas, int cantcolumnas){
 
 }
 
+void Matriz::Definir( def,int fila, int columna) {
+	if (_banda) {
+		_array[fila-1][columna-fila+_anchoBanda/2]=def;
+	} else {
+		_array[fila - 1][columna - 1] = def; 
+	}
 
+}
 
-uint Matriz::sumarVec(int x, int y, int dirx, int diry){
+uint sumarVec(int x, int y, int dirx, int diry, char color){
 
-	uint res;
+	uint res=0;
 
 	int cols = _Ccolumnas;
 	int fils = _Cfilas;
 
-	if(dirx == 1 && diry == 0){
+	int i=x;
+	int j=y;
 
-		for (int i=0; int i<Ccolumnas; i++){
+	while(i<=_Ccolumnas && j<=_Ccolumnas){
 
-				
 
-		}
+}
+
+		for (int i=x int j=y; int i<Ccolumnas; i+=dirx j+=diry){
+
+			sumarcolor(, res, color);
 
 	}
 

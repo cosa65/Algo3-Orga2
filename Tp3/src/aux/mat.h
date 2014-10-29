@@ -10,9 +10,9 @@ struct pixel
 
 pixel(uint rojoIn, uint verdeIn, uint azulIn);
 
-uint rojo;
-uint verde;
-uint azul;
+uint res;
+uint green;
+uint blue;
 
 };
 
@@ -54,10 +54,10 @@ int _Ccolumnas;
 
 pixel :: pixel(uint rojoIn, uint verdeIn, uint azulIn){
 
-rojo = rojoIn;
+red = rojoIn;
 
-verde = verdeIn;
+green = verdeIn;
 
-azul = azulIn;
+blue = azulIn;
 
 }
