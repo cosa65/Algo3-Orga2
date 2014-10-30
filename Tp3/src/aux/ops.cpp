@@ -31,3 +31,18 @@ char color(int fila, int columna) {
         return 'G';
     } return 'R';
 }
+
+int evaluareninterpolante(int x, vector<int> xn, vector<int> yn) {
+	int n=xn.size();
+	int acum=0;
+	for int (i=0;i<n;i++) {
+		double semiacum=yn[i];
+		for (int j=0;j<n;j++) {
+			if (i!=j) {
+				semiacum*=(x-xn[j])/(float)(xn[i]-xn[j]);
+			}
+		} acum+=semiacum;
+	} return acum;
+}
+
+//Probablemente no haga falta guardar xn
