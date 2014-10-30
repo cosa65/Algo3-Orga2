@@ -139,9 +139,9 @@ void Matriz::IBilinealG() {
 		for (int i=1;i<=_Cfilas/2;i++) {
             pixel pg=Posicion(i*2-1,j*2); // verde
             pixel pb=Posicion(i*2,j*2); //azul
-            //pg.blue=pb.blue+Posicion(i*2-2,j*2).blue;
-            Definir(pg,i*2-1,j*2);
-            pb.green=pg.green+Posicion(i*2+1,j*2).green;
+            //pg.blue=(pb.blue+Posicion(i*2-2,j*2).blue)/2;
+            //Definir(pg,i*2-1,j*2);
+            pb.green=(pg.green+Posicion(i*2+1,j*2).green)/2;
             Definir(pb,i*2,j*2);
 		}
 	}
@@ -154,13 +154,17 @@ void Matriz::IBilinealRB() {
             pixel pr=Posicion(i*2-1,j*2-1); // rojo
             pixel pg=Posicion(i*2-1,j*2); //verde
             //pr.green=(pg.green+Posicion(i*2-1,j*2-2).green)/2;
+            //Definir(pr,i*2-1,j*2-1);
             pg.red=(pr.red+Posicion(i*2-1,j*2+1).red)/2;
+	        Definir(pg,i*2-1,j*2-1);
 		}
 		for (int j=1;j<=_Ccolumnas/2;j++) {
             pixel pg=Posicion(i*2,j*2-1); // verde
             pixel pb=Posicion(i*2,j*2); //azul
             pg.blue=(pb.blue+Posicion(i*2,j*2-2).blue)/2;
+            Definir(pg,i*2,j*2-1);
             //pb.green=(pg.green+Posicion(i*2,j*2+1).green)/2;
+            //Definir(pb,i*2,j*2);
 		}
 	}
 //Vertical
@@ -169,13 +173,17 @@ void Matriz::IBilinealRB() {
             pixel pr=Posicion(i*2-1,j*2-1); // rojo
             pixel pg=Posicion(i*2,j*2-1); //verde
             //pr.green=(pg.green+Posicion(i*2-2,j*2-1).green)/2;
+            //Definir(pr,i*2-1,j*2-1);
             pg.red=(pr.red+Posicion(i*2+1,j*2-1).red)/2;
+            Definir(pg,i*2,j*2-1);
 		}
 		for (int i=1;i<=_Cfilas/2;i++) {
             pixel pg=Posicion(i*2-1,j*2); // verde
             pixel pb=Posicion(i*2,j*2); //azul
             pg.blue=(pb.blue+Posicion(i*2-2,j*2).blue)/2;
+            Definir(pg,i*2-1,j*2);
             //pb.green=(pg.red+Posicion(i*2+1,j*2).green)/2;
+            //Definir(pb,i*2,j*2);
 		}
 	}
 }
