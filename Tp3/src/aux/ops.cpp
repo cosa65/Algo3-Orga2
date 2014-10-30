@@ -21,3 +21,13 @@ uint sumarVec(Matriz mat,int x, int y, int dirx, int diry, char color){
 	return 0;
 
 }
+
+char color(int fila, int columna) {
+    if (fila%2==0) {
+        if (columna%2==0) {
+            return 'B';
+        } return 'G';
+    } if (columna%2==0) {
+        return 'G';
+    } return 'R';
+}
