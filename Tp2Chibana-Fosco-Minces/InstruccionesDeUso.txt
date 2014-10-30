@@ -1,0 +1,8 @@
+El programa "tp" toma como parámetro el nombre del archivo de entrada (.in), luego el nombre del archivo de salida (.out). Al agregar '1' como tercer parámetro, repite el test para PageRank y distintos valores de c. Imprie todos los resultados, junto con las normas y el tiempo de ejecución
+
+Solo corre archivos con el formato SNAP. Para correr un archivo con el formato de la universidad de Toronto, proveemos un archivo "snapper.cpp" que transforma estos archivos al formato snap.
+ejemplo de uso de snapper:
+".\snapper A B C D"  A = c, B = tolerancia, C = nombredearchivosalida.txt, D = nombredearchivosalida.in
+el snapper toma los archivos nodes y adj_list que estén en su mismo directorio para convertir.
+
+Puede no correr los archivos que tienen Nodos numerados como 0 (la numeración debe empezar desde 1).

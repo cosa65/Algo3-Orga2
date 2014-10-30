@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ctime>
-#include "aux/matriz.h"
+#include "aux/ops.cpp"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ int main(){
 	ofstream tiempo;
 	t = clock() - t;
 	tiempo.open("Tiempo");
-	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;*/
+	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 	pixel p;
 	Matriz m(20,10);
 	for (int i=0;i<20;i++) {
@@ -23,7 +23,10 @@ int main(){
 	} m.mostrar();
 	m.IBilinealG();
 	//m.IBilinealRB();
-	m.mostrar();
+	m.mostrar();*/
+
+	//Matriz mat = 
+
 	return 0;
 }
 
