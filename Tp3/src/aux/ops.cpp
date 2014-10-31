@@ -4,34 +4,70 @@ uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int di
 ///Crucen los dedos
 	int C, F;
 
-	if(dirfil==1 && dircol==1){
-		C = posCol;
-		F = posFil;
+	if (dirfil!=0 && dircol !=0){
+
+		if(dirfil==1 && dircol==1){
+			C = posCol;
+			F = posFil;
+		}
+
+		if(dirfil==-1 && dircol==1){
+			C = posCol;
+			F = mat.Cfilas()+1 - posFil;
+		}
+
+		if(dirfil==1 && dircol==-1){
+			F = posFil;
+			C = mat.Ccolumnas()+1 - posCol;
+		}
+
+		if(dirfil==-1 && dircol==-1){
+			C = mat.Ccolumnas()+1 - posCol;
+			F = mat.Cfilas()+1 - posFil;
+		}
+
+		int res;
+		res = C*(C<F) + F*(F<=C);
+
+		primfil = posFil - dirfil*res+dirfil;
+
+		primcol = posCol - dircol*res+dircol;
+
+		return res;		
+
+	} else {
+
+		int res;
+
+		if(dirfil==0 && dircol==1){
+			res = posCol;
+			primfil = posFil;
+			primcol = 1;
+
+		}
+
+		if(dirfil==0 && dircol==-1){
+			res = posCol;
+			primfil = posFil;
+			primcol = mat.Ccolumnas();
+		}
+
+		if(dirfil==1 && dircol==0){
+			res = posFil;
+			primfil = 1;
+			primcol = posCol;
+		}
+
+		if(dirfil==-1 && dircol==0){
+			res = posFil;
+			primfil = mat.Cfilas();
+			primcol = posCol;
+		}
+
+		return res;
+
 	}
 
-	if(dirfil==-1 && dircol==1){
-		C = posCol;
-		F = mat.Cfilas()+1 - posFil;
-	}
-
-	if(dirfil==1 && dircol==-1){
-		F = posFil;
-		C = mat.Ccolumnas()+1 - posCol;
-	}
-
-	if(dirfil==-1 && dircol==-1){
-		C = mat.Ccolumnas()+1 - posCol;
-		F = mat.Cfilas()+1 - posFil;
-	}
-
-
-	int res = C*(C<F) + F*(F<=C);
-
-	primfil = posFil - dirfil*res+dirfil;
-
-	primcol = posCol - dircol*res+dircol;
-
-	return res;					
 }
 
 void VecEnDir(Matriz mat,int col, int fil, int dirfil, int dircol, char color, vector<uint> &vecres, int &size, int &pos){
