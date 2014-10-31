@@ -1,0 +1,104 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{charter}   % tipografia
+\usepackage{graphicx}
+\usepackage{courier}
+%\usepackage{makeidx}
+\usepackage{paralist} %itemize inline
+
+%\usepackage{float}
+\usepackage{amsmath, amsthm, amssymb}
+%\usepackage{amsfonts}
+%\usepackage{sectsty}
+%\usepackage{charter}
+%\usepackage{wrapfig}
+%\usepackage{listings}
+%\lstset{language=C}
+
+
+\input{page.layout}
+% \setcounter{secnumdepth}{2}
+\usepackage{underscore}
+\usepackage{caratula}
+\usepackage{url}
+
+
+\begin{document}
+
+
+\thispagestyle{empty}
+\materia{Métodos Numéricos}
+\submateria{Segundo Cuatrimestre de 2014}
+\titulo{Trabajo Práctico 3}
+\subtitulo{Develando la mentira de los megapíxeles}
+\integrante{Fosco, Martin Esteban}{449/13}{mfosco65@gmail.com}
+\integrante{Minces Müller, Javier Nicolás}{231/13}{javijavi1994@gmail.com}
+\integrante{Chibana, Christian Ezequiel}{586/13}{christian.chiba93@gmail.com}
+
+\maketitle
+\newpage
+
+\thispagestyle{empty}
+\vfill
+\begin{abstract}
+\end{abstract}
+
+\thispagestyle{empty}
+\vspace{3cm}
+\tableofcontents
+\newpage
+
+
+%\normalsize
+\newpage
+
+\section{Introducci\'{o}n Te\'{o}rica}
+\label{sec:intro}
+
+\newpage
+
+\section{Desarrollo}
+\label{sec:desarrollo}
+%Deben explicarse los métodos numéricos que utilizaron y su aplicación al problema concreto involucrado en el trabajo práctico. Se deben mencionar los pasos que siguieron para implementar los algoritmos, las dificultades que fueron encontrando y la descripción de cómo las fueron resolviendo. Explicar también cómo fueron planteadas y realizadas las mediciones experimentales. Los ensayos fallidos, hipótesis y conjeturas equivocadas, experimentos y métodos malogrados deben figurar en esta sección, con una breve explicación de los motivos de estas fallas (en caso de ser conocidas).
+
+
+\newpage
+\section{Resultados}
+\label{sec:res}
+%Deben incluir los resultados de los experimentos, utilizando el formato más adecuados para su presentación. Deberán especificar claramente a qué experiencia corresponde cada resultado. No se incluirán aquí corridas de máquina.
+
+\newpage
+\section{Discusi\'{o}n}
+\label{sec:discusion}
+%Se incluirá aquí un análisis de los resultados obtenidos en la sección anterior (se analizará su validez, coherencia, etc.). Deben analizarse como mínimo los items pedidos en el enunciado. No es aceptable decir que “los resultados fueron los esperados”, sin hacer clara referencia a la teoría la cual se ajustan. Además, se deben mencionar los resultados interesantes y los casos “patológicos” encontrados.
+
+
+\newpage
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+%Esta sección debe contener las conclusiones generales del trabajo. Se deben mencionar las relaciones de la discusión sobre las que se tiene certeza, junto con comentarios y observaciones generales aplicables a todo el proceso. Mencionar también posibles extensiones a los métodos, experimentos que hayan quedado pendientes, etc.
+
+
+\newpage
+
+\section{Apéndice A}
+\label{sec:ApA}
+
+\input{tp3} %que no nos dieron el .tex
+
+\newpage
+%En el apéndice B se incluirán los códigos fuente de las funciones relevantes desde el punto de vista numérico. Resultados que valga la pena mencionar en el trabajo pero que sean demasiado específicos para aparecer en el cuerpo principal del trabajo podrán mencionarse en sucesivos apéndicesaerotulados con las letras mayúsculas del alfabeto romano. Por ejemplo: [la demostración de una propiedad que aplican para optimizar el algoritmo que programaron para resolver un problema].
+
+\section{Referencias}
+\label{sec:ref}
+
+Apuntes de clase
+
+R. Burden y J.D.Faires, Análisis numérico, International Thomson Editors, 1998
+
+Henrique S. Malvar, Li-wei He, and Ross Cutler. High-quality linear interpolation for demosaicing of Bayer-patterned color images. Microsoft Research
+
+\end{document}
