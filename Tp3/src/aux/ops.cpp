@@ -28,12 +28,8 @@ uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int di
 	int res = C*(C<F) + F*(F<=C);
 
 	primfil = posFil - dirfil*res+dirfil;
-	cout << res << endl;
-	cout << "primfil " << primfil << endl;
 
 	primcol = posCol - dircol*res+dircol;
-
-	cout << "primcol " << primcol << endl;
 
 	return res;					
 }
