@@ -27,10 +27,44 @@ void Matriz::Definir(pixel def,int fila, int columna) {
 	_array[fila - 1][columna - 1] = def; 
 }
 
+void Matriz::DefColor(uint def,int fila, int columna, char color) {
+
+    if(color == 'r'){
+        _array[fila - 1][columna - 1].red = def;
+    } else if(color == 'g'){
+        _array[fila - 1][columna - 1].green = def;
+    } else if(color == 'b'){
+        _array[fila - 1][columna - 1].blue = def;
+    }
+}
+
+
 pixel Matriz::Posicion(int fila, int columna){
     if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
+    	cout << endl << "Error en Matriz::Posicion(), te fuiste del rango de la matriz" << endl;
         return pixel(0,0,0);
     } return _array[fila - 1][columna - 1];
+}
+
+uint Matriz::PosColor(int fila, int columna, char color){
+
+    if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
+    	cout << endl << "Error en Matriz::PosColor(), te fuiste del rango de la matriz" << endl;
+        return 0;
+    }
+
+    uint res;
+
+    if (color == 'r'){
+     res = _array[fila - 1][columna - 1].red;
+    } else if (color == 'g'){
+     res = _array[fila - 1][columna - 1].green;
+    } else if (color == 'b'){
+     res = _array[fila - 1][columna - 1].blue;
+    }
+
+    return res;
+
 }
 
 int Matriz::Cfilas(){

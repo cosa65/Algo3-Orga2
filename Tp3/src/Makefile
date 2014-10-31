@@ -18,7 +18,7 @@ $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
 
 clean:
-	rm -rf $(EXECUTABLE) $(OBJECTS)
-
+	rm tp
+	rm main.o
 .cpp.o:
 	$(CC) -I$(INCDIR) $(CFLAGS) $< -c -o $@

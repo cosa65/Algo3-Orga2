@@ -1,64 +1,67 @@
 #include"mat.cpp"
 
-uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int dircol){
+uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
 ///Crucen los dedos
-	int C1, C2;
+	int C, F;
 
 	if(dirfil==1 && dircol==1){
-		C1 = posCol;
-		C2 = posFil;
-	}
-
-	if(dirfil==1 && dircol==-1){
-		C1 = posCol;
-		C2 = mat.Cfilas()+1 - posFil;
+		C = posCol;
+		F = posFil;
 	}
 
 	if(dirfil==-1 && dircol==1){
-		C2 = posFil;
-		C1 = mat.Ccolumnas()+1 - posCol;
+		C = posCol;
+		F = mat.Cfilas()+1 - posFil;
+	}
+
+	if(dirfil==1 && dircol==-1){
+		F = posFil;
+		C = mat.Ccolumnas()+1 - posCol;
 	}
 
 	if(dirfil==-1 && dircol==-1){
-		C1 = mat.Ccolumnas()+1 - posCol;
-		C2 = mat.Cfilas()+1 - posFil;
+		C = mat.Ccolumnas()+1 - posCol;
+		F = mat.Cfilas()+1 - posFil;
 	}
 
-	int res = C1*(C1<C2)+C2*(C2<=C1);
 
-	return res;
+	int res = C*(C<F) + F*(F<=C);
+
+	primfil = posFil - dirfil*res+dirfil;
+	cout << res << endl;
+	cout << "primfil " << primfil << endl;
+
+	primcol = posCol - dircol*res+dircol;
+
+	cout << "primcol " << primcol << endl;
+
+	return res;					
 }
 
-void calcularInterp(Matriz mat,int x, int y, int dirx, int diry, char color){ //(dirx,diry) tiene las direcciones segun la matriz, no es un vector de x,y de un grafico
+void VecEnDir(Matriz mat,int col, int fil, int dirfil, int dircol, char color, vector<uint> &vecres, int &size, int &pos){
 
-	uint res=0;
+	int i, j;
 
-	int cols = mat.Ccolumnas();
-	int fils = mat.Cfilas();
+	pos = posEnVectorImaginario(mat, col, fil, dirfil, dircol, i, j);
 
-	int i=x;
-	int j=y;
-
-	uint XenVec = posEnVectorImaginario(mat, x, y, dirx, diry);
-	uint KPAdelante = XenVec + 1 ; //arranca un punto para atras asi no calcula dos veces nada
-	uint KPAtras = XenVec -1; //arranca un punto para atras asi no calcula dos veces nada
+	if(mat.Ccolumnas() > mat.Cfilas()){
+		vecres.resize(mat.Ccolumnas());
+	} else {
+		vecres.resize(mat.Cfilas());
+	}
+	
+	int posVec = 0;
 
 	while(i<= mat.Cfilas() && j<=mat.Ccolumnas() && i>0 && j>0){
-		//sumarcolor(mat.Posicion(i,j), res, color);
-		i += dirx;
-		j += diry;
+
+		vecres[posVec] = mat.PosColor(i,j,color);
+
+		i+=dirfil;
+		j+=dircol; 
+
+		posVec++;
+
 	}
-
-	i = x - dirx;
-	j = y - diry;
-
-	while(i<= mat.Cfilas() && j<=mat.Ccolumnas() && i>0 && j>0){
-	//sumarcolor(mat.Posicion(i,j), res, color);
-		i -= dirx;
-		j -= diry;
-	}
-
-// return res;
 
 }
 

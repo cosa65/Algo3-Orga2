@@ -38,7 +38,11 @@ Matriz( vector< vector<pixel> > filas, int cantfilas, int cantcolumnas);
 
 void Definir(pixel adefinir, int fila, int columna);
 
+void DefColor(uint adefinir, int fila, int columna, char color);
+
 pixel Posicion(int fila, int columna);
+
+uint PosColor(int fila, int columna, char color);
 
 int Cfilas();
 

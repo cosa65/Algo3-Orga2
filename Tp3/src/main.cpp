@@ -1,19 +1,19 @@
 #include <iostream>
 #include <fstream>
-#include "aux/ops.cpp"
+#include "aux/metodos.cpp"
 #include <ctime>
 
 using namespace std;
 
 void cargar(Matriz& m, vector<unsigned char>& a, char* in) {
+	int w=768;
+	int h=512;
 	ifstream image;
 	image.open(in, ios_base::binary);
 
-	image.seekg (0, ios::end);
-	int n = image.tellg();
-	image.seekg (0, ios::beg);
+	int n = 54+(w*h*3);
 
-	char* res = new char[n];
+	unsigned char res[n]; //= new char[n];
 	for(int i = 0; i < n; i++)
 	res[i] = '0';
 
@@ -25,17 +25,18 @@ void cargar(Matriz& m, vector<unsigned char>& a, char* in) {
 
 	for (int i=54;i<n;i+=3) {
 		pixel p;
-		char x=res[i];
-		int ix=(int) x;
-		p.blue=(ix+256)*(ix<0)+ix;
-		x=res[i+1];
-		ix=(int) x;
-		p.green=(ix+256)*(ix<0)+ix;
-		x=res[i+2];
-		ix=(int) x;
-		p.red=(ix+256)*(ix<0)+ix; //¿Little endian o lo que muestra me corta el borde?
+	//	uint ix= (uint)res[i];
+		//int ix=(int) x;
+		p.blue=(uint)res[i];	//(ix+256)*(ix<0)+ix;
+	//	uint ix= (uint)res[i+1];
+
+		p.green=(uint)res[i+1]; //(ix+256)*(ix<0)+ix;
+	//	x=res[i+2];
+	//	ix=(int) x;
+		p.red=(uint)res[i+2]; //(ix+256)*(ix<0)+ix; //¿Little endian o lo que muestra me corta el borde?
+		cout << p.red << ' ' << p.green << ' '<<p.blue << endl;
         int ireal=(i-54)/3;
-        m.Definir(p,(ireal/512)+1,(ireal%512)+1);
+        m.Definir(p,(ireal/h)+1,(ireal%h)+1);
 	} 
 }
 
@@ -65,14 +66,21 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
     fclose(f);
 }
 
+
+
 int main(int argc, char** argv) {
-	/*clock_t t;
+	/*clocklock_t t;
 	t = clock();*/
 
     Matriz m(768,512);
     vector<unsigned char> header(54);
 	cargar(m,header,argv[1]);
-    devolver(m,header,argv[2]); //podemos usar argv[3] para el método
+    devolver(m,header,argv[2]); //podemos usar argv[3] para el método*/
+
+
+	//posEnVectorImaginario(m, 1 , 2, 1, 1, padelante, primfil, primcol);
+
+	//cout << "(" << primfil << "," << primcol << ")" << endl;
 
 	/*ofstream tiempo;
 	t = clock() - t;
@@ -92,8 +100,6 @@ int main(int argc, char** argv) {
 	m.IBilinealG();
 	//m.IBilinealRB();
 	m.mostrar();*/
-
-	//Matriz mat = 
 
 	return 0;
 }
