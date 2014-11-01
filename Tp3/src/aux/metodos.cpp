@@ -12,7 +12,7 @@ void VecinoMasCercano(Matriz& mat){
 		    mat.Definir(pr,i*2-1,j*2-1);
 //          mat.Definir(pg,i*2-1,j*2);
 		}
-		for (int j=1;j<=mat.Ccolumnas();j++) {
+		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
 		    pixel pg=mat.Posicion(i*2,j*2-1); // verde
 		    pixel pb=mat.Posicion(i*2,j*2); //azul
 		    pb.green=pg.green;
@@ -23,41 +23,15 @@ void VecinoMasCercano(Matriz& mat){
 }
 
 void InterpBilineal(Matriz& mat){
-	//Horizontal
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
-            pixel pg=mat.Posicion(i*2-1,j*2); //verde
-            pr.green=(pg.green+mat.Posicion(i*2-1,j*2-2).green)/2;
+            pr.green=(mat.Posicion(i*2-1,j*2).green+mat.Posicion(i*2-1,j*2-2).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2-2,j*2-1).green)/4;
             mat.Definir(pr,i*2-1,j*2-1);
-            //pg.red=(pr.red+mat.Posicion(i*2-1,j*2+1).red)/2;
-            //mat.Definir(pg,i*2-1,j*2);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
-            pixel pg=mat.Posicion(i*2,j*2-1); // verde
             pixel pb=mat.Posicion(i*2,j*2); //azul
-            //pg.blue=(pb.blue+mat.Posicion(i*2,j*2-2).blue)/2;
-            //mat.Definir(pg,i*2,j*2-1);
-            pb.green=(pg.green+mat.Posicion(i*2,j*2+1).green)/2;
-            mat.Definir(pb,i*2,j*2);
-		}
-	}
-//Vertical
-	for (int j=1;j<=mat.Ccolumnas()/2;j++) {
-		for (int i=1;i<=mat.Cfilas()/2;i++) {
-            pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
-            pixel pg=mat.Posicion(i*2,j*2-1); //verde
-            pr.green=(pg.green+mat.Posicion(i*2-2,j*2-1).green)/2;
-            mat.Definir(pr,i*2-1,j*2-1);
-            //pg.red=(pr.red+mat.Posicion(i*2+1,j*2-1).red)/2;
-            //mat.Definir(pg,i*2,j*2-1);
-		}
-		for (int i=1;i<=mat.Cfilas()/2;i++) {
-            pixel pg=mat.Posicion(i*2-1,j*2); // verde
-            pixel pb=mat.Posicion(i*2,j*2); //azul
-            //pg.blue=(pb.blue+mat.Posicion(i*2-2,j*2).blue)/2;
-            //mat.Definir(pg,i*2-1,j*2);
-            pb.green=(pg.green+mat.Posicion(i*2+1,j*2).green)/2;
+            pb.green=(mat.Posicion(i*2,j*2+1).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2+1,j*2).green+mat.Posicion(i*2-1,j*2).green)/4;
             mat.Definir(pb,i*2,j*2);
 		}
 	}
