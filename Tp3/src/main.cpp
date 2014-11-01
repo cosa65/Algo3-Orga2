@@ -2,6 +2,7 @@
 #include <fstream>
 #include "aux/metodos.cpp"
 #include <ctime>
+#include <math.h>
 
 using namespace std;
 
@@ -66,38 +67,51 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
     fclose(f);
 }
 
-
+double psnr(Matriz orig, Matriz m) {
+	int f=m.Cfilas();
+	int c=m.Ccolumnas();
+	double mse;
+	for (int i=2;i<f;i++) {
+		for (int j=2;j<c;j++) {
+			mse+=pow((m.Posicion(i,j).green-orig.Posicion(i,j).green),2);
+		}
+	} mse=mse/((f-2)*(c-2));
+	//hasta acá, el error cuadrático medio
+	return 10*log10(pow(255,2)/mse);
+}
 
 int main(int argc, char** argv) {
-	/*clock_t t;
-	t = clock();*/
 
     Matriz m(512,768);
     vector<unsigned char> header(54);
 	cargar(m,header,argv[1]);
-    devolver(m,header,argv[2]); //podemos usar argv[3] para el método*/
 
+	/*clock_t t;
+	t = clock();*/
 
-	//cout << "(" << primfil << "," << primcol << ")" << endl;
+	if (*argv[3]=='0') {
+		VecinoMasCercano(m);
+	} else if (*argv[3]=='1') {
+		InterpBilineal(m);
+	} else if (*argv[3]=='2') {
+		InterpXDir(m);
+	} else {
+		ElDelPaper(m); //Si quieren cambiarlo por un nombre mejor...
+	}
 
-	/*ofstream tiempo;
-	t = clock() - t;
+	/* t = clock() - t;
+	ofstream tiempo;
 	tiempo.open("Tiempo");
 	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;*/
 
-    /*pixel p;
-	Matriz m(20,10);
-	for (int i=0;i<20;i++) {
-		for (int j=0;j<10;j++) {
-			p.green=(i+j)*10;
-			p.red=i*10;
-			p.blue=j*10;
-			m.Definir(p,i+1,j+1);
-		}
-	} m.mostrar();
-	m.IBilinealG();
-	//m.IBilinealRB();
-	m.mostrar();*/
+	m.IBilinealRB();
+
+    devolver(m,header,argv[2]);
+
+	Matriz orig(512,768);
+	cargar(orig,header,argv[1]); //Fosco, vos sabés sacarle la b al nombre de la imagen
+
+	cout << psnr(orig,m) << endl;
 
 	return 0;
 }

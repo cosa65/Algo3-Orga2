@@ -50,10 +50,6 @@ int Ccolumnas();
 
 int TamTotal();
 
-void VecinoMasCercano();
-
-void IBilinealG();
-
 void IBilinealRB();
 
 void mostrar();
