@@ -67,16 +67,24 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
     fclose(f);
 }
 
-double psnr(Matriz orig, Matriz m) {
+char* sinb(char* in) {
+	char* res=in;
+	int i;
+	for (i=0;res[i]!='b' || res[i+1]!='.' ;i++) {}
+	for (int j=i;res[j]!=0;j++) {
+		res[j]=res[j+1];
+	} return res;
+}
+
+double psnr(Matriz& orig, Matriz& m) {
 	int f=m.Cfilas();
 	int c=m.Ccolumnas();
-	double mse;
+	double mse=0;
 	for (int i=2;i<f;i++) {
 		for (int j=2;j<c;j++) {
-			mse+=pow((m.Posicion(i,j).green-orig.Posicion(i,j).green),2);
+			mse+=pow((int)(m.Posicion(i,j).green-orig.Posicion(i,j).green),2);
 		}
-	} mse=mse/((f-2)*(c-2));
-	//hasta acá, el error cuadrático medio
+	} mse=mse/((f-2)*(c-2)); //mse=error cuadrático medio
 	return 10*log10(pow(255,2)/mse);
 }
 
@@ -105,12 +113,10 @@ int main(int argc, char** argv) {
 	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;*/
 
 	m.IBilinealRB();
-
     devolver(m,header,argv[2]);
 
 	Matriz orig(512,768);
-	cargar(orig,header,argv[1]); //Fosco, vos sabés sacarle la b al nombre de la imagen
-
+	cargar(orig,header,sinb(argv[1]));
 	cout << psnr(orig,m) << endl;
 
 	return 0;
