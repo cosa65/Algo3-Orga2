@@ -53,17 +53,13 @@ uint Matriz::PosColor(int fila, int columna, char color){
         return 0;
     }
 
-    uint res;
-
     if (color == 'r'){
-     res = _array[fila - 1][columna - 1].red;
+    	return _array[fila - 1][columna - 1].red;
     } else if (color == 'g'){
-     res = _array[fila - 1][columna - 1].green;
+    	return _array[fila - 1][columna - 1].green;
     } else if (color == 'b'){
-     res = _array[fila - 1][columna - 1].blue;
+    	return _array[fila - 1][columna - 1].blue;
     }
-
-    return res;
 
 }
 

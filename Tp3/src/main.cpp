@@ -13,7 +13,7 @@ void cargar(Matriz& m, vector<unsigned char>& a, char* in) {
 
 	int n = 54+(w*h*3);
 
-	char* res = new char[n];
+	char res[n];
 	for (int i=0;i<n;i++) {
 		res[i] = '0';
 	}
@@ -28,21 +28,15 @@ void cargar(Matriz& m, vector<unsigned char>& a, char* in) {
 		pixel p;
 		char x=res[i];
 		int ix=(int) x;
-		p.blue=(ix+256)*(ix<0)+ix;
+		p.blue=(ix+256)*(ix<0)+ix*(ix>0);
 		x=res[i+1];
 		ix=(int) x;
-		p.green=(ix+256)*(ix<0)+ix;
+		p.green=(ix+256)*(ix<0)+ix*(ix>0);
 		x=res[i+2];
 		ix=(int) x;
-		p.red=(ix+256)*(ix<0)+ix; //¿Little endian o lo que muestra me corta el borde?
+		p.red=(ix+256)*(ix<0)+ix*(ix>0); //¿Lo que muestra me corta el borde?
 		int ireal=(i-54)/3;
 		m.Definir(p,(ireal/w)+1,(ireal%w)+1);
-		/*if (p.red+p.green+p.blue==0) {
-        	p.red=250;
-        	p.green=250;
-       		p.blue=250;
-        } m.Definir(p,(ireal/w)+1,(ireal%w)+1);*/
-		//cout << p.red << ' ' << p.green << ' ' << p.blue << endl;
 	} 
 }
 
@@ -58,15 +52,12 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
 
     for (int i=0;i<h;i++) {
         for (int j=0;j<w;j++) {
-            int r = m.Posicion(i+1,j+1).red;
-            int g = m.Posicion(i+1,j+1).green;
-            int b = m.Posicion(i+1,j+1).blue;
-            img[54+(i*w+j)*3+2] = (unsigned char)(r); // estará bien que esté al vesre? ver http://stackoverflow.com/questions/2654480/writing-bmp-image-in-pure-c-c-without-other-libraries
-            img[54+(i*w+j)*3+1] = (unsigned char)(g);
-            img[54+(i*w+j)*3+0] = (unsigned char)(b);
-            /*if (r+g+b==0) {
-            	cout << "La cagaste, Fosqui " << i << ' ' << j << endl;
-        	}*/
+            unsigned int r = (m.Posicion(i+1,j+1).red);
+            unsigned int g = m.Posicion(i+1,j+1).green;
+            unsigned int b = m.Posicion(i+1,j+1).blue;
+            img[54+(i*w+j)*3+2] = (char)(r);
+            img[54+(i*w+j)*3+1] = (char)(g);
+            img[54+(i*w+j)*3+0] = (char)(b);
         }
     }
 
@@ -78,7 +69,7 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
 
 
 int main(int argc, char** argv) {
-	/*clocklock_t t;
+	/*clock_t t;
 	t = clock();*/
 
     Matriz m(512,768);
