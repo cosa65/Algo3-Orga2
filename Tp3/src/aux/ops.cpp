@@ -1,43 +1,28 @@
 #include"mat.cpp"
 
 uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
-///Crucen los dedos
-	int C, F;
+
+	int C, F, res;
 
 	if (dirfil!=0 && dircol !=0){
 
-		if(dirfil==1 && dircol==1){
-			C = posCol;
-			F = posFil;
-		}
-
-		if(dirfil==-1 && dircol==1){
-			C = posCol;
-			F = mat.Cfilas()+1 - posFil;
-		}
-
-		if(dirfil==1 && dircol==-1){
-			F = posFil;
+		if(dircol>0){
+			C = posCol; //si quisiera meter dircol>1, podría poner int C =pos/dircol redondeado para abajo?
+		} else {
 			C = mat.Ccolumnas()+1 - posCol;
+		} if (dirfil>0) {
+			F = posFil;
+		} else {
+			F = mat.Cfilas() +1 - posFil;
 		}
-
-		if(dirfil==-1 && dircol==-1){
-			C = mat.Ccolumnas()+1 - posCol;
-			F = mat.Cfilas()+1 - posFil;
-		}
-
-		int res;
-		res = C*(C<F) + F*(F<=C);
+		int res = C*(C<F) + F*(F<=C);
 
 		primfil = posFil - dirfil*res+dirfil;
 
 		primcol = posCol - dircol*res+dircol;
 
-		return res;		
 
 	} else {
-
-		int res;
 
 		if(dirfil==0 && dircol==1){
 			res = posCol;
@@ -63,11 +48,8 @@ uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int di
 			primfil = mat.Cfilas();
 			primcol = posCol;
 		}
-
-		return res;
-
 	}
-
+	return res;		
 }
 
 void VecEnDir(Matriz mat,int col, int fil, int dirfil, int dircol, char color, vector<uint> &vecres, int &size, int &pos){
