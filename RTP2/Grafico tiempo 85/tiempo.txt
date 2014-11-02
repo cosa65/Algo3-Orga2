@@ -1,5 +1,0 @@
-Abortion ; 10000
-Censorship ; 20000
-Movies ; 40000
-NotreDame ; 1657906
-Stanford ; 4761647
