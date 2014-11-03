@@ -62,4 +62,19 @@ void InterpXDir(Matriz& mat){
 }
 
 void ElDelPaper(Matriz& mat){
+		float alpha=0.5;
+	for (int i=1;i<=mat.Cfilas()/2;i++) {
+		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
+            pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
+            pr.green=(mat.Posicion(i*2-1,j*2).green+mat.Posicion(i*2-1,j*2-2).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2-2,j*2-1).green)/4;
+			pr.green+=alpha*(grad(mat,i*2-1,j*2-1,'r'));
+            mat.Definir(pr,i*2-1,j*2-1);
+		}
+		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
+            pixel pb=mat.Posicion(i*2,j*2); //azul
+            pb.green=(mat.Posicion(i*2,j*2+1).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2+1,j*2).green+mat.Posicion(i*2-1,j*2).green)/4;
+			pb.green+=alpha*(grad(mat,i*2,j*2,'b'));
+            mat.Definir(pb,i*2,j*2);
+		}
+	}
 }

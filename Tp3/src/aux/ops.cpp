@@ -103,3 +103,22 @@ int evaluareninterpolante(int x, vector<int> xn, vector<int> yn) {
 }
 
 //Probablemente no haga falta guardar xn
+
+float grad(Matriz& mat, int i, int j, char color) {
+	float res=0;
+	if (color=='r') {
+		res+=mat.Posicion(i+2,j).red;
+		res+=mat.Posicion(i-2,j).red;
+		res+=mat.Posicion(i,j+2).red;
+		res+=mat.Posicion(i,j-2).red;
+		return mat.Posicion(i,j).red-res/4;
+	} else if (color == 'b') {
+		res+=mat.Posicion(i+2,j).blue;
+		res+=mat.Posicion(i-2,j).blue;
+		res+=mat.Posicion(i,j+2).blue;
+		res+=mat.Posicion(i,j-2).blue;
+		return mat.Posicion(i,j).blue-res/4;
+	} else {
+		cout << "Error" << endl;
+	} return 0;
+}
