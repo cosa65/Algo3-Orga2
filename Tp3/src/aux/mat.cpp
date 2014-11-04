@@ -41,7 +41,7 @@ void Matriz::DefColor(uint def,int fila, int columna, char color) {
 
 pixel Matriz::Posicion(int fila, int columna){
     if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
-    	cout << endl << "Error en Matriz::Posicion(), te fuiste del rango de la matriz" << endl;
+    	cout << "Error en Matriz::Posicion(), te fuiste del rango de la matriz" << endl;
         return pixel(0,0,0);
     } return _array[fila - 1][columna - 1];
 }
@@ -49,7 +49,7 @@ pixel Matriz::Posicion(int fila, int columna){
 uint Matriz::PosColor(int fila, int columna, char color){
 
     if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
-    	cout << endl << "Error en Matriz::PosColor(), te fuiste del rango de la matriz" << endl;
+    	cout << "Error en Matriz::PosColor(), te fuiste del rango de la matriz" << endl;
         return 0;
     }
 
