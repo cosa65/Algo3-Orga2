@@ -84,6 +84,15 @@ void InterpXDir(Matriz& mat){
 }
 
 void ElDelPaper(Matriz& mat){
+
+	Matriz nuevamat(mat.Cfilas(), mat.Ccolumnas());
+
+	for (int i=1; i<=mat.Cfilas(); i++){
+		for (int j=1; j<=mat.Ccolumnas(); j++){
+			nuevamat.Definir(mat.Posicion(i,j),i,j);
+		}
+	}
+
 	float alpha=0.5;
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
@@ -92,7 +101,7 @@ void ElDelPaper(Matriz& mat){
 			pr.green+=alpha*(grad(mat,i*2-1,j*2-1,'r'));
 			if ((int)(pr.green)>255) {pr.green=255;}
 			if ((int)(pr.green)<0) {pr.green=0;}
-            mat.Definir(pr,i*2-1,j*2-1);
+            nuevamat.Definir(pr,i*2-1,j*2-1);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pb=mat.Posicion(i*2,j*2); //azul
@@ -100,7 +109,8 @@ void ElDelPaper(Matriz& mat){
 			pb.green+=alpha*(grad(mat,i*2,j*2,'b'));
 			if ((int)(pb.green)>255) {pb.green=255;}
 			if ((int)(pb.green)<0) {pb.green=0;}
-            mat.Definir(pb,i*2,j*2);
+            nuevamat.Definir(pb,i*2,j*2);
 		}
 	}
+	mat = nuevamat;
 }
