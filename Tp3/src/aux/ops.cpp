@@ -1,50 +1,46 @@
 #include"mat.cpp"
 
-uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
+uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
 
 	int C, F, res;
 
 	if (dirfil!=0 && dircol !=0){
 
-		if(dircol>0){
-			C = posCol; //si quisiera meter dircol>1, podría poner int C =pos/dircol redondeado para abajo?
+		if (dircol>0){
+			C = posCol/dircol; 
 		} else {
-			C = mat.Ccolumnas()+1 - posCol;
+			C = (mat.Ccolumnas()+1 - posCol)/(-dircol);
 		} if (dirfil>0) {
-			F = posFil;
+			F = posFil/dirfil;
 		} else {
-			F = mat.Cfilas() +1 - posFil;
+			F = (mat.Cfilas() +1 - posFil)/(-dirfil);
 		}
+		
 		int res = C*(C<F) + F*(F<=C);
 
-		primfil = posFil - dirfil*res+dirfil;
-
-		primcol = posCol - dircol*res+dircol;
+		primfil = posFil - dirfil*(res-1);
+		primcol = posCol - dircol*(res-1);
 
 
 	} else {
 
-		if(dirfil==0 && dircol==1){
-			res = posCol;
+		if (dirfil==0 && dircol>0){
+			res = posCol/dircol;
 			primfil = posFil;
 			primcol = 1;
-
 		}
-
-		if(dirfil==0 && dircol==-1){
-			res = posCol;
+		if (dirfil==0 && dircol<0){
+			res = (mat.Ccolumnas()+1)/(-dircol);
 			primfil = posFil;
 			primcol = mat.Ccolumnas();
 		}
-
-		if(dirfil==1 && dircol==0){
-			res = posFil;
+		if (dirfil>0 && dircol==0){
+			res = posFil/dirfil;
 			primfil = 1;
 			primcol = posCol;
 		}
-
-		if(dirfil==-1 && dircol==0){
-			res = posFil;
+		if (dirfil<0 && dircol==0){
+			res = (mat.Cfilas()+1)/(-dirfil);
 			primfil = mat.Cfilas();
 			primcol = posCol;
 		}
@@ -52,17 +48,24 @@ uint posEnVectorImaginario(Matriz mat,int posFil, int posCol, int dirfil, int di
 	return res;		
 }
 
-void VecEnDir(Matriz mat,int col, int fil, int dirfil, int dircol, char color, vector<uint> &vecres, int &size, int &pos){
+vector<uint> VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, int &size, int &pos){
 
 	int i, j;
 
-	pos = posEnVectorImaginario(mat, col, fil, dirfil, dircol, i, j);
+	pos = posEnVectorImaginario(mat, fil, col, dirfil, dircol, i, j);
 
-	if(mat.Ccolumnas() > mat.Cfilas()){
-		vecres.resize(mat.Ccolumnas());
+	if (dirfil==0){
+		size=((mat.Ccolumnas()+1)-1)/dircol;
+	} else if (dircol==0) {
+		size=((mat.Cfilas()+1)-1)/dirfil;
 	} else {
-		vecres.resize(mat.Cfilas());
+		int sizef=((mat.Cfilas()+1)-1)/dirfil;
+		int sizec=((mat.Ccolumnas()+1)-1)/dircol;
+		size=sizef*(sizef<sizec)+sizec*(sizec<=sizef);
 	}
+	size=-(size<0)*size;
+	
+	vector <uint> vecres(size);
 	
 	int posVec = 0;
 
@@ -76,7 +79,7 @@ void VecEnDir(Matriz mat,int col, int fil, int dirfil, int dircol, char color, v
 		posVec++;
 
 	}
-
+	return vecres;
 }
 
 char color(int fila, int columna) {
