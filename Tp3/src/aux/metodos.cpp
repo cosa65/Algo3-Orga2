@@ -60,27 +60,47 @@ void InterpBilineal(Matriz& mat){
 }
 
 void InterpXDir(Matriz& mat){
-	//básicamente:
-	//for (int i=0;i<h;i++) {
-	//	vector<int> x
-	//	VecEnDir (1,0,x bla bla bla)
-	//	filtrarImpares? que devuelva una copia del vector dejando solo las posiciones pares
-	//	crear un vector p=[0,2,4,6...] (o modificar evaluarenInterpolante para que no sea necesario)
-	//	for (int j=1;j<n;j+=2) {
-	//		x[j]=evaluarenInterpolante(p,x,j);
-	//	y metés x en la matriz. NO podés no trabajar sobre una copia del vector y poner Definir(eso,i,j);
-	//	TENES que trabajar sobre una copia de la matriz para poder definir el próximo paso
-	//	o bien hacer todo junto punto por punto, pero ahí tendrías que volver a calcular los vectores cada vez
-	// Si no hacés todo junto punto por punto:
-	//	Algo parecido para la vertical/diagonal/la que sea y la guardás en mat2
-	//	for (i,j) {
-	//		gradH=abs((i,j+1)-(i,j-1));
-	//		gradV=abs((i+1,j)-(i-1,j));
-	//		Esta fórmula me gusta, no la borren:
-	//		def= (255-gradh)*mat1(i,j) + (255-gradv)*mat2(i,j), escalado de 1 a 255:
-	//		escala=(255-gradh)+(255-gradv)=255*2-gradh-gradv
-	//		mat.Definir(res/escala, i,j)); gg
-	//		otra fórmula: ((255-grH)/255*valH+(255-grV)/255*valV)*255/(grH+grV)
+	int size;
+	int pos;
+	vector<uint> vecPar (mat.Ccolumnas()/2);
+	vector<uint> vecImp (mat.Ccolumnas()/2);
+	for (int j = 0; j < mat.Ccolumnas()/2; j++){vecPar[j] = j*2+2; vecImp[j] = j*2+1;}
+	vector<uint> vecDirH;
+	for (int i=1;i<=mat.Cfilas();i++) {
+		if (i%2 == 1){//Fila Impar
+			VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
+			for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal)
+				pixel pr = mat.Posicion(i, j*2-1); //rojo
+				pr.green = (evaluarEnInterLagrange(j*2-1, vecPar, vecDirH))/2; //evaluarEnInterLagrange, habría q hacer otra de Splines.
+				mat.Definir(pr, i, j*2-1);
+			}
+		} else {//Fila Par
+			VecEnDir(mat, 1, i, 0, 2, 'g', vecDirH, size, pos);
+			for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
+				pixel pb = mat.Posicion(i, j*2); //blue
+				pb.green = (evaluarEnInterLagrange(j*2, vecImp, vecDirH))/2;
+				mat.Definir(pb, i, j*2);
+			}
+		}
+	}//Acá ya estan definidos todos los valores green en los b y r con la dirH
+	vector<uint> vecDirV;
+	for (int j=1;j<=mat.Ccolumnas();j++) {
+		if (j%2 == 1){//Columna Impar
+			VecEnDir(mat, j, 2, 2, 0, 'g', vecDirV, size, pos);
+			for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los red (con direccion vertical)
+				pixel pr = mat.Posicion(i*2-1, j); //rojo
+				pr.green += (evaluarEnInterLagrange(i*2-1, vecPar, vecDirV))/2; //El primer parametro es de la posicion en la que quiero evaluar
+				mat.Definir(pr, i*2-1, j);
+			}
+		} else {//Columna Par
+			VecEnDir(mat, j, 1, 2, 0, 'g', vecDirV, size, pos);
+			for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los blue (con direccion vertical)
+				pixel pb = mat.Posicion(i*2, j); //blue
+				pb.green += (evaluarEnInterLagrange(i*2, vecImp, vecDirV))/2;
+				mat.Definir(pb, i*2, j);
+			}
+		}
+	}//Acá ya estan definidos todos los valores green en los b y r con las dos Dir
 }
 
 void ElDelPaper(Matriz& mat){
@@ -114,3 +134,25 @@ void ElDelPaper(Matriz& mat){
 	}
 	mat = nuevamat;
 }
+	//---- PARA INTERPOLACION X DIRECCIONES ----//
+	//básicamente:
+	//for (int i=0;i<h;i++) {
+	//	vector<int> x
+	//	VecEnDir (1,0,x bla bla bla)
+	//	filtrarImpares? que devuelva una copia del vector dejando solo las posiciones pares
+	//	crear un vector p=[0,2,4,6...] (o modificar evaluarenInterpolante para que no sea necesario)
+	//	for (int j=1;j<n;j+=2) {
+	//		x[j]=evaluarenInterpolante(p,x,j);
+	//	y metés x en la matriz. NO podés no trabajar sobre una copia del vector y poner Definir(eso,i,j);
+	//	TENES que trabajar sobre una copia de la matriz para poder definir el próximo paso
+	//	o bien hacer todo junto punto por punto, pero ahí tendrías que volver a calcular los vectores cada vez
+	// Si no hacés todo junto punto por punto:
+	//	Algo parecido para la vertical/diagonal/la que sea y la guardás en mat2
+	//	for (i,j) {
+	//		gradH=abs((i,j+1)-(i,j-1));
+	//		gradV=abs((i+1,j)-(i-1,j));
+	//		Esta fórmula me gusta, no la borren:
+	//		def= (255-gradh)*mat1(i,j) + (255-gradv)*mat2(i,j), escalado de 1 a 255:
+	//		escala=(255-gradh)+(255-gradv)=255*2-gradh-gradv
+	//		mat.Definir(res/escala, i,j)); gg
+	//		otra fórmula: ((255-grH)/255*valH+(255-grV)/255*valV)*255/(grH+grV)

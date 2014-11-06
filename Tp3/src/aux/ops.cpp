@@ -48,7 +48,7 @@ uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int d
 	return res;		
 }
 
-vector<uint> VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, int &size, int &pos){
+void VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, vector<uint>& vecres, int &size, int &pos){
 
 	int i, j;
 
@@ -63,9 +63,9 @@ vector<uint> VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char
 		int sizec=((mat.Ccolumnas()+1)-1)/dircol;
 		size=sizef*(sizef<sizec)+sizec*(sizec<=sizef);
 	}
-	size=-(size<0)*size;
+	size=(-(size<0)+(size>=0))*size;
 	
-	vector <uint> vecres(size);
+	vecres.resize(size);
 	
 	int posVec = 0;
 
@@ -79,7 +79,6 @@ vector<uint> VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char
 		posVec++;
 
 	}
-	return vecres;
 }
 
 char color(int fila, int columna) {
@@ -92,7 +91,7 @@ char color(int fila, int columna) {
     } return 'R';
 }
 
-int evaluareninterpolante(int x, vector<int> xn, vector<int> yn) {
+int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {
 	int n=xn.size();
 	int acum=0;
 	for (int i=0;i<n;i++) {
