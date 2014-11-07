@@ -16,7 +16,7 @@
 %\usepackage{listings}
 %\lstset{language=C}
 
-\input{codesnippet}
+
 \input{page.layout}
 % \setcounter{secnumdepth}{2}
 \usepackage{underscore}
@@ -58,7 +58,7 @@ Para resolver dicho sistema de ecuaciones se recurre a técnicas matemáticas ba
 \section{Introducci\'{o}n Te\'{o}rica}
 \label{sec:intro}
 
-El problema a resolver por este trabajo consiste en modelar la distribución del calor en el parabrisas rectangular de una nave en el momento de equilibrio. Este parabrisas recibe frío en sus bordes y calor a partir de $sanguijuelas$ circulares.
+El problema a resolver por este trabajo consiste en modelar la distribución del calor en el parabrisas rectangular de una nave en el momento de equilibrio. Este parabrisas recibe frío en sus bordes y calor de $sanguijuelas$ circulares.
 
 Este problema puede expresarse como un sistema de ecuaciones, con una ecuación por cada punto cuya temperatura se busca determinar. El objetivo de este trabajo, por lo tanto, es usar métodos numéricos para la resolución de sistemas de ecuaciones, observándolos como una matriz multiplicada por un vector incógnita; de este producto se obtiene un vector resultado, utilizando el lenguaje C++.
 
@@ -80,20 +80,16 @@ Otro objetivo del trabajo es aprovechar la estructura banda de una matriz. Una m
 Nuestro trabajo apunta a resolver el problema dividiéndolo en tres partes. \newline \newline
 La \textbf{Primera parte} es encontrar la tempratura de cada punto del parabrisas  representándolo como una matriz. Algunos puntos son conocidos, ya que el parabrisas tiene bordes con una temperatura constante, y fuentes de calor (sanguijuelas) con radio y temperatura a determinar por los parámetros $r$ y $T_s$.
 
-Como dato, se tiene que cada punto del parabrisas satisface la ecuación de Laplace:
-\begin{eqnarray*}
-\frac{\partial ^2u}{\partial x^2}+\frac{\partial ^2u}{\partial y^2}&=&0
-\end{eqnarray*}
+Como dato, se tiene que cada punto del parabrisas satisface la ecuación de Laplace.\newline $\frac{\partial ^2u}{\partial x^2}+\frac{\partial ^2u}{\partial y^2}=0$
 
-
-Para poder modelar el parabrisas se toma una discretización, con granularidad variable. De esta forma, el parabrisas queda representado con una matriz de $a/h+1$ filas y $b/h+1$ columnas, siendo $a$ el ancho en metros del parabrisas original, $b$ su alto y $h$ la granularidad elegida. Al ancho de esta matriz lo llamaremos $m$ y a su alto $n$. 
+Para poder modelar el parabrisas se toma una discretización, con granularidad variable. De esta forma, el parabrisas queda representado con una matriz de $a/h+1$ filas y $b/h+1$ columnas, siendo $a$ el ancho en metros del parabrisas original, $b$ su alto y $h$ la granularidad elegida. Al ancho de esta matriz lo llamaremos $a'$ y a su alto $b'$. Esta notación se utilizará a lo largo de todo el informe.
 
 Aplicando el modelo de aproximación por diferencias finitas se puede ver que la temperatura de cada punto desconocido puede expresarse como el promedio de cada uno de los puntos adyacentes. Es decir, la temperatura de cada punto del parabrisas se puede expresar como una ecuación lineal: \footnote{Consideramos que un punto 'es sanguijuela" si la distancia al centro de una sanguijuela es menor o igual al radio de las sanguijuelas. La distancia entre el punto $p=(p_x, p_y)$ y la sanguijuela con centro en $s=(s_x, s_y)$ se calcula como $\| p-s  \|_{2}= \sqrt{(p_x-s_x)^2+(p_y-s_y)2}$. Si el punto está en el borde, no es sanguijuela, pero si el centro de la sanguijuela está en el borde, sigue modificando los puntos de alrededor.} \newline 
 
 $\left \{\begin{array}{ll}
 \frac{1}{4}x_{i+1,j}+\frac{1}{4}x_{i,j+1}+\frac{1}{4}x_{i-1,j}+\frac{1}{4}x_{i,j-1}-x_{i,j}=0 & \text{si el punto es desconocido} \\  x_{i,j}=-100 & \text{si el punto es borde} \\ x_{i,j}=T_s & \text{si el punto es sanguijuela} \end{array}$ \newline
 
-Considerando todos los puntos desconocidos de la matriz, se obtiene entonces un sistema de ecuaciones lineales de $mn \times mn$.
+Considerando todos los puntos desconocidos de la matriz, se obtiene entonces un sistema de ecuaciones lineales de $a'+b' \times a'+b'$.
 
 Nuestro problema entonces se reduce a plantear una resolución.
 %En un principio se pensó en utilizar una sola estructura para el problema, que generara la matriz a partir de los datos leídos en el archivo de entrada, suficientes para hallar la temperatura en cada punto del parabrisas. El problema que encontramos era que al crear la matriz, solo guardábamos sus celdas, perdiendo los datos originales del problema. De esta forma, no podíamos generar la matriz parabrisas sin saber su ancho, para devolver los datos de la forma requerida. Guardar estos datos como parte de la estructura hubiera sido una solución forzada, que hubiera hecho que la matriz dejara de ser una estructura genérica para volverse específica de este problema. Por eso, optamos por una estructura parabrisas, que guardara todos los datos relevantes.
@@ -111,7 +107,7 @@ Para aprovechar la estructura banda se pensó en guardar únicamente un vector d
 
 Finalmente, para implementar la matriz banda, no se creó otra estructura, sino que se modificó la estructura matriz ya existente, de forma que incluyera un booleano que indicara si era una matriz banda, y un entero para el ancho de banda. De esta forma, todas las operaciones de la matriz podían utilizarse para la matriz banda, con la única excepción de la función que permite definir un valor en una celda y la que busca el valor de una celda determinada, en las que hubo que separar en dos casos.
 
-Al implementar esto, hubo que modificar el algoritmo que crea la matriz a partir de un parabrisas para que solo definiera los elementos de la banda. También hubo que modificar indirectamente la eliminación gaussiana, ya que al restar filas solo debían tenerse en cuenta las celdas que formaran parte de la banda. El ancho de banda es $2 \times m + 1$.
+Al implementar esto, hubo que modificar el algoritmo que crea la matriz a partir de un parabrisas para que solo definiera los elementos de la banda. También hubo que modificar indirectamente la eliminación gaussiana, ya que al restar filas solo debían tenerse en cuenta las celdas que formaran parte de la banda. El ancho de banda es $2 \times a' + 1$.
 
 Se trabaja con tolerancia, forzando un 0 cuando el valor de una celda es menor a $10^{-10}$ en módulo.
 
@@ -123,78 +119,34 @@ La \textbf{Segunda parte} se trata de experimentar con estos algoritmos desarrol
   Operación & Costo matriz común & Costo matriz banda \\
  \hline
   Cargar los datos & O(k) & O(k)  \\
-  Generar la matriz & O($m^2n^2k$) & O($m^2nk$) \\
-  Triangular la matriz & O($m^3n^3$) & O($m^3n$) \\
-  Generar el vector de resultados & O($m^2n^2$) & O($m^2n^2$)\\
-  Imprimir el vector de resultados & O($mn$) & O($mn$)
+  Generar la matriz & O($a'^2b'^2k$) & O($a'^2b'k$) \\
+  Triangular la matriz & O($a'^3b'^3$) & O($a'^2b'^2$) \\
+  Generar el vector de resultados & O($a'^2b'^2$) & O($a'^2b'^2$)\\
+  Imprimir el vector de resultados & O($a'b'$) & O($a'b'$)\\
+  Tiempo total de ejecución & O($a'^3b'^3$) & O($a'^2b'^2$)
 \end{tabular} \\ \\
 
-El costo de generar la matriz incluye la cantidad de sanguijuelas $k$ porque es necesario determinar, para cada punto, si está en una sanguijuela. 
+El costo de generar la matriz incluye la cantidad de sanguijuelas $k$ porque es necesario determinar, para cada punto, si está en una sanguijuela. Para el costo total de ejecución se acota $k$ por $max\{a',b'\}$
 
-Se tiene que lo que determina el costo total es la triangulación de la matriz. Por eso, el algoritmo banda es temporalmente más eficiente que el algoritmo de eliminación gaussiana común. Este es el algoritmo de triangulación de una matriz común:
+Se tiene que lo que determina el costo total es la triangulación de la matriz. Por eso, el algoritmo banda es temporalmente más eficiente que el algoritmo de eliminación gaussiana común. Esto se debe a la operación que resta filas, que se ejecuta hasta $((a'b')^2)/2$ veces, ya que puede ser necesario ejecutarla una vez para generar un 0 en cada celda por debajo de la diagonal. 
 
-\newcommand{\tab}{\hspace*{7mm}}
-\begin{codesnippet}
+Esta operación tiene como complejidad $a' \times b'$ en el caso de la matriz común, y $2a'+1$ en el caso de la matriz banda, ya que solo debe restar las celdas que forman parte de la banda, cuya cantidad corresponde con el ancho de banda. La complejidad total de la triangulación es, entonces, O($(a'b')^3$) en el caso de la matriz común y O($(a'b')^2$) en el caso de la banda. 
 
-EliminacionGaussiana(Matriz m):\\
-\textbf{for} i=(1:columnas)\\
-\tab \textbf{for} j=(i+1:filas)\\
-\tab \tab \textbf{if} ($|A_{ii}| \geq$ tol $\wedge |A_{ji}| \geq$ tol)\\
-\tab \tab \tab mult = $\frac{A_{ji}}{A_{ii}}$\\
-\tab \tab \tab restarFilas($A_{j}$,$A_{i}$*mult) \hfill O(mn)\\
-\tab \tab \textbf{endif}\\
-\tab \textbf{endfor} \hfill O(mn) $\cdot$ O(m)=O($m^2n^2$) \\
-\textbf{endfor} \hfill O($m^2n^2$) $\cdot$ O(m)=O($m^3n^3$) \\
+Al reducirse la granularidad, debería aumentar el tiempo de ejecución. Esto es porque reducir al doble la granularidad, por ejemplo, implica duplicar tanto el alto como el ancho de la matriz que representa la discretización del parabrisas.
 
-\end{codesnippet}
+Si se considera $b'=b/h+1$ y $a'=a/h+1$, es posible reescribir los órdenes de complejidad de los algoritmos. El algoritmo de triangulación de la matriz común cuesta O($\frac{a^3 b^3}{h^6}$) y el de la matriz banda, O($\frac{a^2 b^2}{h^4}$).
 
-Y este es el algoritmo de triangulación de una matriz banda:
+La cantidad de sanguijuelas no debería afectar el tiempo de ejecución, salvo que sea muy grande, superando la cota fijada al considerar el orden de complejidad del tiempo de ejecución. \newline
 
-\begin{codesnippet}
-
-EliminacionGaussiana(Matriz m):\\
-\textbf{for} i=(1:columnas)\\
-\tab \textbf{for} j=(i+1:min$\{$filas,i+anchoBanda$\}$)\\
-\tab \tab \textbf{if} ($|A_{ii}| \geq$tol $\wedge |A_{ji}| \geq$ tol)\\
-\tab \tab \tab mult = $\frac{A_{ji}}{A_{ii}}$\\
-\tab \tab \tab restarFilas($A_{j}$,$A_{i}$*mult) \hfill O(m)\\
-\tab \tab \textbf{endif}\\
-\tab \textbf{endfor} \hfill O(m) $\cdot$ O(m)=O($m^2$)\\
-\textbf{endfor} \hfill O(mn) $\cdot$ O($m^2$)=O($m^3n$)\\
-
-\end{codesnippet}
-La operación que resta filas se ejecuta hasta $((mn)^2)/2$ veces en el caso de la matriz común, ya que puede ser necesario ejecutarla una vez para generar un 0 en cada celda por debajo de la diagonal. En el caso de la matriz banda, se ejecuta hasta $m+1$ veces por cada columna, es decir, $m^2n+mn$ veces.
-
-Esta operación tiene como complejidad $m \times n$ en el caso de la matriz común, y $2m+1$ en el caso de la matriz banda, ya que solo debe restar las celdas que forman parte de la banda, cuya cantidad corresponde con el ancho de banda. La complejidad total de la triangulación es, entonces, O($(mn)^3$) en el caso de la matriz común y O($m^3n$) en el caso de la banda. 
-
-Considerando $m \sim n>>k$
-
-\begin{tabular}{ l|c c }
-  Operación & Costo matriz común & Costo matriz banda \\
- \hline
-  Cargar los datos & O(k) & O(k)  \\
-  Generar la matriz & O($m^4$) & O($m^4$) \\
-  Triangular la matriz & O($m^6$) & O($m^4$) \\
-  Generar el vector de resultados & O($m^4$) & O($m^4$)\\
-  Imprimir el vector de resultados & O($m^2$) & O($m^2$)\\
-  Tiempo total de ejecución & O($m^6$) & O($m^4$)
-\end{tabular} \\ \\
-
-Al reducirse la granularidad, debería aumentar el tiempo de ejecución. Esto es porque reducir a la mitad la granularidad, por ejemplo, implica duplicar tanto el alto como el ancho de la matriz que representa la discretización del parabrisas.
-
-Si se considera $m=a/h+1$, es posible reescribir los órdenes de complejidad de los algoritmos en función de $a$, y $h$. El algoritmo de triangulación de la matriz común cuesta O($\frac{a^6}{h^6}$) y el de la matriz banda, O($\frac{a^4}{h^4}$).
-
-La cantidad de sanguijuelas no debería afectar el tiempo de ejecución, salvo que sea muy grande, comparable con m o n. \newline
-
-La \textbf{Tercera parte} del problema consiste en encontrar un algoritmo que permita elegir qué sanguijuelas eliminar para que la temperatura del punto crítico del vidrio se mantenga por debajo de 235º, evitando eliminar más sanguijuelas de las estrictamente necesarias. El algoritmo ultilizado fue heurístico: se elimina siempre la sanguijuela más cercana al centro. Elegimos hacerlo de esta manera porque la sanguijuela que más influye en la temperatura de un punto es la más cercana a él, siendo el borde fijo. En caso de que dos sanguijuelas sean equidistantes al centro, se elimina la última que se agregó.
-
+La \textbf{Tercera parte} del problema consiste en encontrar un algoritmo que permita elegir qué sanguijuelas eliminar para que la temperatura del punto crítico del vidrio se mantenga por debajo de 235º, evitando eliminar más sanguijuelas de las estrictamente necesarias. El algoritmo ultilizado fue heurístico: se elimina siempre la sanguijuela más cercana al centro. Elegimos hacerlo de esta manera porque la sanguijuela que más influye en la temperatura de un punto es la más cercana a él, siendo el borde fijo. En caso de que dos sanguijuelas sean equidistantes al centro, se elimina la última que se agregó.\newline
 Una opción más provechosa en términos del uso de láseres sería usar un algoritmo que antes de decidir si eliminar una sanguijuela simulara el estado del punto crítico posterior a su eliminación, haciendo esta simulación con todas las sanguijuelas (o con todas dentro un determinado radio); luego podría elegir una sanguijuela a eliminar observando en cuál estado posterior de la simulación el punto crítico baja más.
-
 Un ejemplo en el que este último algoritmo se desempeña mejor sería un caso en el que hubiera diez sanguijuelas muy cerca una de la otra y del punto crítico y una no tan cerca, pero en el que eliminar esta sanguijuela solitaria bastaría para reducir la temperatura del punto crítico a un valor óptimo.
 El algoritmo que elegimos eliminaría las 10 sanguijuelas más cercanas, y recalcularía todo el sistema cada vez.
 El algoritmo más eficiente en uso de lásers, en cambio, notaría que eliminando una sola sanguijuela puede alcanzar un resultado aceptable, y al ver que eliminando una sola de las sangujuelas más cercanas no conseguiría nada, elegiría entonces a la más lejana, matando una sola sanguijuela.
 
-Sin embargo, nos inclinamos por el algoritmo heurístico debido a que consideramos que el costo del algoritmo más inteligente tanto en complejidad de programación, temporal y espacial sería mucho mayor, debido a que debería correr once veces la simulación para decidirse por una sanguijuela, mientras que el de fuerza bruta sólo una. Ademas, este es un caso particular en el que, por ejemplo, el radio de las sanguijuelas sea lo suficientemente pequeño como para que las cercanas al centro no afecten ningún punto de la grilla, mientras que la más alejada, por hallarse más cerca su centro de un punto de la grilla, modifique la temperatura del centro.
+Sin embargo, nos inclinamos por el algoritmo heurístico debido a que consideramos que el costo del algoritmo más inteligente tanto en complejidad de programación, temporal y espacial sería mucho mayor, debido a que debería correr once veces la simulación para decidirse por una sanguijuela, mientras que el de fuerza bruta sólo una. 
+
+Además, es altamente improbable que se dé un ejemplo así. Debería ser un caso particular en el que, por ejemplo, el radio de las sanguijuelas sea lo suficientemente pequeño como para que las cercanas al centro no afecten ningún punto de la grilla, mientras que la más alejada, por hallarse más cerca su centro de un punto de la grilla, modifique la temperatura del centro.
 
 Decidimos implementar el algoritmo de forma que imprimiera en un archivo separado, cuyo nombre se pasa por parámetro, una lista de las coordenadas de las sanguijuelas eliminadas, en orden, junto con la temperatura en el punto crítico después de cada eliminación. Dado que después de cada eliminación era necesario recalcular todo el sistema, usamos para esto el algoritmo de matriz banda. \newline \newline
 
@@ -214,7 +166,7 @@ Los tests utilizados fueron los siguientes, cambiando la granularidad: \\
 \end{tabular}   \\
 Se toma 100 y 120 como ancho y alto para el parabrisas porque deben ser números que permitieran variar la granularidad. Es necesario recordar que la granularidad debe dividir a ambos valores. Se varía la cantidad de saguijuelas para observar si este parámetro afecta el tiempo de ejecución. No se varía su temperatura, ya que no debería afectarla, mientras que variar el radio debería tener un efecto similar a variar la cantidad de saguijuelas.
   
-Los siguentes son los mapas de temperaturas para cada test, generados con el archivo graphsol.py, provisto por la cátedra, con distintas granularidades: 1, 2, 2.5, 4, 5 para los primeros dos tests y 1, 2, 3, 4, 5, 6 para los últimos dos.
+Los siguentes son los mapas de temperaturas para cada test, generados con el archivo graphsol.py, provisto por la cátedra, con distintas granularidades: 1, 2, 2.5, 4, 5 y 10 para los primeros dos tests y 1, 2, 3, 4, 5, 6 para los últimos dos.
 
 \begin{figure}[htbp]
 \includegraphics[width=110pt]{img/Parabrisas1-1.png} \includegraphics[width=110pt]{img/Parabrisas1-2.png} \includegraphics[width=110pt]{img/Parabrisas1-2,5.png} \newline \includegraphics[width=110pt]{img/Parabrisas1-4.png} \includegraphics[width=110pt]{img/Parabrisas1-5.png} \includegraphics[width=110pt]{img/Parabrisas1-10.png} \newline
@@ -226,17 +178,15 @@ Los siguentes son los mapas de temperaturas para cada test, generados con el arc
 \caption{Test 2}
 \end{figure}
 
-Los mapas de temperatura para los test 3 y 4 son muy similares a los anteriores, ya que el único parámetro que cambia es el ancho.
-
-%\begin{figure}[htbp]
-%\includegraphics[width=110pt]{img/Parabrisas3-1.png} \includegraphics[width=110pt]{img/Parabrisas3-2.png} \includegraphics[width=110pt]{img/Parabrisas3-3.png} \newline \includegraphics[width=110pt]{img/Parabrisas3-4.png} \includegraphics[width=110pt]{img/Parabrisas3-5.png} \includegraphics[width=110pt]{img/Parabrisas3-6.png} \newline
-%\caption{Test 3}
-%\end{figure}
-%\begin{figure}[htbp]
-%\includegraphics[width=110pt]{img/Parabrisas4-1.png} \includegraphics[width=110pt]{img/Parabrisas4-2.png} \includegraphics[width=110pt]{img/Parabrisas4-3.png} \newline \includegraphics[width=110pt]{img/Parabrisas4-4.png} \includegraphics[width=110pt]{img/Parabrisas4-5.png} \includegraphics[width=110pt]{img/Parabrisas4-6.png} \newline
-%\caption{Test 4}
-%\end{figure}
-%\newpage
+\begin{figure}[htbp]
+\includegraphics[width=110pt]{img/Parabrisas3-1.png} \includegraphics[width=110pt]{img/Parabrisas3-2.png} \includegraphics[width=110pt]{img/Parabrisas3-3.png} \newline \includegraphics[width=110pt]{img/Parabrisas3-4.png} \includegraphics[width=110pt]{img/Parabrisas3-5.png} \includegraphics[width=110pt]{img/Parabrisas3-6.png} \newline
+\caption{Test 3}
+\end{figure}
+\begin{figure}[htbp]
+\includegraphics[width=110pt]{img/Parabrisas4-1.png} \includegraphics[width=110pt]{img/Parabrisas4-2.png} \includegraphics[width=110pt]{img/Parabrisas4-3.png} \newline \includegraphics[width=110pt]{img/Parabrisas4-4.png} \includegraphics[width=110pt]{img/Parabrisas4-5.png} \includegraphics[width=110pt]{img/Parabrisas4-6.png} \newline
+\caption{Test 4}
+\end{figure}
+\newpage
 A continuación se presenta el tiempo de ejecución según la granularidad. Las mediciones fueron  efectuadas con instrucciones de la librería $ctime$. Realizar varias mediciones produce una diferencia de hasta 0.5s, por lo que se hizo un promedio de varias ejecuciones; sin embargo, no se puede garantizar que los resultados para los casos de mayor granularidad sean confiables. Notar que la escala es logarítmica:
 
 \noindent \includegraphics[width=180pt]{img/tiempo1.png}\includegraphics[width=180pt]{img/tiempo2.png} \newline
@@ -247,7 +197,7 @@ Lo que sigue es la temperatura del punto medio según la granularidad.
 \noindent \includegraphics[width=180pt]{img/temp1.png}\includegraphics[width=180pt]{img/temp2.png} \newline
 \includegraphics[width=180pt]{img/temp3.png}\includegraphics[width=180pt]{img/temp4.png}
 
-Para el algoritmo de eliminación de sanguijuelas se tomaron los tests 1 y 3, se fijó la granularidad en 2 y se agregaron más sanguijuelas, de forma que el algoritmo tuviera que repetirse un número mayor de veces. \\
+Para el algoritmo de eliminación de sanguijuelas tomamos los tests 1 y 3, fijamos la granularidad en 2 y agregamos más sanguijuelas, de forma que el algoritmo tuviera que repetirse un número mayor de veces. \\
   \begin{tabular}{ l|l l l l l l}
   test & ancho & alto & h & radio & temp & $\#$sang \\
   \hline
@@ -260,13 +210,13 @@ Para el algoritmo de eliminación de sanguijuelas se tomaron los tests 1 y 3, se
 
 \includegraphics[width=300pt]{img/elim3.png} 
 
-En cuanto al tiempo de ejecución, se obtuvieron estos resultados que presentamos junto a los del test correspondiente, sin eliminación de sanguijuelas: \smallskip \newline
+En cuanto al tiempo de ejecución, obtuvimos estos resultados que presentamos junto a los del test correspondiente, sin eliminación de sanguijuelas: \smallskip \newline
 
 \begin{tabular}{ l |l l l l}
   test & tiempo sin elim & tiempo con elim & $\#$ elim & $\frac{\text{tiempo con elim}}{\text{tiempo sin elim}}$\\
   \hline
-  test1 & 0,33 & 5,71 & 8 & 17,30\\
-  test3 & 1,02 & 8,87 & 6 & 8,69
+  test1 & 1,413 & 8,361 & 8 & 5,91\\
+  test3 & 3.159 & 13.347 & 6 & 4,22
 \end{tabular} 
 
 
@@ -275,41 +225,45 @@ En cuanto al tiempo de ejecución, se obtuvieron estos resultados que presentamo
 \section{Discusi\'{o}n}
 \label{sec:discusion}
 
-Teniendo en cuenta que la matriz cuadrada es de $(m \times n) \times (m \times n)$ y que la matriz banda solo debe conservar $(m \times n) \times (2 \times m + 1)$ valores, la matriz banda ocupa menos memoria cuando $n > 2$. La diferencia escala con $n$. En el caso asintótico, ocupa $O(m^2 n^2)$ la matriz cuadrada y $O(m^2 n)$ la matriz banda.
+%Algo de la que da constante
 
-Como se puede ver en los gráficos de tiempo de ejecución, el algoritmo de eliminación gaussiana banda fue más eficiente que el común. Sin embargo, la diferencia escala con $a$, no con $a^2$, por lo que la aproximación no fue muy buena.
+Teniendo en cuenta que la matriz cuadrada es de $(a' \times b') \times (a' \times b')$ y que la matriz banda solo debe conservar $(a' \times b') \times (2 \times a' + 1)$ valores, la matriz banda ocupa menos memoria cuando $b' > 2$. La diferencia escala con $b'$. En el caso asintótico, ocupa $O(a'^2 b'^2)$ la matriz cuadrada y $O(a'^2 b')$ la matriz banda.
 
-La cantidad de sanguijuelas afectó al tiempo total de ejecución. En algunos casos lo aumentó y en otros lo redujo. Si bien al analizar el orden de complejidad en peor caso parecería que solo debería aumentarlo, hay que tener en cuenta que agregar una sanguijuela implica cambiar algunos valores de la matriz de 1/4 a 0. Esto reduce el tiempo de triangulación, que es el que domina la función. %acá había que cambiar algo
+Como se puede ver en los gráficos de tiempo de ejecución, el algoritmo de eliminación gaussiana banda fue más eficiente que el común. El algoritmo banda tardó alrededor de $3b$ veces menos que el común en el test 1, algo que está en línea con lo que se esperaba. En los otros tests tardó más que eso, además de escalar la proporción más que $b$, por lo que la aproximación no fue muy buena.
 
-Como esperábamos, reducir la granularidad aumentó el tiempo de ejecución. Se puede ver que una reducción de la granularidad del 50$\%$ llevó a un aumento del tiempo de ejecución del orden de $2^4$ en la matriz banda y hasta $2^5$ en la matriz común, aproximadamente; es decir, lo esperado en el primer caso y la mitad de lo esperado en el segundo:\newline
+La cantidad de sanguijuelas afectó al tiempo total de ejecución. En algunos casos lo aumentó y en otros lo redujo. Si bien al analizar el orden de complejidad en peor caso parecería que solo debería aumentarlo, hay que tener en cuenta que agregar una sanguijuela implica cambiar algunos valores de la matriz de 1/4 a 0. Esto reduce el tiempo de triangulación, que es el que domina la función.
+
+Como esperábamos, reducir la granularidad aumentó el tiempo de ejecución. Se puede ver que una reducción de la granularidad del 50$\%$ llevó a un aumento del tiempo de ejecución del orden de $2^4$ en la matriz banda y hasta $2^5$ en la matriz común, aproximadamente; es decir, la mitad de lo esperado:\newline
 
 Matriz banda \newline
 
 \begin{tabular}{ l|l l l}
-  test & h=1 & h=2 & $\frac{h=1}{h=2}$ \\
+  test & h=1 & h=2 & $\frac{h=2}{h=1}$ \\
   \hline
-  test1 & 4,94 & 0,33 & 14,96 \\
-  test2 & 7,24 & 0,49 & 14,77 \\
-  test3 & 11,76 & 0,77 & 15,27 \\
-  test4 & 15,2 & 1,02 & 14,90 \\
+  test1 & 42,007 & 2,006 & 15,272 \\
+  test2 & 13,073 & 0,856 & 20,94 \\
+  test3 & 69,18 & 4,427 & 15,62 \\
+  test4 & 27,926 & 1,807 & 15,45 \\
 \end{tabular} \newline \newline
 
 Matriz común \newline
 
 \begin{tabular}{ l|l l l}
-  test & h=1 & h=2 & $\frac{h=1}{h=2}$ \\
+  test & h=1 & h=2 & $\frac{h=2}{h=1}$ \\
   \hline
-  test1 & 318,48 & 10,43 & 30,52 \\
-  test2 & 398,78 & 12,95 & 30,79 \\
-  test3 & 596,97 & 32,19 & 18,54 \\
-  test4 & 711,23 & 27,96 & 25,42 \\
+  test1 & 318,481 & 10,432 & 30,52 \\
+  test2 & 431,00 & 4,380 & 32,40 \\
+  test3 & 596,97 & 32,195 & 18,54 \\
+  test4 & 711,23 & 27,969 & 25,42 \\
 \end{tabular} \newline \newline
+
+Sin embargo, se dieron casos anómalos en los tests 1 y 3, donde la curva resultante no fue decreciente, pero no sabemos a qué pueden deberse.
 
 Reducir la granularidad llevó a resultados más exactos, como se puede ver en los mapas de temperatura. Con los gráficos de temperatura del punto crítico se puede ver que el valor de ese punto parece ir tendiendo hacia un determinado límite; si fuera posible tomar un límite con granularidad tendiente a 0 entonces se podría encontrar el valor del punto crítico en el caso continuo, en otras palabras, cuanta más precisa la granularidad, más confiable y cercano al real es el resultado.
 
 En un caso la temperatura se mantuvo contanste en $T_s$. Esto se debe a que el punto crítico queda bajo una sanguijuela, algo que no varía al cambiar la granularidad.
 
-En cuanto al algoritmo de eliminación, se pude ver que cada sanguijuela eliminada redujo la temperatura del punto crítico. Esto no garantiza que el algoritmo sea óptimo, ya que es evidente que si hubiera dos sanguijuelas en el mismo punto, esto no se daría. Pero dejando ese caso a un lado, se puede decir que el algoritmo es bueno, ya que no desperdicia disparos en sanguijuelas que no afectan la temperatura del punto crítico.
+En cuanto al algoritmo de eliminación, se pude ver que cada sanguijuela eliminada redujo la temperatura del punto crítico. Esto no garantiza que el algoritmo sea óptimo, ya que es evidente que si hubiera dos sanguijuelas en el mismo punto, esto no se daría. Pero dejando ese caso a un lado, se puede decir que el algortimo es bueno, ya que no desperdicia disparos en sanguijuelas que no afectan la temperatura del punto crítico.
 
 En cuanto al tiempo de ejecución de este algoritmo, no coincide exactamente con el producto de la cantidad de sanguijuelas y el tiempo que se tarda en volver a calcular el sistema, si bien se aproxima. Esto se debe a que, como ya se dijo, recalcular el sistema con menos sanguijuelas no necesariamente cuesta lo mismo.
 
@@ -331,7 +285,7 @@ Podemos sacar otras conclusiones al ver las diferencias que surgen de implementa
 
 Principalmente se puede ver la importancia que tiene el no guardar más datos de los necesarios (o de guardarlos de manera inteligente) para cubrir todas las funciones esperadas de nuestra estructura de manera satisfactoria, ya que es evidente que si bien ambas implementaciones cumplen con lo necesario para considerarse correctas, la eficiencia, tanto a nivel temporal como espacial, de la matriz banda sobrepasa por mucho a aquella de la matriz común.
 Habiendo dicho esto, uno podría pensar que la matriz banda sería deseable por sobre la común en todos los casos, pero podemos hacernos la pregunta de si no hay algo que estemos perdiendo al obtener esta mayor eficiencia.  Salta entonces a la vista que la matriz banda se diferencia de la común en que está mucho más especializada, es decir que al aprovechar el hecho de que trabaja con una matriz con forma de banda, al asumir que los puntos alejados del centro a partir de una determinada distancia valen 0 estamos justamente reduciendo la cantidad de casos a los que la matriz banda es aplicable. La matriz banda trabaja mejor con todos los casos que puede, pero es aplicable a menos casos, mientras que la común cambia velocidad y memoria por una versatilidad mucho mayor.
-En otras palabras, si quisiéramos usar la banda para alguna otra utilidad, distinta del propósito de este trabajo, tendríamos primero que comprobar si es aplicable a nuestros experimentos, mientras que con la común no habría requisitos para representar en forma de matriz lo que sea que necesitemos.
+En otras palabras, si quisiéramos usar la banda para alguna otra utilidad, distinta del propósito de este trabajo, tendríamos primero que comprobar si es aplicable a nuestros experimentos, mientras que con la común ya directamente no habría requisitos para representar en forma de matriz lo que sea que necesitemos.
 Luego de haber sacado conclusiones de comparar nuestras implementaciones en términos de versatilidad, velocidad y tiempo, queda también ver qué podemos sacar de la comparación entre complejidad de implementaciones; sin embargo no encontramos mucha diferencia entre nuestra implementación de matriz banda y de común, ya que nos limitamos a reducir el ancho de la matriz efectiva que guardábamos, incluso comparten funciones (con ligeras variaciones).
 
 \newpage
