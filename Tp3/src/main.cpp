@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
 	tiempo.open("Tiempo");
 	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;*/
 
-	m.IBilinealRB();
+	IBilinealRB(m);
     devolver(m,header,argv[2]);
 
 	Matriz orig(512,768);

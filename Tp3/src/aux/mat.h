@@ -50,8 +50,6 @@ int Ccolumnas();
 
 int TamTotal();
 
-void IBilinealRB();
-
 void mostrar();
 
 private:

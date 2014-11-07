@@ -98,7 +98,7 @@ int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {
 		double semiacum=yn[i];
 		for (int j=0;j<n;j++) {
 			if (i!=j) {
-				semiacum*=(x-xn[j])/(float)(xn[i]-xn[j]);
+				semiacum*=(x-xn[j])/((float)(xn[i])-(float)(xn[j]));
 			}
 		} acum+=semiacum;
 	} return acum;
@@ -123,4 +123,27 @@ float grad(Matriz& mat, int i, int j, char color) {
 	} else {
 		cout << "Error" << endl;
 	} return 0;
+}
+
+void IBilinealRB(Matriz& mat) {
+	for (int i=1;i<=mat.Cfilas()/2;i++) {
+		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
+            pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
+            pixel pg=mat.Posicion(i*2-1,j*2); //verde
+            pr.blue=(mat.Posicion(i*2,j*2).blue+mat.Posicion(i*2-2,j*2-2).blue+mat.Posicion(i*2-2,j*2).blue+mat.Posicion(i*2,j*2-2).blue)/4;
+            mat.Definir(pr,i*2-1,j*2-1);
+            pg.red=(pr.red+mat.Posicion(i*2-1,j*2+1).red)/2;
+            pg.blue=(mat.Posicion(i*2,j*2).blue+mat.Posicion(i*2-2,j*2).blue)/2;
+	        mat.Definir(pg,i*2-1,j*2);
+		}
+		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
+            pixel pg=mat.Posicion(i*2,j*2-1); // verde
+            pixel pb=mat.Posicion(i*2,j*2); //azul
+            pg.blue=(pb.blue+mat.Posicion(i*2,j*2-2).blue)/2;
+            pg.red=(mat.Posicion(i*2-1,j*2-1).red+mat.Posicion(i*2+1,j*2-1).red)/2;
+            mat.Definir(pg,i*2,j*2-1);
+            pb.red=(mat.Posicion(i*2-1,j*2-1).red+mat.Posicion(i*2+1,j*2+1).red+mat.Posicion(i*2-1,j*2+1).red+mat.Posicion(i*2+1,j*2-1).red)/4;
+            mat.Definir(pb,i*2,j*2);
+		}
+	}
 }

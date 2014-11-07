@@ -4,114 +4,80 @@
 //Los hago void y por referencia porque no necesitamos guardar la matriz mosaiqueada para el psnr.
 
 void VecinoMasCercano(Matriz& mat){
-
-	Matriz nuevamat(mat.Cfilas(), mat.Ccolumnas());
-
-	for (int i=1; i<=mat.Cfilas(); i++){
-		for (int j=1; j<=mat.Ccolumnas(); j++){
-			nuevamat.Definir(mat.Posicion(i,j),i,j);
-		}
-	}
-
-
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
 		    pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
 		    pixel pg=mat.Posicion(i*2-1,j*2); //verde
 		    pr.green=pg.green;
-		    nuevamat.Definir(pr,i*2-1,j*2-1);
-//          mat.Definir(pg,i*2-1,j*2);
+		    mat.Definir(pr,i*2-1,j*2-1);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
 		    pixel pg=mat.Posicion(i*2,j*2-1); // verde
 		    pixel pb=mat.Posicion(i*2,j*2); //azul
 		    pb.green=pg.green;
-//          mat.Definir(pg,i*2,j*2-1);
-		    nuevamat.Definir(pb,i*2,j*2);
+		    mat.Definir(pb,i*2,j*2);
 		}
 	}
-	mat = nuevamat;
 }
 
 void InterpBilineal(Matriz& mat){
-
-	Matriz nuevamat(mat.Cfilas(), mat.Ccolumnas());
-
-	for (int i=1; i<=mat.Cfilas(); i++){
-		for (int j=1; j<=mat.Ccolumnas(); j++){
-			nuevamat.Definir(mat.Posicion(i,j),i,j);
-		}
-	}
-
-
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
             pr.green=(mat.Posicion(i*2-1,j*2).green+mat.Posicion(i*2-1,j*2-2).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2-2,j*2-1).green)/4;
-            nuevamat.Definir(pr,i*2-1,j*2-1);
+            mat.Definir(pr,i*2-1,j*2-1);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pb=mat.Posicion(i*2,j*2); //azul
             pb.green=(mat.Posicion(i*2,j*2+1).green+mat.Posicion(i*2,j*2-1).green+mat.Posicion(i*2+1,j*2).green+mat.Posicion(i*2-1,j*2).green)/4;
-            nuevamat.Definir(pb,i*2,j*2);
+            mat.Definir(pb,i*2,j*2);
 		}
 	}
-	mat = nuevamat;
 }
 
 void InterpXDir(Matriz& mat){
-	int size;
-	int pos;
+	int size, pos;
 	vector<uint> vecPar (mat.Ccolumnas()/2);
 	vector<uint> vecImp (mat.Ccolumnas()/2);
 	for (int j = 0; j < mat.Ccolumnas()/2; j++){vecPar[j] = j*2+2; vecImp[j] = j*2+1;}
 	vector<uint> vecDirH;
 	for (int i=1;i<=mat.Cfilas();i++) {
-		if (i%2 == 1){//Fila Impar
-			VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
-			for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal)
-				pixel pr = mat.Posicion(i, j*2-1); //rojo
-				pr.green = (evaluarEnInterLagrange(j*2-1, vecPar, vecDirH))/2; //evaluarEnInterLagrange, habría q hacer otra de Splines.
-				mat.Definir(pr, i, j*2-1);
-			}
-		} else {//Fila Par
-			VecEnDir(mat, 1, i, 0, 2, 'g', vecDirH, size, pos);
-			for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
-				pixel pb = mat.Posicion(i, j*2); //blue
-				pb.green = (evaluarEnInterLagrange(j*2, vecImp, vecDirH))/2;
-				mat.Definir(pb, i, j*2);
-			}
+		//Fila Impar
+		cout << i << endl;
+		VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
+		for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal)
+			pixel pr = mat.Posicion(i, j*2-1); //rojo
+			pr.green = (evaluarEnInterLagrange(j*2-1, vecPar, vecDirH))/2; //evaluarEnInterLagrange, habría q hacer otra de Splines.
+			mat.Definir(pr, i, j*2-1);
+		}
+		i++; cout << i << endl; //Fila par
+		VecEnDir(mat, 1, i, 0, 2, 'g', vecDirH, size, pos);
+		for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
+			pixel pb = mat.Posicion(i, j*2); //blue
+			pb.green = (evaluarEnInterLagrange(j*2, vecImp, vecDirH))/2;
+			mat.Definir(pb, i, j*2);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con la dirH
 	vector<uint> vecDirV;
 	for (int j=1;j<=mat.Ccolumnas();j++) {
-		if (j%2 == 1){//Columna Impar
-			VecEnDir(mat, j, 2, 2, 0, 'g', vecDirV, size, pos);
-			for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los red (con direccion vertical)
-				pixel pr = mat.Posicion(i*2-1, j); //rojo
-				pr.green += (evaluarEnInterLagrange(i*2-1, vecPar, vecDirV))/2; //El primer parametro es de la posicion en la que quiero evaluar
-				mat.Definir(pr, i*2-1, j);
-			}
-		} else {//Columna Par
-			VecEnDir(mat, j, 1, 2, 0, 'g', vecDirV, size, pos);
-			for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los blue (con direccion vertical)
-				pixel pb = mat.Posicion(i*2, j); //blue
-				pb.green += (evaluarEnInterLagrange(i*2, vecImp, vecDirV))/2;
-				mat.Definir(pb, i*2, j);
-			}
+		//Columna Impar
+		VecEnDir(mat, j, 2, 2, 0, 'g', vecDirV, size, pos);
+		for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los red (con direccion vertical)
+			pixel pr = mat.Posicion(i*2-1, j); //rojo
+			pr.green += (evaluarEnInterLagrange(i*2-1, vecPar, vecDirV))/2; //El primer parametro es de la posicion en la que quiero evaluar
+			mat.Definir(pr, i*2-1, j);
+		}
+		j++; //columna par
+		VecEnDir(mat, j, 1, 2, 0, 'g', vecDirV, size, pos);
+		for (int i = 1; i<=mat.Cfilas()/2; i++){	//Defino el valor green para los blue (con direccion vertical)
+			pixel pb = mat.Posicion(i*2, j); //blue
+			pb.green += (evaluarEnInterLagrange(i*2, vecImp, vecDirV))/2;
+			mat.Definir(pb, i*2, j);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con las dos Dir
 }
 
 void ElDelPaper(Matriz& mat){
-
-	Matriz nuevamat(mat.Cfilas(), mat.Ccolumnas());
-
-	for (int i=1; i<=mat.Cfilas(); i++){
-		for (int j=1; j<=mat.Ccolumnas(); j++){
-			nuevamat.Definir(mat.Posicion(i,j),i,j);
-		}
-	}
 
 	float alpha=0.5;
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
@@ -121,7 +87,7 @@ void ElDelPaper(Matriz& mat){
 			pr.green+=alpha*(grad(mat,i*2-1,j*2-1,'r'));
 			if ((int)(pr.green)>255) {pr.green=255;}
 			if ((int)(pr.green)<0) {pr.green=0;}
-            nuevamat.Definir(pr,i*2-1,j*2-1);
+            mat.Definir(pr,i*2-1,j*2-1);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pb=mat.Posicion(i*2,j*2); //azul
@@ -129,13 +95,11 @@ void ElDelPaper(Matriz& mat){
 			pb.green+=alpha*(grad(mat,i*2,j*2,'b'));
 			if ((int)(pb.green)>255) {pb.green=255;}
 			if ((int)(pb.green)<0) {pb.green=0;}
-            nuevamat.Definir(pb,i*2,j*2);
+            mat.Definir(pb,i*2,j*2);
 		}
 	}
-	mat = nuevamat;
 }
 	//---- PARA INTERPOLACION X DIRECCIONES ----//
-	//básicamente:
 	//for (int i=0;i<h;i++) {
 	//	vector<int> x
 	//	VecEnDir (1,0,x bla bla bla)
