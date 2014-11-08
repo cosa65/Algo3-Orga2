@@ -44,9 +44,12 @@ void InterpXDir(Matriz& mat){
 	for (int i=1;i<mat.Cfilas();i++) {
 		//Fila Impar
 		VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
+		//cout << vecDirH.size() << endl; //DA 384, No deberia dar la mitad??
+		cout << vecDirH[12] << endl;
+		cout << vecDirH[154] << endl;
 		vector<uint> vecRes = interConSpline(vecDirH);
-		cout << vecRes[10] << endl; //PARA CHEQUEAR!
-		cout << vecRes[11] << endl; //PARA CHEQUEAR!
+		//cout << vecRes[10] << endl; //DA HORRIBLE!
+		//cout << vecRes[11] << endl; //DA HORRIBLE!
 		for (int j = 2; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal) TAL VEZ HAYA SEG FAULT!
 			pixel pr = mat.Posicion(i, j*2-1); //rojo
 			pr.green = (vecRes[j-2])/2;
