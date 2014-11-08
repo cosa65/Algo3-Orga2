@@ -93,40 +93,38 @@ char color(int fila, int columna) {
 
 vector<uint> interConSpline(vector<uint> vecA){
 	int n = vecA.size();
-	vector<uint> vecH (n);	//COMO ES DE TODOS 1 HAY Q VER SI ES UTIL!
+	//vector<uint> vecH (n); COMO ES DE TODOS 2 NO HACE FALTA (STEP 1)
 	int i;
-	for (i = 0; i < n; i++){	//Tal vez se pueda Borrar (STEP 1)
-		vecHSubI[i] = 1;			//Tal vez se pueda Borrar
-	}						//Tal vez se pueda Borrar
-	for (i = 1; i < n; i++){	//(STEP 2)
-		vecA[i] = 3 * (vecA[i+1]- vecA[i]) - 3 * (vecA[i] - vecA[i-1]);
+	for (i = 1; i < n-1; i++){	//(STEP 2)
+		vecA[i] = (3/2) * (vecA[i+1]- vecA[i]) - (3/2) * (vecA[i] - vecA[i-1]);
 	}
-	vector<uint> vecL (n+1);		//(STEP 3)
-	vector<uint> vecU (n+1);
-	vector<uint> vecZ (n+1);
+	vector<uint> vecL (n);		//(STEP 3)
+	vector<uint> vecU (n);
+	vector<uint> vecZ (n);
 	vecL[0] = 1;
 	vecU[0] = 0;
 	vecZ[0] = 0;
-	for (i = 1; i < n; i++){	//(STEP 4)
-		vecL[i] = 8 - vecU[i-1];	//2 * (X_i+1 - X_i-1) = 8	y	H_i-1 = 1
-		vecU[i] = 1/vecL[i];		//H_i = 1
-		vecZ[i] = (vecA[i] - vecZ[i-1])/vecL[i];
+	for (i = 1; i < n-1; i++){	//(STEP 4)
+		vecL[i] = 8 - 2 * vecU[i-1];	//2 * (X_i+1 - X_i-1) = 8	y	H_i-1 = 1
+		vecU[i] = 2/vecL[i];		//H_i = 1
+		vecZ[i] = (vecA[i] - 2 * vecZ[i-1])/vecL[i];
 	}
-	vecL[n] = 1;		//(STEP 5)
-	vecZ[n] = 0;
-	vector<uint> vecB (n+1);
-	vector<uint> vecD (n+1);
-	vector<uint> vecC (n+1);
-	vecC[n] = 0;
-	for (i = n-1; i > -1; i--){	//(STEP 6)
+	vecL[n-1] = 1;		//(STEP 5) En el burden llama n al X_n, pero aca es el tamaño asi q el n seria n-1.
+	vecZ[n-1] = 0;
+	vector<uint> vecB (n);
+	vector<uint> vecD (n);
+	vector<uint> vecC (n);
+	vecC[n-1] = 0;
+	for (i = n-2; i > -1; i--){	//(STEP 6)
 		vecC[i] = vecZ[i] - vecU[i] * vecC[i+1];
-		vecB[i] = (vecA[i+1]/*ACA SE DEBE ROMPER!! MIRAR.*/ - vecA[i])/(1 - (vecC[i+1]+2vecC[i])/3);
-		vecD[i] = (vecC[i+1] - vecC[i])/3;
+		vecB[i] = (vecA[i+1] - vecA[i])/(2 - 2*(vecC[i+1]+2*vecC[i])/3);
+		vecD[i] = (vecC[i+1] - vecC[i])/6;
 	}
-	vector<uint> vecRes (n);//(STEP 7)! (CHEQUEAR LOS SIZE DE LOS VEC PORQ EN EL BURDEN ESTA RARO!. A CASITAAAA!)
-	for (i = 0; i < vecRes.size(); i++){
+	vector<uint> vecRes (n-1);//(STEP 7)!
+	for (i = 0; i < n-1; i++){
 		vecRes[i] = vecA[i] + vecB[i] + vecC[i] + vecD[i];
 	}
+	return vecRes;
 }
 
 int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {

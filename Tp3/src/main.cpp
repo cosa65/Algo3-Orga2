@@ -115,9 +115,9 @@ int main(int argc, char** argv) {
 	IBilinealRB(m);
     devolver(m,header,argv[2]);
 
-	Matriz orig(512,768);
-	cargar(orig,header,sinb(argv[1]));
-	cout << psnr(orig,m) << endl;
+	//Matriz orig(512,768);
+	//cargar(orig,header,sinb(argv[1]));
+	//cout << psnr(orig,m) << endl;
 
 	return 0;
 }
