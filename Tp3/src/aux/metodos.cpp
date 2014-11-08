@@ -46,7 +46,7 @@ void InterpXDir(Matriz& mat){
 		cout << i << endl;
 		VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
 		for (int j = 1; j<=mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal)
-			pixel pr = mat.Posicion(i, j*2-1); //rojo //VER! Esto define dsd el primer Rojo, Pero no hay un S_j que lo defina!!!.
+			pixel pr = mat.Posicion(i, j*2-1); //rojo //VER! Esto define dsd el primer Rojo, Pero no hay un S_j que lo defina!!!. 
 			pr.green = (interConSpline(vecDirH)[j-1])/2;
 			//pr.green = (evaluarEnInterLagrange(j*2-1, vecPar, vecDirH))/2; //evaluarEnInterLagrange, habría q hacer otra de Splines.
 			mat.Definir(pr, i, j*2-1);
