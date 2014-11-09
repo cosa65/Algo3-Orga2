@@ -37,53 +37,43 @@ void InterpBilineal(Matriz& mat){
 
 void InterpXDir(Matriz& mat){
 	int size, pos;
-	//vector<uint> vecPar (mat.Ccolumnas()/2);
-	//vector<uint> vecImp (mat.Ccolumnas()/2);
-	//for (int j = 0; j < mat.Ccolumnas()/2; j++){vecPar[j] = j*2+2; vecImp[j] = j*2+1;}
-	vector<uint> vecDirH;
+	vector<int> vecDirH;
 	for (int i=1;i<mat.Cfilas();i++) {
 		//Fila Impar
-		VecEnDir(mat, 2, i, 0, 2, 'g', vecDirH, size, pos);
-		//cout << vecDirH.size() << endl; //DA 384, No deberia dar la mitad??
-		cout << vecDirH[12] << endl;
-		cout << vecDirH[154] << endl;
-		vector<uint> vecRes = interConSpline(vecDirH);
-		//cout << vecRes[10] << endl; //DA HORRIBLE!
-		//cout << vecRes[11] << endl; //DA HORRIBLE!
-		for (int j = 2; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal) TAL VEZ HAYA SEG FAULT!
+		VecEnDir(mat, i, 2, 0, 2, 'g', vecDirH, size, pos);
+		vector<int> vecRes = interConSpline(vecDirH); //pr está en la pos 1
+		for (int j = 2; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal) 
 			pixel pr = mat.Posicion(i, j*2-1); //rojo
-			pr.green = (vecRes[j-2])/2;
-			//pr.green = (evaluarEnInterLagrange(j*2-1, vecPar, vecDirH))/2;
+			pr.green = (unsigned int)(vecRes[j-2])/2;
+			if (pr.green<10) {cout << '(' << i << ',' << j*2-1 << ')';}
 			mat.Definir(pr, i, j*2-1);
 		}
 		i++; //Fila Par
-		VecEnDir(mat, 1, i, 0, 2, 'g', vecDirH, size, pos);
+		VecEnDir(mat, i, 1, 0, 2, 'g', vecDirH, size, pos);
 		vecRes = interConSpline(vecDirH);
 		for (int j = 1; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
 			pixel pb = mat.Posicion(i, j*2); //blue
-			pb.green = (vecRes[j-1])/2;
-			//pb.green = (evaluarEnInterLagrange(j*2, vecImp, vecDirH))/2;
+			pb.green = (unsigned int)(vecRes[j-1])/2;
 			mat.Definir(pb, i, j*2);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con la dirH
-	vector<uint> vecDirV;
+	vector<int> vecDirV;
 	for (int j=1;j<mat.Ccolumnas();j++) {
 		//Columna Impar
-		VecEnDir(mat, j, 2, 2, 0, 'g', vecDirV, size, pos);
-		vector<uint> vecRes = interConSpline(vecDirV);
+		VecEnDir(mat, 2, j, 2, 0, 'g', vecDirV, size, pos);
+		vector<int> vecRes = interConSpline(vecDirV);
 		for (int i = 2; i<mat.Cfilas()/2; i++){	//Defino el valor green para los red (con direccion vertical)
 			pixel pr = mat.Posicion(i*2-1, j); //rojo
-			pr.green += (vecRes[i-2])/2; 
-			//pr.green += (evaluarEnInterLagrange(i*2-1, vecPar, vecDirV))/2; //El primer parametro es de la posicion en la que quiero evaluar
+			pr.green += (unsigned int)(vecRes[i-2])/2; 
+//			if (pr.green<10) {cout << '(' << i*2-1 << ',' << j << ')';}
 			mat.Definir(pr, i*2-1, j);
 		}
 		j++; //columna par
-		VecEnDir(mat, j, 1, 2, 0, 'g', vecDirV, size, pos);
+		VecEnDir(mat, 1, j, 2, 0, 'g', vecDirV, size, pos);
 		vecRes = interConSpline(vecDirV);
 		for (int i = 1; i<mat.Cfilas()/2; i++){	//Defino el valor green para los blue (con direccion vertical)
 			pixel pb = mat.Posicion(i*2, j); //blue
-			pb.green += (vecRes[i-1])/2;
-			//pb.green += (evaluarEnInterLagrange(i*2, vecImp, vecDirV))/2;
+			pb.green += (unsigned int)(vecRes[i-1])/2;
 			mat.Definir(pb, i*2, j);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con las dos Dir
@@ -107,7 +97,7 @@ void ElDelPaper(Matriz& mat){
 			pb.green+=alpha*(grad(mat,i*2,j*2,'b'));
 			if ((int)(pb.green)>255) {pb.green=255;}
 			if ((int)(pb.green)<0) {pb.green=0;}
-            mat.Definir(pb,i*2,j*2);
+		        mat.Definir(pb,i*2,j*2);
 		}
 	}
 }

@@ -53,7 +53,7 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
 
     for (int i=0;i<h;i++) {
         for (int j=0;j<w;j++) {
-            unsigned int r = (m.Posicion(i+1,j+1).red);
+            unsigned int r = m.Posicion(i+1,j+1).red;
             unsigned int g = m.Posicion(i+1,j+1).green;
             unsigned int b = m.Posicion(i+1,j+1).blue;
             img[54+(i*w+j)*3+2] = (char)(r);
@@ -115,9 +115,9 @@ int main(int argc, char** argv) {
 	IBilinealRB(m);
     devolver(m,header,argv[2]);
 
-	//Matriz orig(512,768);
-	//cargar(orig,header,sinb(argv[1]));
-	//cout << psnr(orig,m) << endl;
+	Matriz orig(512,768);
+	cargar(orig,header,sinb(argv[1]));
+	cout << psnr(orig,m) << endl;
 
 	return 0;
 }

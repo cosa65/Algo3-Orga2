@@ -27,7 +27,8 @@ uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int d
 		if (dirfil==0 && dircol>0){
 			res = posCol/dircol;
 			primfil = posFil;
-			primcol = 1;
+			primcol = posCol%dircol;
+			if (primcol==0) {primcol=dircol;}
 		}
 		if (dirfil==0 && dircol<0){
 			res = (mat.Ccolumnas()+1)/(-dircol);
@@ -36,8 +37,9 @@ uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int d
 		}
 		if (dirfil>0 && dircol==0){
 			res = posFil/dirfil;
-			primfil = 1;
+			primfil = posFil%dirfil;
 			primcol = posCol;
+			if (primfil==0) {primfil=dirfil;}
 		}
 		if (dirfil<0 && dircol==0){
 			res = (mat.Cfilas()+1)/(-dirfil);
@@ -48,7 +50,7 @@ uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int d
 	return res;		
 }
 
-void VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, vector<uint>& vecres, int &size, int &pos){
+void VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, vector<int>& vecres, int &size, int &pos){
 
 	int i, j;
 
@@ -91,38 +93,39 @@ char color(int fila, int columna) {
     } return 'R';
 }
 
-vector<uint> interConSpline(vector<uint> vecA){
+vector<int> interConSpline(vector<int> vecA){
+
 	int n = vecA.size();
 	//vector<uint> vecH (n); COMO ES DE TODOS 2 NO HACE FALTA (STEP 1)
-	int i;
-	for (i = 1; i < n-1; i++){	//(STEP 2)
-		vecA[i] = (3/2) * (vecA[i+1]- vecA[i]) - (3/2) * (vecA[i] - vecA[i-1]);
+	vector<double> vecAlpha (n);
+	for (int i = 1; i < n-1; i++){	//(STEP 2)
+		vecAlpha[i] = (3/2) * (double)(vecA[i+1]- vecA[i]) - (3/2) * (double)(vecA[i] - vecA[i-1]);
 	}
-	vector<uint> vecL (n);		//(STEP 3)
-	vector<uint> vecU (n);
-	vector<uint> vecZ (n);
+	vector<double> vecL (n);		//(STEP 3)
+	vector<double> vecU (n);
+	vector<double> vecZ (n);
 	vecL[0] = 1;
 	vecU[0] = 0;
 	vecZ[0] = 0;
-	for (i = 1; i < n-1; i++){	//(STEP 4)
+	for (int i = 1; i < n-1; i++){	//(STEP 4)
 		vecL[i] = 8 - 2 * vecU[i-1];	//2 * (X_i+1 - X_i-1) = 8	y	H_i-1 = 1
 		vecU[i] = 2/vecL[i];		//H_i = 1
-		vecZ[i] = (vecA[i] - 2 * vecZ[i-1])/vecL[i];
+		vecZ[i] = (vecAlpha[i] - 2 * vecZ[i-1])/vecL[i];
 	}
 	vecL[n-1] = 1;		//(STEP 5) En el burden llama n al X_n, pero aca es el tamaño asi q el n seria n-1.
 	vecZ[n-1] = 0;
-	vector<uint> vecB (n);
-	vector<uint> vecD (n);
-	vector<uint> vecC (n);
+	vector<double> vecB (n);
+	vector<double> vecD (n);
+	vector<double> vecC (n);
 	vecC[n-1] = 0;
-	for (i = n-2; i > -1; i--){	//(STEP 6)
+	for (int i = n-2; i > -1; i--){	//(STEP 6)
 		vecC[i] = vecZ[i] - vecU[i] * vecC[i+1];
-		vecB[i] = (vecA[i+1] - vecA[i])/(2 - 2*(vecC[i+1]+2*vecC[i])/3);
+		vecB[i] = (double)(vecA[i+1] - vecA[i])/2 - 2*(vecC[i+1]+2*vecC[i])/3;
 		vecD[i] = (vecC[i+1] - vecC[i])/6;
 	}
-	vector<uint> vecRes (n-1);//(STEP 7)!
-	for (i = 0; i < n-1; i++){
-		vecRes[i] = vecA[i] + vecB[i] + vecC[i] + vecD[i];
+	vector<int> vecRes (n-1);//(STEP 7)!
+	for (int i = 0; i < n-1; i++){
+		vecRes[i] = vecA[i] + vecB[i] + vecC[i] + vecD[i]; //x-xj=1
 	}
 	return vecRes;
 }
