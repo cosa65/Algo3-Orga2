@@ -34,7 +34,7 @@ void InterpBilineal(Matriz& mat){
 		}
 	}
 }
-
+/*
 void interXDirBis(Matriz &mat){
 
 //esto es super alpha stage, no entiendo bien lo que estan buscando hacer, por eso no se muy bien como hacerlo 
@@ -67,36 +67,27 @@ void interXDirBis(Matriz &mat){
 			mat.Definir(pb, i, j*2);
 		}
 	}
-}
+}*/
 void InterpXDir(Matriz& mat){
 	int size, pos;
 	vector<int> vecDirH;
 	for (int i=1;i<mat.Cfilas();i++) {
 		//Fila Impar
 
-		if(xFilaEsMejor(i,2,'g')){
-			VecEnDir(mat, i, 2, 0, 2, 'g', vecDirH, size, pos);
-		} else {
-			VecEnDir(mat, i, 2, 2, 0, 'g', vecDirH, size, pos);			
-		}
+		VecEnDir(mat, i, 2, 0, 2, 'g', vecDirH, size, pos);			
 
 		vector<int> vecRes = interConSpline(vecDirH); //pr está en la pos 1
 		for (int j = 2; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal) 
 			pixel pr = mat.Posicion(i, j*2-1); //rojo
-			pr.green = (unsigned int)(vecRes[j-2])/2;
-			if (pr.green<10) {cout << '(' << i << ',' << j*2-1 << ')';}
+			pr.green = (unsigned int)(vecRes[j-2]);
 			mat.Definir(pr, i, j*2-1);
 		}
 		i++; //Fila Par
-		if(xFilaEsMejor(i,1,'g')){
-			VecEnDir(mat, i, 1, 0, 2, 'g', vecDirH, size, pos);
-		} else {
-			VecEnDir(mat, i, 1, 2, , 'g', vecDirH, size, pos);
-		}
+		VecEnDir(mat, i, 1, 0, 2, 'g', vecDirH, size, pos);
 		vecRes = interConSpline(vecDirH);
 		for (int j = 1; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
 			pixel pb = mat.Posicion(i, j*2); //blue
-			pb.green = (unsigned int)(vecRes[j-1])/2;
+			pb.green = (unsigned int)(vecRes[j-1]);
 			mat.Definir(pb, i, j*2);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con la dirH
@@ -106,17 +97,33 @@ void InterpXDir(Matriz& mat){
 		VecEnDir(mat, 2, j, 2, 0, 'g', vecDirV, size, pos);
 		vector<int> vecRes = interConSpline(vecDirV);
 		for (int i = 2; i<mat.Cfilas()/2; i++){	//Defino el valor green para los red (con direccion vertical)
+			int gradH=abs(((int)mat.Posicion((i*2-1),j+1).green)-((int)mat.Posicion((i*2-1),j-1).green));
+			int gradV=abs(((int)mat.Posicion((i*2-1)+1,j).green)-((int)mat.Posicion((i*2-1)-1,j).green));
 			pixel pr = mat.Posicion(i*2-1, j); //rojo
-			pr.green += (unsigned int)(vecRes[i-2])/2; 
-//			if (pr.green<10) {cout << '(' << i*2-1 << ',' << j << ')';}
+
+			int prH=(int)pr.green;
+			int prV=(vecRes[i-2]);
+
+			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+
+			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
 			mat.Definir(pr, i*2-1, j);
 		}
 		j++; //columna par
 		VecEnDir(mat, 1, j, 2, 0, 'g', vecDirV, size, pos);
 		vecRes = interConSpline(vecDirV);
 		for (int i = 1; i<mat.Cfilas()/2; i++){	//Defino el valor green para los blue (con direccion vertical)
+
+			int gradH=abs(((int)mat.Posicion((i*2),j+1).green)-((int)mat.Posicion((i*2),j-1).green));
+			int gradV=abs(((int)mat.Posicion((i*2)+1,j).green)-((int)mat.Posicion((i*2)-1,j).green));
 			pixel pb = mat.Posicion(i*2, j); //blue
-			pb.green += (unsigned int)(vecRes[i-1])/2;
+
+			int prH=(int)pb.green;
+			int prV=(vecRes[i-2]);
+
+			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+
+			pb.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
 			mat.Definir(pb, i*2, j);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con las dos Dir

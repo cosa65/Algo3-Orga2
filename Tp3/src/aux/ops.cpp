@@ -73,7 +73,7 @@ void VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, 
 		int sizec=((mat.Ccolumnas()+1)-1)/dircol;
 		size=sizef*(sizef<sizec)+sizec*(sizec<=sizef);
 	}
-	size=(-(size<0)+(size>=0))*size;
+	size=abs(size);
 	
 	vecres.resize(size);
 	

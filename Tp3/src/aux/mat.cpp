@@ -65,7 +65,7 @@ uint Matriz::PosColor(int fila, int columna, char color){
 
 uint Matriz::sumaDePoses(int fila, int columna, char queColorNo){
 
-    if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
+/*    if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
         cout << "Error en Matriz::PosColor(), te fuiste del rango de la matriz" << endl;
         return 0;
     }
@@ -79,8 +79,7 @@ uint Matriz::sumaDePoses(int fila, int columna, char queColorNo){
             break;
         CASE('b'):
             return _array[fila-1][columna-1].red + _array[fila-1][columna-1].green;
-            break;        
-    }
+    }*/
 }
 
 int Matriz::Cfilas(){
