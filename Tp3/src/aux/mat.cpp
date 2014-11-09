@@ -63,6 +63,26 @@ uint Matriz::PosColor(int fila, int columna, char color){
     return 0; //asi no jode el warning
 }
 
+uint Matriz::sumaDePoses(int fila, int columna, char queColorNo){
+
+    if (fila<1 || fila>_Cfilas || columna<1 || columna>_Ccolumnas) {
+        cout << "Error en Matriz::PosColor(), te fuiste del rango de la matriz" << endl;
+        return 0;
+    }
+
+    switch (queColorNo){
+        CASE('r'):
+            return _array[fila-1][columna-1].green + _array[fila-1][columna-1].blue;
+            break;
+        CASE('g'):
+            return _array[fila-1][columna-1].red + _array[fila-1][columna-1].blue;
+            break;
+        CASE('b'):
+            return _array[fila-1][columna-1].red + _array[fila-1][columna-1].green;
+            break;        
+    }
+}
+
 int Matriz::Cfilas(){
 	return _Cfilas;
 }

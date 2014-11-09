@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 
@@ -43,6 +44,8 @@ void DefColor(uint adefinir, int fila, int columna, char color);
 pixel Posicion(int fila, int columna);
 
 uint PosColor(int fila, int columna, char color);
+
+uint sumaDePoses(int fila, int columna, char queColorNo);
 
 int Cfilas();
 
