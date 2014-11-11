@@ -107,6 +107,10 @@ void InterpXDir(Matriz& mat){
 			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
 
 			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+			
+			if ((int)(pr.green)>255) {pr.green=255;}
+			if ((int)(pr.green)<0) {pr.green=0;}
+
 			mat.Definir(pr, i*2-1, j);
 		}
 		j++; //columna par
@@ -124,6 +128,9 @@ void InterpXDir(Matriz& mat){
 			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
 
 			pb.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+			
+			if ((int)(pb.green)>255) {pb.green=255;}
+			if ((int)(pb.green)<0) {pb.green=0;}
 			mat.Definir(pb, i*2, j);
 		}
 	}//Acá ya estan definidos todos los valores green en los b y r con las dos Dir
