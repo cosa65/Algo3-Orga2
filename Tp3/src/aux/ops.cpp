@@ -171,39 +171,37 @@ float grad(Matriz& mat, int i, int j, char color) {
 }
 
 int gradH(Matriz& mat, int i, int j) {
-	return abs(((int)mat.Posicion((i*2-1),j+1).green)-((int)mat.Posicion((i*2-1),j-1).green));
+	return abs(((int)mat.PosColor(i,j+1,'g'))-((int)mat.PosColor(i,j-1,'g')));
 }
 
 int gradV(Matriz& mat, int i, int j) {
-	return abs(((int)mat.Posicion((i*2-1)+1,j).green)-((int)mat.Posicion((i*2-1)-1,j).green));
+	return abs(((int)mat.PosColor(i+1,j,'g'))-((int)mat.PosColor(i-1,j,'g')));
 }
-
-
 
 void IBilinealRB(Matriz& mat) {
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pr=mat.Posicion(i*2-1,j*2-1); // rojo
             pixel pg=mat.Posicion(i*2-1,j*2); //verde
-            pr.blue=(mat.Posicion(i*2,j*2).blue+mat.Posicion(i*2-2,j*2-2).blue+mat.Posicion(i*2-2,j*2).blue+mat.Posicion(i*2,j*2-2).blue)/4;
+            pr.blue=(mat.PosColor(i*2,j*2,'b')+mat.PosColor(i*2-2,j*2-2,'b')+mat.PosColor(i*2-2,j*2,'b')+mat.PosColor(i*2,j*2-2,'b'))/4;
             mat.Definir(pr,i*2-1,j*2-1);
-            pg.red=(pr.red+mat.Posicion(i*2-1,j*2+1).red)/2;
-            pg.blue=(mat.Posicion(i*2,j*2).blue+mat.Posicion(i*2-2,j*2).blue)/2;
+            pg.red=(pr.red+mat.PosColor(i*2-1,j*2+1,'r'))/2;
+            pg.blue=(mat.PosColor(i*2,j*2,'b')+mat.PosColor(i*2-2,j*2,'b'))/2;
 	        mat.Definir(pg,i*2-1,j*2);
 		}
 		for (int j=1;j<=mat.Ccolumnas()/2;j++) {
             pixel pg=mat.Posicion(i*2,j*2-1); // verde
             pixel pb=mat.Posicion(i*2,j*2); //azul
-            pg.blue=(pb.blue+mat.Posicion(i*2,j*2-2).blue)/2;
-            pg.red=(mat.Posicion(i*2-1,j*2-1).red+mat.Posicion(i*2+1,j*2-1).red)/2;
+            pg.blue=(pb.blue+mat.PosColor(i*2,j*2-2,'b'))/2;
+            pg.red=(mat.PosColor(i*2-1,j*2-1,'r')+mat.PosColor(i*2+1,j*2-1,'r'))/2;
             mat.Definir(pg,i*2,j*2-1);
-            pb.red=(mat.Posicion(i*2-1,j*2-1).red+mat.Posicion(i*2+1,j*2+1).red+mat.Posicion(i*2-1,j*2+1).red+mat.Posicion(i*2+1,j*2-1).red)/4;
+            pb.red=(mat.PosColor(i*2-1,j*2-1,'r')+mat.PosColor(i*2+1,j*2+1,'r')+mat.PosColor(i*2-1,j*2+1,'r')+mat.PosColor(i*2+1,j*2-1,'r'))/4;
             mat.Definir(pb,i*2,j*2);
 		}
 	}
 }
 
-void saturar(uint& a) {
+void saturar(int& a) {
 	if ((int)a>255){a=255;}
 	if ((int)a<0){a=0;}
 }
