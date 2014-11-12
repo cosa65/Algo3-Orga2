@@ -101,13 +101,13 @@ void InterpXDir(Matriz& mat){
 			int prH=(int)pr.green;
 			int prV=(vecRes[i-2]);
 
-//Fórmula Rouli (da 39,84)
-//			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
-//			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+//Fórmula Espineta (da 39,74)
+			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
 
-//Fórmula Espineta (da 39,66)
-			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
-			pr.green = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
+//Fórmula Rouli (da 39,84)
+//			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
+//			pr.green = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
 
 //Quedándose con el mejor (da 39,29, aunque el cuello del loro queda mejor)
 //          pr.green = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
@@ -129,11 +129,12 @@ void InterpXDir(Matriz& mat){
 			int prH=(int)pb.green;
 			int prV=(vecRes[i-1]);
 
+			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+			pb.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+			
 //			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
 //			pb.green = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
 
-			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
-			pb.green = (unsigned int)((gradV*prH + gradH*prV)/escala);
 
 //          pb.green = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
 			
