@@ -1,7 +1,6 @@
 #include "ops.cpp"
 
 //Aca van los 3 metodos enteros, usando las ops de ops.cpp
-//Los hago void y por referencia porque no necesitamos guardar la matriz mosaiqueada para el psnr.
 
 void VecinoMasCercano(Matriz& mat){
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
@@ -36,8 +35,6 @@ void InterpBilineal(Matriz& mat){
 }
 /*
 void interXDirBis(Matriz &mat){
-
-//esto es super alpha stage, no entiendo bien lo que estan buscando hacer, por eso no se muy bien como hacerlo 
 
 	for (int i=1;i<mat.Cfilas();i++) {
 		//Fila Impar
@@ -104,9 +101,16 @@ void InterpXDir(Matriz& mat){
 			int prH=(int)pr.green;
 			int prV=(vecRes[i-2]);
 
-			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+//Fórmula Rouli (da 39,84)
+//			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+//			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
 
-			pr.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+//Fórmula Espineta (da 39,66)
+			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
+			pr.green = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
+
+//Quedándose con el mejor (da 39,29, aunque el cuello del loro queda mejor)
+//          pr.green = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
 			
 			if ((int)(pr.green)>255) {pr.green=255;}
 			if ((int)(pr.green)<0) {pr.green=0;}
@@ -123,11 +127,15 @@ void InterpXDir(Matriz& mat){
 			pixel pb = mat.Posicion(i*2, j); //blue
 
 			int prH=(int)pb.green;
-			int prV=(vecRes[i-2]);
+			int prV=(vecRes[i-1]);
+
+//			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
+//			pb.green = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
 
 			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
+			pb.green = (unsigned int)((gradV*prH + gradH*prV)/escala);
 
-			pb.green = (unsigned int)(((255-gradH)*prH + (255-gradV)*prV)/escala);
+//          pb.green = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
 			
 			if ((int)(pb.green)>255) {pb.green=255;}
 			if ((int)(pb.green)<0) {pb.green=0;}
@@ -158,24 +166,3 @@ void ElDelPaper(Matriz& mat){
 		}
 	}
 }
-	//---- PARA INTERPOLACION X DIRECCIONES ----//
-	//for (int i=0;i<h;i++) {
-	//	vector<int> x
-	//	VecEnDir (1,0,x bla bla bla)
-	//	filtrarImpares? que devuelva una copia del vector dejando solo las posiciones pares
-	//	crear un vector p=[0,2,4,6...] (o modificar evaluarenInterpolante para que no sea necesario)
-	//	for (int j=1;j<n;j+=2) {
-	//		x[j]=evaluarenInterpolante(p,x,j);
-	//	y metés x en la matriz. NO podés no trabajar sobre una copia del vector y poner Definir(eso,i,j);
-	//	TENES que trabajar sobre una copia de la matriz para poder definir el próximo paso
-	//	o bien hacer todo junto punto por punto, pero ahí tendrías que volver a calcular los vectores cada vez
-	// Si no hacés todo junto punto por punto:
-	//	Algo parecido para la vertical/diagonal/la que sea y la guardás en mat2
-	//	for (i,j) {
-	//		gradH=abs((i,j+1)-(i,j-1));
-	//		gradV=abs((i+1,j)-(i-1,j));
-	//		Esta fórmula me gusta, no la borren:
-	//		def= (255-gradh)*mat1(i,j) + (255-gradv)*mat2(i,j), escalado de 1 a 255:
-	//		escala=(255-gradh)+(255-gradv)=255*2-gradh-gradv
-	//		mat.Definir(res/escala, i,j)); gg
-	//		otra fórmula: ((255-grH)/255*valH+(255-grV)/255*valV)*255/(grH+grV)

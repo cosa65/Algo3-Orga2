@@ -1,12 +1,12 @@
 #include"mat.cpp"
 
-bool xFilaEsMejor(Matriz mat, int posFil, int posCol, char color){
+/*bool xFilaEsMejor(Matriz mat, int posFil, int posCol, char color){
 
 	uint xfila = abs(mat.sumaDePoses(posFil,posCol-2,color) - mat.sumaDePoses(posFil,posCol+2,color)); 
 	uint xcolumna = abs(mat.sumaDePoses(posFil-2,posCol,color) - mat.sumaDePoses(posFil+2,posCol,color));
 
 	return xfila <= xcolumna;
-}
+}*/
 
 uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
 
@@ -138,7 +138,7 @@ vector<int> interConSpline(vector<int> vecA){
 	return vecRes;
 }
 
-int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {
+/*int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {
 	int n=xn.size();
 	int acum=0;
 	for (int i=0;i<n;i++) {
@@ -149,9 +149,7 @@ int evaluarEnInterLagrange(int x, vector<uint>& xn, vector<uint>& yn) {
 			}
 		} acum+=semiacum;
 	} return acum;
-}
-
-//Probablemente no haga falta guardar xn
+}*/
 
 float grad(Matriz& mat, int i, int j, char color) {
 	float res=0;
@@ -171,6 +169,16 @@ float grad(Matriz& mat, int i, int j, char color) {
 		cout << "Error" << endl;
 	} return 0;
 }
+
+int gradH(Matriz& mat, int i, int j) {
+	return abs(((int)mat.Posicion((i*2-1),j+1).green)-((int)mat.Posicion((i*2-1),j-1).green));
+}
+
+int gradV(Matriz& mat, int i, int j) {
+	return abs(((int)mat.Posicion((i*2-1)+1,j).green)-((int)mat.Posicion((i*2-1)-1,j).green));
+}
+
+
 
 void IBilinealRB(Matriz& mat) {
 	for (int i=1;i<=mat.Cfilas()/2;i++) {
@@ -193,4 +201,9 @@ void IBilinealRB(Matriz& mat) {
             mat.Definir(pb,i*2,j*2);
 		}
 	}
+}
+
+void saturar(uint& a) {
+	if ((int)a>255){a=255;}
+	if ((int)a<0){a=0;}
 }

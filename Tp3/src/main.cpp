@@ -94,8 +94,8 @@ int main(int argc, char** argv) {
     vector<unsigned char> header(54);
 	cargar(m,header,argv[1]);
 
-	/*clock_t t;
-	t = clock();*/
+	clock_t t;
+	t = clock();
 
 	if (*argv[3]=='0') {
 		VecinoMasCercano(m);
@@ -107,17 +107,21 @@ int main(int argc, char** argv) {
 		ElDelPaper(m); //Si quieren cambiarlo por un nombre mejor...
 	}
 
-	/* t = clock() - t;
+	t = clock() - t;
 	ofstream tiempo;
-	tiempo.open("Tiempo");
-	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;*/
+	tiempo.open("Tiempo",ios::app);
+	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 
 	IBilinealRB(m);
-    devolver(m,header,argv[2]);
+	devolver(m,header,argv[2]);
 
 	Matriz orig(512,768);
 	cargar(orig,header,sinb(argv[1]));
 	cout << psnr(orig,m) << endl;
+
+/*	ofstream psnrdev;
+	psnrdev.open("psnr",ios::app);
+	psnrdev << psnr(orig,m) << endl;*/
 
 	return 0;
 }
