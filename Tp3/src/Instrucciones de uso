@@ -1,0 +1,12 @@
+El programa toma 3 parámetros: la imagen de entrada (bayerizada), la imagen de salida y el método a utilizar.
+El método es:
+0=Vecino Más cercano
+1=Interpolación Bilineal
+2=Interpolación Direccional
+3=Algoritmo de He, Malvar y Cutler
+El nombre de la imagen de entrada debe ser *b.mp
+Para obtener un pnsr correcto, la imagen original debe estar en el mismo directorio y llamarse de la misma forma, pero sin la b
+Ejemplo: ./tp ../images/img1b.bmp imgout.bmp 2
+Los tiempos se imprimen en el archivo "Tiempo", los pnsr en el archivo "psnr"
+Hay además un script de Matlab para bayerizar la imagen
+Y un .sh que permite ejecutar el algoritmo para todos los métodos, para todas las imágenes dadas por la cátedra. Requiere que la carpeta "out" se haya creado previamente.
