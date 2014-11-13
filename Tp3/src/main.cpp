@@ -56,9 +56,9 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
             unsigned int r = m.Posicion(i+1,j+1).red;
             unsigned int g = m.Posicion(i+1,j+1).green;
             unsigned int b = m.Posicion(i+1,j+1).blue;
-            img[54+(i*w+j)*3+2] = 0;//(char)(r);
+            img[54+(i*w+j)*3+2] = (char)(r);
             img[54+(i*w+j)*3+1] = (char)(g);
-            img[54+(i*w+j)*3+0] = 0;(char)(b);
+            img[54+(i*w+j)*3+0] = (char)(b);
         }
     }
 
