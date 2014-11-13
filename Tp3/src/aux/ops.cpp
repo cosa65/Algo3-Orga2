@@ -1,13 +1,5 @@
 #include"mat.cpp"
 
-/*bool xFilaEsMejor(Matriz mat, int posFil, int posCol, char color){
-
-	uint xfila = abs(mat.sumaDePoses(posFil,posCol-2,color) - mat.sumaDePoses(posFil,posCol+2,color)); 
-	uint xcolumna = abs(mat.sumaDePoses(posFil-2,posCol,color) - mat.sumaDePoses(posFil+2,posCol,color));
-
-	return xfila <= xcolumna;
-}*/
-
 uint posEnVectorImaginario(Matriz& mat,int posFil, int posCol, int dirfil, int dircol, int &primfil, int &primcol){
 
 	int C, F, res;
@@ -73,8 +65,8 @@ void VecEnDir(Matriz& mat,int fil, int col, int dirfil, int dircol, char color, 
 		int sizec=((mat.Ccolumnas()+1)-1)/dircol;
 		size=sizef*(sizef<sizec)+sizec*(sizec<=sizef);
 	}
+
 	size=abs(size);
-	
 	vecres.resize(size);
 	
 	int posVec = 0;

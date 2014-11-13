@@ -19,7 +19,7 @@ void cargar(Matriz& m, vector<unsigned char>& a, char* in) {
 		res[i] = '0';
 	}
 	
-	image.read(res, n); //hasta acá, gracias gugl
+	image.read(res, n);
 	
 	for (int i=0;i<54;i++) {
 		a[i]=res[i];
@@ -58,7 +58,7 @@ void devolver(Matriz& m, vector<unsigned char>& a, char* out) {
             unsigned int b = m.Posicion(i+1,j+1).blue;
             img[54+(i*w+j)*3+2] = 0;//(char)(r);
             img[54+(i*w+j)*3+1] = (char)(g);
-            img[54+(i*w+j)*3+0] = 0;//(char)(b);
+            img[54+(i*w+j)*3+0] = 0;(char)(b);
         }
     }
 
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 	} else if (*argv[3]=='2') {
 		InterpXDir(m);
 	} else {
-		ElDelPaper(m); //Si quieren cambiarlo por un nombre mejor...
+		ElDelPaper(m);
 	}
 
 	t = clock() - t;
@@ -117,11 +117,10 @@ int main(int argc, char** argv) {
 
 	Matriz orig(512,768);
 	cargar(orig,header,sinb(argv[1]));
-	cout << psnr(orig,m) << endl;
 
-/*	ofstream psnrdev;
+	ofstream psnrdev;
 	psnrdev.open("psnr",ios::app);
-	psnrdev << psnr(orig,m) << endl;*/
+	psnrdev << psnr(orig,m) << endl;
 
 	return 0;
 }

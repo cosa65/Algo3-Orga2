@@ -45,8 +45,6 @@ pixel Posicion(int fila, int columna);
 
 uint PosColor(int fila, int columna, char color);
 
-uint sumaDePoses(int fila, int columna, char queColorNo);
-
 int Cfilas();
 
 int Ccolumnas();

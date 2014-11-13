@@ -25,38 +25,7 @@ void InterpBilineal(Matriz& mat){
 		}
 	}
 }
-/*
-void interXDirBis(Matriz &mat){
 
-	for (int i=1;i<mat.Cfilas();i++) {
-		//Fila Impar
-		if(xFilaEsMejor(i,2,'g')){
-			VecEnDir(mat, i, 2, 0, 2, 'g', vecDirH, size, pos);
-		} else {
-			VecEnDir(mat, i, 2, 2, 0, 'g', vecDirH, size, pos);			
-		}
-
-		vector<int> vecRes = interConSpline(vecDirH); //pr está en la pos 1
-		for (int j = 2; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los red (con direccion horizontal) 
-			pixel pr = mat.Posicion(i, j*2-1); //rojo
-			pr.green = (unsigned int)(vecRes[j-2])/2;
-			if (pr.green<10) {cout << '(' << i << ',' << j*2-1 << ')';}
-			mat.Definir(pr, i, j*2-1);
-		}
-		i++; //Fila Par
-		if(xFilaEsMejor(i,1,'g')){
-			VecEnDir(mat, i, 1, 0, 2, 'g', vecDirH, size, pos);
-		} else {
-			VecEnDir(mat, i, 1, 2, , 'g', vecDirH, size, pos);
-		}
-		vecRes = interConSpline(vecDirH);
-		for (int j = 1; j<mat.Ccolumnas()/2; j++){	//Defino el valor green para los blue (con direccion horizontal)
-			pixel pb = mat.Posicion(i, j*2); //blue
-			pb.green = (unsigned int)(vecRes[j-1])/2;
-			mat.Definir(pb, i, j*2);
-		}
-	}
-}*/
 void InterpXDir(Matriz& mat){
 	int size, pos;
 	vector<int> vecDirH;
@@ -88,16 +57,16 @@ void InterpXDir(Matriz& mat){
 			int prH = (int)mat.PosColor(i*2-1, j,'g'); //blue
 			int prV=(vecRes[i-2]);
 
-//Fórmula Espineta (da 39,66)
+//Fórmula 1
 			int escala=(255-gradH)+(255-gradV);//=255*2-gradh-gradv
 			int res = (((255-gradH)*prH + (255-gradV)*prV)/escala);
 
-//Fórmula Rouli (da 39,84)
+//Fórmula 2
 //			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
 //			unsigned int res = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
 
-//Quedándose con el mejor (da 39,29, aunque el cuello del loro queda mejor)
-//          unsigned int res = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
+//Fórmula 3
+//          		int res = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
 			
 			saturar(res);
 
@@ -120,7 +89,7 @@ void InterpXDir(Matriz& mat){
 //			int escala=(gradH+1)+(1+gradV);//=255*2-gradh-gradv
 //			int res = (unsigned int)(((gradV+1)*prH + (gradH+1)*prV)/escala);
 
-//          pb.green = (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
+//          		int res= (unsigned int)((gradV>gradH)*prH+(gradV<=gradH)*prV);
 			
 			saturar(res);
 			
