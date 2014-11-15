@@ -131,12 +131,10 @@ void EliminacionGaussiana (Matriz &mat){
 		
 		for(int j=i+1; j<=filas; j++){
 
-			if(abs(mat.Posicion(i,i))>=tol && abs(mat.Posicion(j,i))>=tol){ 
+			if(abs(mat.Posicion(j,i))>=tol){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
-			} /* else {
-				mat.Definir(0,j,i)
-			} */
+			} 
 		}
 	}
 }
@@ -147,12 +145,11 @@ void EliminacionGaussianaB (Matriz &mat){
 	for(int i=1; i<=filas; i++){
 		
 		for(int j=i+1; j<=filas && j<i+mat.anchoBanda(); j++){
-			if(abs(mat.Posicion(i,i))>=tol && abs(mat.Posicion(j,i))>=tol){
+
+			if (abs(mat.Posicion(j,i))>=tol){
 				long double mult = mat.Posicion(j,i) / (mat.Posicion(i,i));
 				mat.restarFilas(j, i, mult);
-			} /* else {
-				mat.Definir(0,j,i)
-			} */
+			} 
 		}
 	}
 }

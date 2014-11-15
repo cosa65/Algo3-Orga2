@@ -7,8 +7,6 @@ using namespace std;
 
 typedef vector<long double> fila;
 
-float tolerancia=pow(10,10);
-
 Matriz::Matriz(){}
 
 Matriz::Matriz( int cantfilas, int cantcolumnas){
@@ -67,20 +65,12 @@ void Matriz::restarFilas(int filaRestada, int filaQueResta, long double multFila
 		for (int i=filaRestada-_anchoBanda/2; i<=filaRestada+_anchoBanda/2 && i<=_Ccolumnas; i++){
 			if (i<1) {i=1;}
 			double adefinir=Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar;
-			//if (abs(adefinir)>=tolerancia) {
 				Definir(adefinir,filaRestada,i);
-			//} else {
-			//	Definir(0,filaRestada,i);
-			//}
 		}
 	} else {
 		for (int i=1; i<=_Ccolumnas; i++){
 			double adefinir=Posicion(filaRestada,i)-Posicion(filaQueResta,i)* multFilaARestar;
-			//if (abs(adefinir)>=tolerancia) {
 				Definir(adefinir,filaRestada,i);
-			//} else {
-			//	Definir(0,filaRestada,i);
-			//}
 		}
 	}
 	_indeps[filaRestada-1] = _indeps[filaRestada-1] - (_indeps[filaQueResta-1]* multFilaARestar);

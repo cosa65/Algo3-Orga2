@@ -42,7 +42,7 @@
 \thispagestyle{empty}
 \vfill
 \begin{abstract}
-En este trabajo se implementa una solución al problema planteado en el tp: encontrar una manera de determinar qué sanguijuelas pegadas al parabrisas son peligrosas y eliminarlas, usando una representación matricial del sistema de ecuaciones que nos permita hallar la temperatura del parabrisas en cada punto, con una precisión determinada por la granularidad, tomando como incógnita a cada punto del parabrisas.\newline
+En este trabajo se implementa una solución al problema de encontrar una manera de determinar qué sanguijuelas pegadas a un parabrisas son peligrosas y eliminarlas. Para esto, se plantea un sistema de ecuaciones que  permita hallar la temperatura del parabrisas en cada punto, con una precisión determinada por la granularidad, tomando como incógnita a cada punto del parabrisas.\newline
 Para resolver dicho sistema de ecuaciones se recurre a técnicas matemáticas basadas en métodos de resolución de sistemas, y se divide el programa en distintos módulos con funciones específicas al parabrisas y a la matriz del sistema de ecuaciones para facilitar la comprensión de la implementación hecha.
 \end{abstract}
 
@@ -77,13 +77,18 @@ Otro objetivo del trabajo es aprovechar la estructura banda de una matriz. Una m
 \section{Desarrollo}
 \label{sec:desarrollo}
 
-Nuestro trabajo apunta a resolver el problema dividiéndolo en tres partes. \newline \newline
-La \textbf{Primera parte} es encontrar la tempratura de cada punto del parabrisas  representándolo como una matriz. Algunos puntos son conocidos, ya que el parabrisas tiene bordes con una temperatura constante, y fuentes de calor (sanguijuelas) con radio y temperatura a determinar por los parámetros $r$ y $T_s$.
+
+Nuestro trabajo apunta a resolver el problema dividiéndolo en tres partes.
+
+\subsection{Representación y determinación de temperatura}
+
+La \textbf{Primera parte} consiste en encontrar la tempratura de cada punto del parabrisas  representándolo como una matriz. Algunos puntos son conocidos, ya que el parabrisas tiene bordes con una temperatura constante, y fuentes de calor (sanguijuelas) con radio y temperatura a determinar por los parámetros $r$ y $T_s$.
 
 Como dato, se tiene que cada punto del parabrisas satisface la ecuación de Laplace:
 \begin{eqnarray*}
 \frac{\partial ^2u}{\partial x^2}+\frac{\partial ^2u}{\partial y^2}&=&0
 \end{eqnarray*}
+
 
 
 Para poder modelar el parabrisas se toma una discretización, con granularidad variable. De esta forma, el parabrisas queda representado con una matriz de $a/h+1$ filas y $b/h+1$ columnas, siendo $a$ el ancho en metros del parabrisas original, $b$ su alto y $h$ la granularidad elegida. Al ancho de esta matriz lo llamaremos $m$ y a su alto $n$. 
@@ -116,6 +121,8 @@ Al implementar esto, hubo que modificar el algoritmo que crea la matriz a partir
 Se trabaja con tolerancia, forzando un 0 cuando el valor de una celda es menor a $10^{-10}$ en módulo.
 
 Es particularmente necesario para el problema calcular la temperatura del $punto cr$í$tico$, que se define como el centro del parabrisas. Sin embargo, este punto puede no pertenecer a la discretización: si $a/h$ o $b/h$ no es divisible por 2, entonces no hay una celda que se corresponda con el punto crítico. Una posibilidad para calcular su temperatura es, entonces, hacer un promedio de los cuatro puntos que lo rodean.
+
+\subsection{Análisis de complejidades y comportamientos esperados}
 
 La \textbf{Segunda parte} se trata de experimentar con estos algoritmos desarrollados y comparar el tiempo y espacio ocupados por cada implementación. Se esperaba que la banda se desempeñara de forma más eficiente, ya que realiza menos operaciones, midiendo el orden de complejidad asintótico (O) en peor caso de cada parte de la implementación. \newline 
  
@@ -186,6 +193,8 @@ Si se considera $m=a/h+1$, es posible reescribir los órdenes de complejidad de 
 
 La cantidad de sanguijuelas no debería afectar el tiempo de ejecución, salvo que sea muy grande, comparable con m o n. \newline
 
+\subsection{Algoritmo de eliminación de sanguijuelas}
+
 La \textbf{Tercera parte} del problema consiste en encontrar un algoritmo que permita elegir qué sanguijuelas eliminar para que la temperatura del punto crítico del vidrio se mantenga por debajo de 235º, evitando eliminar más sanguijuelas de las estrictamente necesarias. El algoritmo ultilizado fue heurístico: se elimina siempre la sanguijuela más cercana al centro. Elegimos hacerlo de esta manera porque la sanguijuela que más influye en la temperatura de un punto es la más cercana a él, siendo el borde fijo. En caso de que dos sanguijuelas sean equidistantes al centro, se elimina la última que se agregó.
 
 Una opción más provechosa en términos del uso de láseres sería usar un algoritmo que antes de decidir si eliminar una sanguijuela simulara el estado del punto crítico posterior a su eliminación, haciendo esta simulación con todas las sanguijuelas (o con todas dentro un determinado radio); luego podría elegir una sanguijuela a eliminar observando en cuál estado posterior de la simulación el punto crítico baja más.
@@ -203,7 +212,8 @@ Decidimos implementar el algoritmo de forma que imprimiera en un archivo separad
 \section{Resultados}
 \label{sec:res}
 
-Los tests utilizados fueron los siguientes, cambiando la granularidad: \\
+Los tests utilizados fueron los siguientes, cambiando la granularidad: \\ \\
+\begin{center}
 \begin{tabular}{ l|l l l l l}
   test & ancho & alto & radio & $T_s$ & $\#$sang \\
   \hline
@@ -211,21 +221,26 @@ Los tests utilizados fueron los siguientes, cambiando la granularidad: \\
   test2 & 100 & 100 & 10 & 500 & 1 \\
   test3 & 120 & 120 & 10 & 500 & 6 \\
   test4 & 120 & 120 & 10 & 500 & 1 
-\end{tabular}   \\
-Se toma 100 y 120 como ancho y alto para el parabrisas porque deben ser números que permitieran variar la granularidad. Es necesario recordar que la granularidad debe dividir a ambos valores. Se varía la cantidad de saguijuelas para observar si este parámetro afecta el tiempo de ejecución. No se varía su temperatura, ya que no debería afectarla, mientras que variar el radio debería tener un efecto similar a variar la cantidad de saguijuelas.
+\end{tabular}  
+\end{center}
+Se toma 100 y 120 como ancho y alto para el parabrisas porque deben ser números que permitan variar la granularidad. Es necesario recordar que la granularidad debe dividir a ambos valores. Se varía la cantidad de saguijuelas para observar si este parámetro afecta el tiempo de ejecución. No se varía su temperatura, ya que no debería afectarla, mientras que variar el radio debería tener un efecto similar a variar la cantidad de saguijuelas.
   
-Los siguentes son los mapas de temperaturas para cada test, generados con el archivo graphsol.py, provisto por la cátedra, con distintas granularidades: 1, 2, 2.5, 4, 5 para los primeros dos tests y 1, 2, 3, 4, 5, 6 para los últimos dos.
-
-\begin{figure}[htbp]
+Uno de los tests tiene una de las sanguijuelas sobre el punto crítico. Según la granularidad que se tome, podría no reflejarse esto en el resultado. Además, la intención es que un cambio en el tamaño de parabrisas, al cambiar la posición del punto crítico, cambie su temperatura.
+  
+Los siguentes son los mapas de temperaturas para cada test, generados con el archivo $graphsol.py$, provisto por la cátedra, con distintas granularidades: 1, 2, 2.5, 4, 5, 10 para los primeros dos tests y 1, 2, 3, 4, 5, 6 para los últimos dos.
+\begin{center}
+\begin{figure}[h!]
+\centering
 \includegraphics[width=110pt]{img/Parabrisas1-1.png} \includegraphics[width=110pt]{img/Parabrisas1-2.png} \includegraphics[width=110pt]{img/Parabrisas1-2,5.png} \newline \includegraphics[width=110pt]{img/Parabrisas1-4.png} \includegraphics[width=110pt]{img/Parabrisas1-5.png} \includegraphics[width=110pt]{img/Parabrisas1-10.png} \newline
 \caption{Test 1}
 \end{figure}
-
-\begin{figure}[htbp]
+\newpage
+\begin{figure}[h!]
+\centering
 \includegraphics[width=110pt]{img/Parabrisas2-1.png} \includegraphics[width=110pt]{img/Parabrisas2-2.png} \includegraphics[width=110pt]{img/Parabrisas2-2,5.png} \newline \includegraphics[width=110pt]{img/Parabrisas2-4.png} \includegraphics[width=110pt]{img/Parabrisas2-5.png} \includegraphics[width=110pt]{img/Parabrisas2-10.png} \newline
 \caption{Test 2}
 \end{figure}
-
+\end{center}
 Los mapas de temperatura para los test 3 y 4 son muy similares a los anteriores, ya que el único parámetro que cambia es el ancho.
 
 %\begin{figure}[htbp]
@@ -238,14 +253,16 @@ Los mapas de temperatura para los test 3 y 4 son muy similares a los anteriores,
 %\end{figure}
 %\newpage
 A continuación se presenta el tiempo de ejecución según la granularidad. Las mediciones fueron  efectuadas con instrucciones de la librería $ctime$. Realizar varias mediciones produce una diferencia de hasta 0.5s, por lo que se hizo un promedio de varias ejecuciones; sin embargo, no se puede garantizar que los resultados para los casos de mayor granularidad sean confiables. Notar que la escala es logarítmica:
-
-\noindent \includegraphics[width=180pt]{img/tiempo1.png}\includegraphics[width=180pt]{img/tiempo2.png} \newline
+\begin{center}
+ \includegraphics[width=180pt]{img/tiempo1.png}\includegraphics[width=180pt]{img/tiempo2.png}
 \includegraphics[width=180pt]{img/tiempo3.png}\includegraphics[width=180pt]{img/tiempo4.png} 
 
 Lo que sigue es la temperatura del punto medio según la granularidad. 
 
-\noindent \includegraphics[width=180pt]{img/temp1.png}\includegraphics[width=180pt]{img/temp2.png} \newline
+ \includegraphics[width=180pt]{img/temp1.png}\includegraphics[width=180pt]{img/temp2.png} 
 \includegraphics[width=180pt]{img/temp3.png}\includegraphics[width=180pt]{img/temp4.png}
+
+\end{center}
 
 Para el algoritmo de eliminación de sanguijuelas se tomaron los tests 1 y 3, se fijó la granularidad en 2 y se agregaron más sanguijuelas, de forma que el algoritmo tuviera que repetirse un número mayor de veces. \\
   \begin{tabular}{ l|l l l l l l}
@@ -307,13 +324,16 @@ Matriz común \newline
 
 Reducir la granularidad llevó a resultados más exactos, como se puede ver en los mapas de temperatura. Con los gráficos de temperatura del punto crítico se puede ver que el valor de ese punto parece ir tendiendo hacia un determinado límite; si fuera posible tomar un límite con granularidad tendiente a 0 entonces se podría encontrar el valor del punto crítico en el caso continuo, en otras palabras, cuanta más precisa la granularidad, más confiable y cercano al real es el resultado.
 
-En un caso la temperatura se mantuvo contanste en $T_s$. Esto se debe a que el punto crítico queda bajo una sanguijuela, algo que no varía al cambiar la granularidad.
+En un caso la temperatura se mantuvo contanste en $T_s$. Esto se debe a que el punto crítico queda bajo una sanguijuela, algo que no varió al cambiar la granularidad. 
+Creemos que la pérdida de precisión al aumentar el valor de $h$ en los otros casos provoca tanto ascensos como descensos en el valor de la temperatura; sin embargo, en la mayoría de los casos se ve un descenso, ya que los bordes ocupan una proporción mayor de la matriz.
 
 En cuanto al algoritmo de eliminación, se pude ver que cada sanguijuela eliminada redujo la temperatura del punto crítico. Esto no garantiza que el algoritmo sea óptimo, ya que es evidente que si hubiera dos sanguijuelas en el mismo punto, esto no se daría. Pero dejando ese caso a un lado, se puede decir que el algoritmo es bueno, ya que no desperdicia disparos en sanguijuelas que no afectan la temperatura del punto crítico.
 
-En cuanto al tiempo de ejecución de este algoritmo, no coincide exactamente con el producto de la cantidad de sanguijuelas y el tiempo que se tarda en volver a calcular el sistema, si bien se aproxima. Esto se debe a que, como ya se dijo, recalcular el sistema con menos sanguijuelas no necesariamente cuesta lo mismo.
+En cuanto al tiempo de ejecución de este algoritmo, no coincide exactamente con el producto de la cantidad de sanguijuelas y el tiempo que se tarda en volver a calcular el sistema, si bien se aproxima. Esto se debe a que, como ya se dijo, recalcular el sistema con menos sanguijuelas no necesariamente cuesta lo mismo, ya que hay más posiciones de la matriz cuya temperatura no se conoce.
 
-El cálculo de qué sanguijuela eliminar podría optimizarse si se guardara un vector con la distancia al centro de cada sanguijuela, de forma que no habría que volver a calcular la de todas cada vez que se busca una a eliminar. Esta solución, sin embargo, ocuparía más espacio de memoria y no tendría un gran impacto en el tiempo total.
+El cálculo de qué sanguijuela eliminar podría optimizarse si se guardara un vector con la distancia al centro de cada sanguijuela, de forma que no habría que volver a calcular la de todas cada vez que se busca una a eliminar. Esta solución, sin embargo, ocuparía más espacio de memoria y no tendría un gran impacto en el tiempo total.\\
+%En el gráfico de la temperatura en el punto crítico del primer test no se nota ningún cambio según la granularidad aplicada, esto es fácil de suponer teniendo en cuenta que hay sanguijuelas aplicadas específicamente sobre el punto crítico.\\
+
 
 
 \newpage
@@ -325,13 +345,14 @@ Podemos, al final de nuestro trabajo, sacar varias conclusiones respecto al enfo
 
 Primero, si se aumenta la granularidad, se pierde exactitud. Como consecuencia, el valor del punto crítico puede alejarse considerablemente del real, de forma que podría ser mayor a 235 cuando el real no lo es. Además, si el diámetro de las sanguijuelas es menor a la granularidad, una sanguijuela podría no cubrir ningún punto de la grilla, quedando el mapa de temperaturas como si ésta no estuviera, dando como resultado una temperatura menor en el punto crítico a la real. Es decir que es conveniente elegir una granularidad menor al diámetro de las sanguijuelas. Sin embargo, esto no siempre es posible, ya que el radio podría ser 0.
 
-Teniendo esto en cuenta, junto al impacto de la granularidad en el tiempo de ejecución, podemos decir que obtuvimos los mejores resultados con granularidad alrededor de 1/50 del lado, con un parabrisas cuadrado. Por supuesto, hay factores que modifican esto, como cuán precisa debe ser la medición del valor del punto crítico.
+Teniendo esto en cuenta, junto al impacto de la granularidad en el tiempo de ejecución, podemos decir que obtuvimos los mejores resultados con granularidad alrededor de 1/50 del lado, con un parabrisas cuadrado. Por supuesto, hay factores que modifican esto, como cuán precisa debe ser la medición del valor del punto crítico.\\
 
 Podemos sacar otras conclusiones al ver las diferencias que surgen de implementar una matriz como una banda o como una común.
 
-Principalmente se puede ver la importancia que tiene el no guardar más datos de los necesarios (o de guardarlos de manera inteligente) para cubrir todas las funciones esperadas de nuestra estructura de manera satisfactoria, ya que es evidente que si bien ambas implementaciones cumplen con lo necesario para considerarse correctas, la eficiencia, tanto a nivel temporal como espacial, de la matriz banda sobrepasa por mucho a aquella de la matriz común.
-Habiendo dicho esto, uno podría pensar que la matriz banda sería deseable por sobre la común en todos los casos, pero podemos hacernos la pregunta de si no hay algo que estemos perdiendo al obtener esta mayor eficiencia.  Salta entonces a la vista que la matriz banda se diferencia de la común en que está mucho más especializada, es decir que al aprovechar el hecho de que trabaja con una matriz con forma de banda, al asumir que los puntos alejados del centro a partir de una determinada distancia valen 0 estamos justamente reduciendo la cantidad de casos a los que la matriz banda es aplicable. La matriz banda trabaja mejor con todos los casos que puede, pero es aplicable a menos casos, mientras que la común cambia velocidad y memoria por una versatilidad mucho mayor.
-En otras palabras, si quisiéramos usar la banda para alguna otra utilidad, distinta del propósito de este trabajo, tendríamos primero que comprobar si es aplicable a nuestros experimentos, mientras que con la común no habría requisitos para representar en forma de matriz lo que sea que necesitemos.
+Principalmente, es destacable la importancia que tiene el no guardar más datos de los necesarios (o de guardarlos de manera inteligente) para cubrir todas las funciones esperadas de nuestra estructura de manera satisfactoria, ya que es evidente que si bien ambas implementaciones cumplen con lo necesario para considerarse correctas, la eficiencia, tanto a nivel temporal como espacial, de la matriz banda sobrepasa por mucho a aquella de la matriz común.
+Habiendo dicho esto, uno podría pensar que la matriz banda sería deseable por sobre la común en todos los casos, pero podemos hacernos la pregunta de si no hay algo que estamos perdiendo al obtener esta mayor eficiencia.\\
+Salta entonces a la vista que la matriz banda se diferencia de la común en que está mucho más especializada, es decir que al aprovechar el hecho de que trabaja con una matriz con forma de banda, al asumir que los puntos alejados del centro a partir de una determinada distancia valen 0 estamos justamente reduciendo la cantidad de casos a los que la matriz banda es aplicable. La matriz banda trabaja mejor con todos los casos que puede, pero es aplicable a menos casos, mientras que la común cambia velocidad y memoria por una versatilidad mucho mayor.\\
+En otras palabras, si quisiéramos usar la banda para alguna otra utilidad, distinta del propósito de este trabajo, tendríamos primero que comprobar si es aplicable a nuestros experimentos, mientras que con la común no habría requisitos para representar en forma de matriz lo que sea que necesitemos.\\ \\
 Luego de haber sacado conclusiones de comparar nuestras implementaciones en términos de versatilidad, velocidad y tiempo, queda también ver qué podemos sacar de la comparación entre complejidad de implementaciones; sin embargo no encontramos mucha diferencia entre nuestra implementación de matriz banda y de común, ya que nos limitamos a reducir el ancho de la matriz efectiva que guardábamos, incluso comparten funciones (con ligeras variaciones).
 
 \newpage
