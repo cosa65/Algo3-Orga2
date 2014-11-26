@@ -1,0 +1,10 @@
+# Directed graph (each unordered pair of nodes is saved once): 
+# Example snapped.
+# Nodes: 6 Edges: 
+# FromNodeId	ToNodeId
+1   2
+2   3
+3   4
+4   5
+5   6
+6   1
