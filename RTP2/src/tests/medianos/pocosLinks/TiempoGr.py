@@ -41,7 +41,8 @@ ax.bar(x-0.1+i, 0,width=0.2,color='g',align='center',label='c=0.7')
 ax.bar(x+0.1+i, 0,width=0.2,color='r',align='center',label='c=0.85')
 ax.bar(x+0.3+i, 0,width=0.2,color='y',align='center',label='c=0.95')
 
-plt.xlim(0.5, 14.5)
+plt.xlim(0.5, 6.5)
+plt.ylim(0, 0.25)
 
 legend()
 

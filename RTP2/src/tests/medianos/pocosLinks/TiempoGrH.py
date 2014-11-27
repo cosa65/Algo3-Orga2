@@ -14,14 +14,14 @@ x=0
 	
 tick_params(axis='x', colors= '#072b57')
 tick_params(axis='y', colors= '#072b57')
-xlabel('Puntaje Hits', color= '#072b57')
-ylabel('Pagina Web', color= '#072b57')
+ylabel('Puntaje Hits', color= '#072b57')
+xlabel('Pagina Web', color= '#072b57')
 title('Hits', color='#072b57')
 pos = arange(len(y)) + .5
 
 colour=['salmon','goldenrod','peachpuff']
 
-for i in range(14):
+for line in read_file:
 	value, value2 = line.strip().split('	')
 	y.append(float(value))
 	z.append(float(value2))
@@ -35,7 +35,8 @@ for i in range(len(y)) :
 ax.bar(x-0.3+i, 0,width=0.2,color='b',align='center',label='Autoridad')
 ax.bar(x-0.1+i, 0,width=0.2,color='g',align='center',label='Hub')
 
-plt.xlim(0.5, 14.5)
+plt.xlim(0.5, 6.5)
+plt.ylim(0, 1)
 
 legend()
 

@@ -14,8 +14,8 @@ x=0
 	
 tick_params(axis='x', colors= '#072b57')
 tick_params(axis='y', colors= '#072b57')
-xlabel('PageRank', color= '#072b57')
-ylabel('Pagina Web', color= '#072b57')
+ylabel('PageRank', color= '#072b57')
+xlabel('Pagina Web', color= '#072b57')
 title('Pagerank', color='#072b57')
 pos = arange(len(y)) + .5
 
@@ -41,7 +41,8 @@ ax.bar(x-0.1+i, 0,width=0.2,color='g',align='center',label='c=0.7')
 ax.bar(x+0.1+i, 0,width=0.2,color='r',align='center',label='c=0.85')
 ax.bar(x+0.3+i, 0,width=0.2,color='y',align='center',label='c=0.95')
 
-plt.xlim(0.5, 14.5)
+plt.xlim(0.5, 6.5)
+plt.ylim(0, 0.25)
 
 legend()
 
