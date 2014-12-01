@@ -148,7 +148,8 @@ long int MatrizE::contarCol(long int col){
 
 double MatrizE::contarFila(long int fila){
 	double suma =0;
-	for (long int i=0; i<_Ccolumnas; i++){
+	int n=_posValores.size();
+	for (long int i=0; i<n; i++){
 		if(_posValores[i]==fila){
 			suma+=_valores[i];
 		}
