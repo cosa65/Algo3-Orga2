@@ -71,7 +71,7 @@ Datos cargar(char* in) {
 	return d;
 }
 
-vector<double> pageRank(Datos& d) {
+void divxGrado(Datos& d) {
 	MatrizE& matre=d._links; 
 	long int n=matre.Cfilas(); 
 	long int suma; 
@@ -81,6 +81,11 @@ vector<double> pageRank(Datos& d) {
 			matre.divColCte(i,suma);
 		}
 	}
+}
+
+vector<double> pageRank(Datos& d) {
+	MatrizE& matre=d._links; 
+	long int n=matre.Cfilas(); 
 	double inv=1/(double)n;
 	vector<double> xi(n) ; for (long int i=0;i<n;i++) {xi[i]=inv;}
 	vector<double> yi(n);
@@ -170,6 +175,7 @@ int main(int argc, char *argv[])
 	cout << "Calculando...";
 	t = clock();
 	if (d._metodo==0) {
+		divxGrado(d);
 		res=pageRank(d);
 	} else if (d._metodo==1) {
 		res=HITS(d);
@@ -185,8 +191,9 @@ int main(int argc, char *argv[])
 	tiempo.open("Tiempo");
 	tiempo << "Clocks: "<< (long int)t << " segundos: " << ((float)t)/CLOCKS_PER_SEC << endl;
 
-	if (argc==4) { //No sé si es la mejor forma de hacerlo, pero es mejor que tener 5 txt iguales.
+	if (argc==4) { //No sé si es la mejor forma de hacerlo
 		double ces[5];
+		divxGrado(d);
 		ces[0]=0.5;ces[1]=0.7;ces[2]=0.85;ces[3]=0.95;
 		for (long int i=0;i<=3;i++) {
 			t = clock();			
