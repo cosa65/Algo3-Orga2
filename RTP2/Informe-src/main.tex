@@ -42,7 +42,7 @@
 \thispagestyle{empty}
 \vfill
 \begin{abstract}
-En este trabajo se analizan tres métodos para crear un $ranking$ de páginas web: PageRank, HITS e In-Deg. Estos algoritmos utilizan matrices para modelar la Web mediante matrices y utilizan métodos numéricos, como el método de la potencia, para ordenar las páginas a partir de los links que las relacionan. %método, método, método
+En este trabajo se analizan tres métodos para crear un $ranking$ de páginas web: PageRank, HITS e In-Deg. Estos algoritmos utilizan matrices para modelar la Web y utilizan métodos numéricos, como el método de la potencia, para ordenar las páginas a partir de los links que las relacionan. %método, método, método
 \end{abstract}
 
 \thispagestyle{empty}
@@ -59,9 +59,10 @@ En este trabajo se analizan tres métodos para crear un $ranking$ de páginas we
 %Contendrá una breve explicación de la base teórica que fundamenta los métodos involucrados en el trabajo, junto con los métodos mismos. No deben incluirse demostracionese de propiedades ni teoremas, ejemplos innecesarios, ni definiciones elementales (como por ejemplo la de matriz simétrica).
 
 El problema a resolver es encontrar una manera confiable de definir en qué páginas es conveniente comprar espacios de propaganda para garantizar la mayor publicidad posible a un grupo de música.
+
 El objetivo de este trabajo, por tanto, es resolver este problema analizado diferentes métodos que nos permitan definir un ranking de importancia de p\'{a}ginas web. \\
 
-En un primer paso se debe acordar un m\'{e}todo de selecci\'{o}n de las p\'{a}ginas web sobre las cuales se trabaja, es decir que es necesario adquirir una subred de p\'{a}ginas relevantes al tema en cuesti\'{o}n
+Para trabajar con HITS, se debe comenzar por acordar un m\'{e}todo de selecci\'{o}n de las p\'{a}ginas web sobre las cuales se trabaja, es decir que es necesario adquirir una subred de p\'{a}ginas relevantes al tema en cuesti\'{o}n.
 
 Se recurre en primer lugar a un buscador textual, pero este no asegura un resultado confiable en cuanto a la relevancia de las páginas recibidas. En el paper escrito por Kleinberg \footnote{Kleinberg - 1999 - \textit{Authoritative sources in a hyperlinked environment}} se sugiere un conjunto inicial de páginas $S_{\sigma}$ que cumple las siguientes condiciones:
 
@@ -80,15 +81,17 @@ Se construye luego un mapa de este conjunto de páginas en forma de grafo dirigi
 Terminado este paso, se procede a construir la matriz de conectividad $W \in n \times n$, tal que $w_{ij}=1$ si existe un link de la página $j$ a la página $i$ y $w_{ij}=0$ en caso contrario. 
 
 Usando esta matriz (con la misma notación), se pueden aplicar distintos m\'{e}todos para procesar y definir un cierto \textit{ranking} de las p\'{a}ginas.
-Esta matriz es esparsa, porque incluso en redes de varios cientos de miles de páginas, en promedio cada una tiene 7 u 8 links salientes. \footnote{Kamvar}
+Esta matriz es esparsa, porque incluso en redes de varios cientos de miles de páginas, en promedio cada una tiene 7 u 8 links salientes. \footnote{Kamvar, Haveliwala - 2003 - Extrapolation methods for accelerating PageRank computations}
 Esto debe ser tenido en cuenta a la hora de guardar la matriz en memoria.
 
 Los métodos a analizar son: \\
 
 
-\textbf{PageRank}, el más conocido de los utilizados por Google. PageRank asigna un puntaje a cada página según el puntaje de las que apuntan a ella. De esta forma se evita que una página con muchos links de páginas sin valor obtenga un puntaje demasiado alto. Además, modifica W para tener en cuenta que un "navegante aleatorio" puede con una determinada probabilidad saltar a cualquier página de la web, algo que también hace si encuentra una página sin links salientes.
+\textbf{PageRank}, el más conocido de los utilizados por Google. En este buscador se aplica el algoritmo al conjunto de todas las páginas de la Web, con un tiempo de cómputo del orden de un mes. Al buscar, se retornan las páginas con mejor puntaje que coincidan con la búsqueda. En este trabajo se limitará el conjunto de páginas, utilizando el mismo que para HITS.
 
-Esto se traduce como buscar un vector $x$ tal que $Wx=x$, es decir, encontrar el autovector para el autovalor 1. Si se sabe que 1 es el autovalor de mayor módulo, se puede encontrar su autovector con el método de las potencias.\\
+PageRank asigna un puntaje a cada página según el puntaje de las que apuntan a ella. De esta forma se evita que una página con muchos links de páginas sin valor obtenga un puntaje demasiado alto. Además, modifica W para tener en cuenta que un $navegante$ $aleatorio$ puede con una determinada probabilidad saltar a cualquier página de la web, algo que también hace si encuentra una página sin links salientes.
+
+Esto se traduce como buscar un vector $x$ tal que $Wx=x$, es decir, encontrar el autovector para el autovalor 1. Si se sabe que 1 es el autovalor de mayor módulo, se puede encontrar su autovector con el método de las potencias. Para esto se requiere modificar $W$ para que cumpla ciertas condiciones, que se explican en la próxima sección.\\
 
 \textbf{HITS} (Hyperlink-Induced Topic Search), este se basa en la existencia de páginas de gran valor como 'autoridad' y como "hub". En cada iteración, se actualiza el puntaje de cada página como autoridad a partir del puntaje hub de las páginas que la citan. Luego, se actualiza el puntaje como hub de cada página a partir del puntaje como autoridad de las páginas a las que apunta. Esto se puede reducir a una operación matricial.
 
@@ -100,7 +103,7 @@ Esto se traduce como buscar un vector $x$ tal que $Wx=x$, es decir, encontrar el
 \label{sec:desarrollo}
 %Deben explicarse los métodos numéricos que utilizaron y su aplicación al problema concreto involucrado en el trabajo práctico. Se deben mencionar los pasos que siguieron para implementar los algoritmos, las dificultades que fueron encontrando y la descripción de cómo las fueron resolviendo. Explicar también cómo fueron planteadas y realizadas las mediciones experimentales. Los ensayos fallidos, hipótesis y conjeturas equivocadas, experimentos y métodos malogrados deben figurar en esta sección, con una breve explicación de los motivos de estas fallas (en caso de ser conocidas).
 
-%DEBERIAMOS PONER EN UNA PARTE DE METODOS MAL LOGRADOS, Q NO APROVECHABAMOS LA MATRIZ ESP PARA EL PRODUCTO NO?
+%DEBERIAMOS PONER EN UNA PARTE DE METODOS MALOGRADOS, Q NO APROVECHABAMOS LA MATRIZ ESP PARA EL PRODUCTO NO?
 %LO DE PASOS PARA IMPLEMENTAR LOS ALGORITMOS, TENDRIAMOS Q PONER Q PRIMERO HICIMOS EL MATRIZEsp Y LO DE CARGAR DATOS Snap (y dsp no me acuerdo la implementacion de page rank y hits al principio).
 %Dificultades: Cargar de archivos con distintos renglones?, Leer los toronto (Problemas en el pageR seguro hubo, pero no me acuerdo.)
 %Los ensayos fallidos, hipótesis y conjeturas equivocadas, experimentos y métodos malogrados??
@@ -108,15 +111,15 @@ Esto se traduce como buscar un vector $x$ tal que $Wx=x$, es decir, encontrar el
 \subsection{Criterio de almacenamiento}
 Debimos primero encontrar una forma de almacenar los datos de los links entre p\'{a}ginas provistos (independientemente del formato en que fueron dados). Estos se guardan en la matriz $W$, ya mencionada.
 
-Entre las 3 opciones sugeridas en el enunciado se opt\'{o} finalmente por el almacenamiento en forma de Compressed Sparse Column (CSC)\footnote{Una matriz esparsa que se recorre por columnas.} porque notamos que esto facilita aquellas operaciones que pueden ser necesarias para los algoritmos de mayor complejidad temporal (Pagerank y HITS) como:
+Entre las 3 opciones sugeridas en el enunciado se opt\'{o} finalmente por el almacenamiento en forma de Compressed Sparse Column (CSC)\footnote{Una matriz esparsa que se recorre por columnas.} porque notamos que esto facilita aquellas operaciones que pueden ser necesarias para los algoritmos de mayor complejidad temporal (Pagerank y HITS), algunos ejemplos de estas son:
 
 \begin{itemize}
 
-\item La suma de columnas (ya que se trata de sumar una secci\'{o}n de elementos contiguos del array en el que se guardan los valores de la matriz distintos de 0).
+\item La suma de los elementos de una columna (ya que se trata de sumar una secci\'{o}n de elementos contiguos del array en el que se guardan los valores de la matriz distintos de 0).
 
 \item La divisi\'{o}n de una columna por una constante, debido a que al momento de definir en pagerank la probabilidad de salir de una p\'{a}gina a otra, debemos dividir las columnas de forma que sus elementos (las probabilidades de salir hacia alguna p\'{a}gina) sumen 1.
 
-\item El producto de una matriz transpuesta por un vector, ya que puede recorrer una sección del vector de valores y multiplicarlos por una posición del vector. Para el producto de la matriz sin transponer el algoritmo es más complejo pero igual de eficiente: alcanza con recorrer los valores e ir acumulando en las distintas posiciones del vector resultado los valores parciales que se obtienen.
+\item El producto de una matriz transpuesta por un vector, ya que puede recorrer una sección del vector de valores y multiplicarlos por una posición del vector. Para el producto de la matriz sin transponer el algoritmo es más complejo pero tiende a ser igual de eficiente: alcanza con recorrer los valores e ir acumulando en las distintas posiciones del vector resultado los valores parciales que se obtienen.
 
 \end{itemize}
 
@@ -128,9 +131,12 @@ En comparaci\'{o}n con las otras dos opciones de almacenamiento:
 
 
 \item[Dictionary of Keys] cuenta con s\'{o}lo la \'{u}ltima ventaja del CSC, que permite obviar a las posiciones en las que se guardan ceros, pero no es capaz de mejorar en ninguna manera la eficiencia de las operaciones matriciales, que se efect\'{u}an en los m\'{e}todos de ranking m\'{a}s complicados.
+Una de las desventajas m\'{a}s sobresalientes del Dictionary of Keys es su poco óptima complejidad espacial, ya que al guardar varios elementos de una columna en particular debemos guardar esta columna una vez por cada uno de estos elementos, es decir $m$ veces mas.
+La memoria usada por el $DoK$ es $3 \times  O(m)+O(n)$. \\ 
 
-\item[Compressed Sparse Row (CSR)] cuenta con la \'{u}ltima ventaja del CSC tambi\'{e}n, pero no es capaz de operar con columnas de manera tan eficiente como el CSC.\\
-Es necesario mencionar, sin embargo, que es una estructura m\'{a}s eficiente para realizar las operaciones que el \textit{In-Deg} requiere (por filas) por razones obvias, pero optamos por la \textit{Compressed Sparse Column} debido a que parece mejor optimizar las operaciones por columnas que intervienen en los algorítmos mas complejos (es posible modificar, sin embargo, las operaciones entre columnas para que se puedan realizar con una eficiencia análoga a las efectuadas por el CSC).
+
+\item[Compressed Sparse Row (CSR)] cuenta con la \'{u}ltima ventaja del CSC tambi\'{e}n.
+Optamos por la \textit{Compressed Sparse Column} debido a que facilita la optimización de las operaciones por columnas que intervienen en los algorítmos mas complejos (es posible modificar, sin embargo, las operaciones entre columnas del CSR para que se puedan realizar con una eficiencia análoga a las efectuadas por el CSC).
  
 \end{description}
 
@@ -139,21 +145,12 @@ Es necesario mencionar, sin embargo, que es una estructura m\'{a}s eficiente par
 \subsection{PageRank}
 
 El algoritmo PageRank asigna un puntaje de importancia a cada página entre 0 y 1. Este no depende únicamente de la cantidad de links entrantes, sino que pondera cada link según el puntaje de la página al que pertenece. Sea $x$ el vector en $\mathbb{R}^n$ donde $x_j$ es el puntaje de la página $j$ y $n_j$ el $grado$ de $j$, es decir, la cantidad de links salientes, entonces se quiere ver que:
-\begin{equation}
-x_k = \sum_{j=1,w_{kj}=1}^{n} \frac{x_j}{n_j},~~~~k = 1,\dots,n.
-\end{equation}
+
+$x_k = \sum_{j=1,w_{kj}=1}^{n} \frac{x_j}{n_j},~~~~k = 1,\dots,n.$
 
 Supongamos que se tienen cuatro páginas para hacer el ranking (1, 2, 3, 4) y que están conectadas de esta forma:
 
-$1 \rightarrow 2$
-
-$1 \rightarrow 3$
-
-$2 \rightarrow 3$
-
-$3 \rightarrow 2$
-
-$3 \rightarrow 4$
+\includegraphics[scale=0.5]{img/Grafo1.png} 
 
 Entonces el problema se reduciría a buscar la solución a este sistema de ecuaciones:
 \begin{center}
@@ -174,26 +171,20 @@ Si la matriz $P$ es estocástica por columnas, se puede ver que se cumple las pr
 Sea A una matriz en $\mathbb{R}^{n \times n}$ estocástica por columnas y sea $e$ un vector en $R^n$ tal que $e_i=1$ $\forall i$,
 sabemos que $A$ y su transpuesta $A^T$ tienen los mismos autovalores. Como A es estocástica por columnas, se puede ver que $A^T e = e$, por lo que 1 es un autovalor de $A^T$ y, por tanto, de $A$. Además al estar dividida cada columna por su norma 1, la matriz es efectivamente estocástica por columnas, salvo que haya columnas cuya suma es 0. Esto se da en el caso de los llamados "dangling nodes", páginas sin links salientes. 
 
-Se puede interpretar la navegación en la Web de un $navegante aleatorio$ como un proceso de Markov, a $P$ como su matriz de transición y a la componente $x_j$ del vector soluci\'on de norma 1 del sistema $Px = x$ como la proporci\'on del tiempo que el navegante pasa en la p\'agina $j$ Entonces, se puede suponer que al encontrarse en una página sin links salientes ($dangling node$), irá a cualquiera con probabilidad $1/n$. Se define entonces la matriz $P_1$, en la que se asigna 1/n, entonces, a cada fila de cada columna que representa un dangling node. En el ejemplo anterior:
+Se puede interpretar la navegación en la Web de un $navegante$ $aleatorio$ como un proceso de Markov, a $P$ como su matriz de transición y a la componente $x_j$ del vector soluci\'on de norma 1 del sistema $Px = x$ como la proporci\'on del tiempo que el navegante pasa en la p\'agina $j$ Entonces, se puede suponer que al encontrarse en una página sin links salientes ($dangling$ $node$), irá a cualquiera con probabilidad $1/n$. Se define entonces la matriz $P_1$, en la que se asigna 1/n, entonces, a cada fila de cada columna que representa un dangling node. En el ejemplo anterior:
 \begin{center}
-$P_1= \begin{bmatrix} 0&0&0&\frac{1}{6}\\\frac{1}{2}&0&\frac{1}{2}&\frac{1}{6}\\\frac{1}{2}&1&0&\frac{1}{6}\\0&0&\frac{1}{2}&\frac{1}{6} \end{bmatrix} $
+$P_1= \begin{bmatrix} 0&0&0&\frac{1}{4}\\\frac{1}{2}&0&\frac{1}{2}&\frac{1}{4}\\\frac{1}{2}&1&0&\frac{1}{4}\\0&0&\frac{1}{2}&\frac{1}{4} \end{bmatrix} $
 \end{center}
 
 Sin embargo, la última condición no se cumple necesariamente. Si se tienen dos subredes aisladas, entonces la dimensión del autoespacio será 2. Por ejemplo, sean las páginas (1,2,3,4), con los siguientes links: 
 
-$1 \rightarrow 2$
-
-$2 \rightarrow 1$
-
-$3 \rightarrow 4$
-
-$4 \rightarrow 3$
+\includegraphics[scale=0.5]{img/Grafo2.png} 
 
 Su matriz de conectividad es:
 \begin{center}
 $W=\begin{bmatrix} 0&1&0&0\\1&0&0&0\\ 0&0&0&1\\0&0&1&0\end{bmatrix}$
 \end{center}
-Se puede ver que existen dos vectores diferentes de norma 1 tales que $Wx=x$, $x=\left( \frac{1}{2}, \frac{1}{2},0 ,0\right)$ y $x=\left(0,0,\frac{1}{2}, \frac{1}{2} \right)$ 
+Se puede ver que existen dos vectores linealmente independientes de norma 1 tales que $Wx=x$, $x=\left( \frac{1}{2}, \frac{1}{2},0 ,0\right)$ y $x=\left(0,0,\frac{1}{2}, \frac{1}{2} \right)$ 
 
 Para evitar esto, se agrega un parámetro $c>0$, donde $1-c$ representa la probabilidad de que un navegante aleatorio vaya a una página cualquiera. Se define entonces $P_2$ tal que
 ${P_2}_{ij} = c{P_1}_{ij} + \frac{1-c}{n}  \forall i$
@@ -252,28 +243,38 @@ Para el contexto particular del PageRank, utilizamos el algoritmo 1 propuesto po
 \begin{eqnarray*}
 y&=&c(Px)\\
 w&=&||x||_1-||y||_1\\
-y&=&wv\\
+y&=&y+wv\\
 \end{eqnarray*}
+Donde $v$ es un vector en $ \textbf{R}^n$ tal que $v_i=\frac{1}{n} \forall i$
 
-Donde $v$ es un vector en $ \textbf{R}^n$ tal que $v_i=1/n \forall i$
+Es decir, $y_i=(cPx)_i+\frac{(||x||_1-c||Px||_1)}n$\\
 
-Es decir, $y_i=c(Px)_i+(1-c||Px||_1)/n$ \\
-%||Px||&=&\sum_j (Px_j)\\
-%(Px_j)&=&\sum_i p_{ji} x_i
+recordemos que
 
-%||Px||=suma_j (Px_j)
+$(P_2x)_i=\sum_i P_{2ij} x_i$
 
-%||Px||=suma_j (sum_i p_{ji} x_i)
+y que
 
-%||Px||=suma_i x_i·(sum_j p_{ji})
+$P_{2ij}=cP_{ij}+\frac{(1-c)}n$\\
 
-%sum_j p_{ji}=0:
+$(P_2x)_i=\sum_{j=1}^n (cP_{ij}+\frac{1-c}{n}) x_j$\\
 
-%||Px||=0 => (Px)_i=0 \forall i
+$(P_2x)_i=\sum_{j=1}^n cP_{ij}x_j+\sum_{j=1}\frac{(1-c)x_j}{n}$\\
 
-%$y_i=1/n$ \\
+$(P_2x)_i=c(Px)_i+\frac{1-c}{n}\sum_{j=1}^nx_j$\\
 
-%sum_j p_{ji}>0:
+Como $x_i>0\forall i$, $\sum_{j=0}^n x_i=||x||_1$\\
+
+$(P_2x)_i=c(Px)_i+\frac{(1-c)||x||_1}n$\\
+
+Como $P$ es estocástica por columnas si no tiene dangling nodes:
+
+$||Px||_1=||x||_1$
+
+$(1-c)||x||_1=||x||_1-c||Px||_1$
+
+$(P_2x)_i=c(Px)_i+\frac{(1-c)||x||_1}n=c(Px)_i+\frac{||x||_1-c||Px||_1}n=y_i$
+
 
 \subsection{Hits}
 
@@ -282,7 +283,7 @@ La idea detr\'as de este m\'etodo es, como se ha explicado brevemente antes, rea
 Dada una b\'{u}squeda, el objetivo es retornar un subconjunto de páginas relevantes.
 Se asigna entonces sobre las p\'aginas el rol de $autoridad$ en el tema que se busca. Su valor como $autoridad$ est\'a definido por el valor de $hub$ de las p\'{a}ginas que apuntan a ella mientras que el valor o peso de $hub$ est\'a definido, a su vez, por el valor de $autoridad$ de las p\'{a}ginas a las que apunta.\\
 
-Recordemos que los links están almacenados en la matriz de conectividad $W^t$ donde $w^t_{ij} = 1$ si existe un link de la p\'agina $j$ a la p\'agina $i$,  $w^t_{ij} = 0$ en caso contrario. Para cada p\'agina $i \in Web$ se define como peso de autoridad $x_i$ y como peso de hub $y_i$.
+Recordemos que los links están almacenados en la matriz de conectividad $W$ donde $w_{ij} = 1$ si existe un link de la p\'agina $j$ a la p\'agina $i$,  $w_{ij} = 0$ en caso contrario. Para cada p\'agina $i \in Web$ se define como peso de autoridad $x_i$ y como peso de hub $y_i$.
 A partir de esto, podemos definir los vectores $x,y \in \mathbb{R}^n$ como los vectores de pesos de autoridad y hubs, y se puede suponer que se encuentran normalizados.
 Evidentemente, se desprende de esto que las p\'{a}ginas con mayores $x_i$ o $y_i$ son consideradas las mejores $autoridades$ o $hubs$.
 
@@ -290,25 +291,26 @@ Se puede expresar la transferencia de pesos de hubs y autoridad, respectivamente
 
 \begin{description}
 
-\item[Peso de Autoridad] $x_j = \sum_{i} y_i$
+\item[Peso de Autoridad] $x_j = \sum_{i} w_{ij} y_i$
 
-\item[Peso de Hub] $y_i = \sum_{j} x_j$
+\item[Peso de Hub] $y_i = \sum_{j} w_{ij} x_j$
 
 \end{description}
 
 Consecuentemente, si expresamos con operaciones matriciales los vectores de hub y autoridad:
-\begin{eqnarray*}
-x &=& Wy \\
-y &=& W^tx
-\end{eqnarray*}
 
-Se aplica luego el paso de normalizaci\'{o}n $y \leftarrow \frac{y}{||y||}$ y se vuelve a comenzar hasta llegar a la convergencia.
+$x = Wy$ \\
+$y = W^tx$
+
+Se aplica luego el paso de normalizaci\'{o}n $y \leftarrow \frac{y}{||y||_2}$ y se vuelve a comenzar hasta llegar a la convergencia.
 Para la primera iteraci\'{o}n es posible empezar con un $y_0$ inicial cualquiera, y el m\'{e}todo converger\'{a} si se cumplen las siguientes condiciones:
 
 \begin{itemize}
 \item $W$ tiene un autovalor $\lambda_1$ tal que $|\lambda_1| > |\lambda_2| \geq \dots \geq |\lambda_n|$ 
 \item $y_0$ no es ortogonal al autovector asociado a $\lambda_1$
 \end{itemize}
+
+El autor recomienda tomar $y_{0i}=1 \forall i$. En este trabajo se tomó $y_{0i}=\frac{1}n \forall i$.
 
 % Justificación: (creo que esta es la parte opcional).
 
@@ -326,11 +328,11 @@ Este m\'etodo es considerablemente m\'{a}s simple y sigue una idea m\'{a}s intui
 
 La idea b\'asica es definir el valor de un p\'agina seg\'un la cantidad de p\'aginas que la apuntan.
 
-En otras palabras: el método consiste en sumar los links a cada página y, teniendo en cuenta que ya contamos con la matriz $W$, este método se reduce a sumar la fila correspondiente a cada página y obtener as\'i un vector que nos muestra el valor de cada una (la i\'esima posición corresponde a la iésima página, según su posición asignada en la matriz $W$). 
+En otras palabras: el método consiste en sumar los links a cada página. Teniendo en cuenta que ya contamos con la matriz $W$, este método se reduce a sumar la fila correspondiente a cada página y obtener as\'i un vector que nos muestra el valor de cada una (la i\'esima posición corresponde a la iésima página, según su posición asignada en la matriz $W$). 
 
 
 \subsection{Experimentos realizados}
-Para los dos primeros métodos, se realizaron experimentos para ver la convergencia de la diferencia en cada iteración de la norma del autovector buscado. En PageRank, se utilizo la norma 1 del autovector $x$. En el caso de HITS, se analizó los vectores $x$ e $y$ tomando norma 2.
+Para los dos primeros métodos, se realizaron experimentos para ver la convergencia de la norma del autovector buscado en cada iteración. En PageRank, se utilizo la norma 1 del autovector $x$. En el caso de HITS, se analizó los vectores $x$ e $y$ tomando norma 2.
 Luego, se comparó el tiempo de ejecución de cada uno utilizando la librería time.h de C++. No se tomó en cuenta el tiempo que toma cargar la matriz. Como una iteración de HITS hace dos productos de una matriz por un vector, mientras que PageRank hace uno, y que esta operación es la que domina el costo temporal de la ejecución, se esperaba que el tiempo de ejecución de HITS fuera alrededor del doble del de PageRank, independientemente del valor de $c$ usado. Este influye en el tiempo de ejecución\footnote{Kamvar, Haveliwala - 2003 - Extrapolation methods for accelerating PageRank computations} pero no esperábamos que modificara sustancialmente esta relación.
 
 Dado que indexamos la matriz desde 1, reemplazamos cada página numerada como 0 por $n+1$ para poder realizar los tests.
@@ -357,185 +359,242 @@ Los valores de $c$ usados para el pageRank fueron los siguientes:
 \item 0.85
 \item 0.95
 \end{itemize}
-Mientras que la tolerancia para asumir convergencia la fijamos en $10^{-4}$
+Se toma 0.85 por ser el valor recomendado por los autores de \textit{Brin, Page - The anatomy of a large-scale hypertextual Web search engine}. También se tomaron valores mayores y menores que 0.85 para compararlos con este.
+La tolerancia para asumir convergencia la fijamos en $10^{-5}$.
 
-A continuación se experimentó con una muestra de links entre varias páginas obtenida mediante el script provisto por la cátedra. De esta forma esperábamos analizar los resultados obtenidos en función de qué páginas se esperaban con mayor ranking.
-%Experimentos:
-%Ver la covergencia de la norma 1 de Pagerank
-%Ver la convergencia de la norma ¿2? de HITS
-%Comparar tiempos
-%Comparar calidades
+A continuación se experimentó con una muestra de links entre varias páginas obtenida mediante el script provisto por la cátedra. De esta forma esperábamos analizar los resultados obtenidos en función de qué páginas se esperaban con mayor ranking. Por último, se realizaron experimentos con redes pequeñas, para mostrar el comportamiento esperado de PageRank y HITS.
 
 \newpage
-\section{Resultados}
+\section{Resultados y Análisis}
 \label{sec:res}
 %Deben incluir los resultados de los experimentos, utilizando el formato más adecuados para su presentación. Deberán especificar claramente a qué experiencia corresponde cada resultado. No se incluirán aquí corridas de máquina.
-\subsection{Convergencia de Norma Manhattan de Pagerank}
+%Se incluirá aquí un análisis de los resultados obtenidos en la sección anterior (se analizará su validez, coherencia, etc.). Deben analizarse como mínimo los items pedidos en el enunciado. No es aceptable decir que “los resultados fueron los esperados”, sin hacer clara referencia a la teoría la cual se ajustan. Además, se deben mencionar los resultados interesantes y los casos “patológicos” encontrados.
 
-Estos son los resultados obtenidos de convergencia de la norma para los distintos tests.
+\subsection{Convergencia de Normas}
 
-En los gráficos de PageRank se compara la evolución de $||x^k-x^{k-1}||_1$ para distintos valores de $c$.\\
+%Estos son los resultados obtenidos de convergencia de la norma para los distintos tests.
+
+A continuación se presentan los resultados obtenidos al experimentar con Pagerank (con $c$ = 0.50, 0.70, 0.85 y 0.95), observando la convergencia de la Norma Manhattan hacia un valor que cumpla con la tolerancia definida, y comparando la cantidad de iteraciones necesarias para llegar a dicho valor.
+
+En los gráficos de PageRank se compara la evolución de $||x^{(k)}-x^{(k-1)}||_1$ para distintos valores de $c$.\\
+Se decidió graficar la red Censorship al considerarla representativa de los otros casos probados para redes medianas, y Notre Dame al considerarlo representativo de los casos de redes grandes.
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=0.25]{img/Normas-Page-Censor.png} 
-\includegraphics[scale=0.25]{img/Normas-Page-Genetic.png} 
-\includegraphics[scale=0.25]{img/Normas-Page-Movie.png}
+
+\includegraphics[scale=0.4]{img/Normas-Page-Censor.png} 
 
 \caption{Normas (PageRank): escala logarítmica}
 \end{figure}
 
-\begin{center}
-\begin{tabular}{r|c|c|c}
-&  \textbf{Censorship} & \textbf{Genetic} & \textbf{Movies} \\ 
-\hline
-C & Iteración de Llegada & Iteración de Llegada & Iteración de Llegada\\
-\hline
-0.5 & 6 & 7 & 7\\
-\hline
-0.7 & 9 & 12 & 10\\
-\hline
-0.85 & 19 & 25 & 19\\
-\hline
-0.95 & 58 & 77 & 58
-\end{tabular}
-\end{center}
+Se observa en la figura 1 que la cantidad de iteraciones necesarias para llegar a un ranking aceptable parece tener una clara relación con el $c$ que se define: cuanto mayor es el $c$, mayor cantidad de iteraciones debe hacer antes de llegar a una norma que el criterio de parada acepte.
+
+De esto se puede deducir que cuanta menor importancia se le dé a la estructura de la red, menor cantidad de cálculos habrá que hacer. De allí se puede ver que un $c$ pequeño implica menor probabilidad de que el navegante aleatorio siga algún \textit{camino} predecible, y mayor de que salte a una página cualquiera de la web; esto a su vez llevará a que los caminos que nosotros tratamos de establecer tengan un menor peso a la hora de determinar sus acciones. \newline
 
 
-\begin{figure}[htbp]
+\begin{figure}[ht]
 \centering
-\includegraphics[scale=0.35]{img/Normas-Page-Notre.png}
-\includegraphics[scale=0.35]{img/Norma-Page-Stanford.png}
+\includegraphics[scale=0.4]{img/Normas-Page-Notre.png}
+%\includegraphics[scale=0.35]{img/Normas-Page-Stanford.png}
 \caption{Normas (PageRank): escala logarítmica}
 \end{figure}
 
-\begin{center}
-\begin{tabular}{r|c|c}
- & \textbf{Notredame} & \textbf{Stanford}\\
-\hline
-C & Iteración de Llegada & Iteración de Llegada \\
-\hline
-0.5 & 8 & 8\\
- \hline
-0.7 & 9 & 9\\
-\hline
-0.85 & 16 & 18\\
-\hline
-0.95 & 46 & 55
-\end{tabular}
-\end{center}
+Las normas, al igual que en el caso anterior, convergen en forma exponencial.\\
+La relación entre las iteraciones necesarias según el $c$ que se elija, además, son análogas a aquel presentado en redes medianas.\\
 
+
+Se decidió luego analizar estas convergencias de normas de \textit{Pagerank} de diferentes redes entre sí, tomando como $c$ aquel recomendado en \textit{Brin, Page - The anatomy of a large-scale hypertextual Web search engine}, esto es, tomando $c=0.85$.\\
+
+\begin{center}
+\includegraphics[scale=0.4]{img/Convergencia-PageRank.png}
+\end{center}
 %\caption{Normas (PageRank): escala logarítmica}
 %\label{fig:graficos_cropflip}
 
-\newpage
+Contrario a lo que se esperaba, las normas de las matrices más grandes (Stanford y NotreDame) presentaron una convergencia pronunciadamente más rápida que las de aquellas más pequeñas (Movies, Censorship).\\
 
-En los gráficos de HITS se compara la evolución de $||x^{(k)}-x_{(k-1)}||_2$ con la de $||y^{(k)}-y^{(k-1)}||_2$.\\
+En PageRank, las normas convergen a 0 en forma exponencial luego de las primeras iteraciones. Cuanto mayor sea el valor de $c$, más tarda en alcanzarse el criterio de parada. Con $c=1$, la norma podría no converger, ya que la matriz $P_2$ es igual a $P$, que puede no ser estocástica por columnas. \\ %¿algo de c=0?
+
+Luego de experimentar con el algoritmo de PageRank se decidió observar la convergencia de la diferencia de la norma 2 en HITS: $||x^{(k)}-x^{(k-1)}||_2$ y $||y^{(k)}-y^{(k-1)}||_2$, \newline
+Se presentan en los siguientes gráficos dos casos que consideramos representativos de los resultados de experimentos sobre redes medianas y grandes, respectivamente. \newline
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=0.25]{img/Normas-HITS-Censor.png}
-\includegraphics[scale=0.25]{img/Normas-HITS-Genetic.png} 
-\includegraphics[scale=0.25]{img/Normas-HITS-Movie.png}
+\includegraphics[scale=0.3]{img/Normas-HITS-Censor.png}
+\includegraphics[scale=0.3]{img/Normas-HITS-Notre.png}
+%\includegraphics[scale=0.25]{img/Normas-HITS-Genetic.png} 
+%\includegraphics[scale=0.25]{img/Normas-HITS-Movie.png}
 
 \caption{Normas (HITS): escala logarítmica}
 \end{figure}
 
-\begin{center}
-
-\begin{tabular}{r|c|c|c}
-&  \textbf{Censorship} & \textbf{Genetic} & \textbf{Movies} \\ 
-\hline
- Iteración de Llegada & 29 & 14 & 15\\
-
-\end{tabular}
+En la figura 3 se puede observar que en HITS las normas también convergen a 0 en forma exponencial. Sin embargo, en las muestras de mayor tamaño se observa que tarda más iteraciones en converger.\\
 
 
-\end{center}
-
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[scale=0.385]{img/Normas-HITS-Notre.png}
-\includegraphics[scale=0.385]{img/Norma-HITS-Stanford.png}
-\caption{Normas(HITS): escala logarítmica}
-\label{fig:graficos_cropflip}
-\end{figure}
+Se procede a continuación a comparar una red que consideramos representativa de la mayoría de las redes medianas tomadas y \textit{Genetic}, que mostró una diferencia importante en comparación con las demás.
 
 \begin{center}
-
 \begin{tabular}{r|c|c}
-&  \textbf{NotreDame} & \textbf{Stanford}\\ 
+\textbf{Métodos} &  \multicolumn{2}{|c}{\textbf{Iteraciones de Llegada}}\\
 \hline
- Iteración de Llegada & 30 & 18\\
+  &  \textbf{Censorship} & \textbf{Genetic}\\ 
+\hline
+HITS & 18 & 37\\
+\hline
+Pagerank 0.5 & 9 & 10\\
+\hline
+Pagerank 0.7 & 16 & 19\\
+\hline
+Pagerank 0.85 & 33 & 39\\
+\hline
+Pagerank 0.95 & 101 & 121\\
 \end{tabular}
-
 \end{center}
 
-Estos son los resultados de tiempo de cómputo obtenidos, en ciclos de clock:
+Sorprendentemente, se encontró que al correr HITS sobre las redes medianas, \textit{Genetic} precisó aproximadamente el doble de iteraciones que fueron necesarias para \textit{Censorship} (y para la mayoría de las redes medianas tomadas).\\
+
+Por otro lado, en Pagerank existe una cierta diferencia entre \textit{Genetic} y \textit{Censorship} también, pero está evidentemente muy lejos de ser tan grande como la presentada en HITS. Se puede ver, sin embargo, que ésta escala de forma proporcional al $c$ que se tome.\\
+
+Se consideró en un principio la idea de que la cantidad de nodos, links o la relación entre estos dos valores tuvieran alguna infuencia en esta diferencia, sin embargo no parece ser ésta la principal razón ya que los valores de \textit{Genetic} no muestran ninguna discrepancia especial con la mayoría de los casos de tests tomados (ver sección \textbf{2.5.: Experimentos realizados})\\
+
+No consideramos que sea posible determinar de manera fehaciente la causa de esta diferencia entre redes de tamaño tan grande sin entrar en experimentos más grandes y que requerirían un análisis mucho más profundo.
+
+\subsection{Tiempos de Cómputo}
+
+A continuación se presentan los resultados de tiempo de cómputo obtenidos, en ciclos de clock:
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=0.25]{img/Tiempos-Censor.png}
-\includegraphics[scale=0.25]{img/Tiempos-Genetic.png}
-\includegraphics[scale=0.25]{img/Tiempos-Movie.png}
+\includegraphics[scale=0.385]{img/TiemposPage.png}
+\includegraphics[scale=0.385]{img/TiemposHits.png}
 \caption{Tiempo de cómputo}
 \end{figure}
 
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[scale=0.385]{img/Tiempos-Notre.png}
-\includegraphics[scale=0.385]{img/Tiempo-Stanford.png}
-\caption{Tiempo de cómputo}
+\includegraphics[scale=0.27]{img/CiclosporIterPG.jpg}
+\includegraphics[scale=0.27]{img/CiclosporIterHITS.jpg}
+\caption{Ciclos por iteración}
 \end{figure}
 
 \newpage
-\begin{center}
-\begin{tabular}{l|c|c|c|c|c}
-\hline
-& Movie & Censorship & Genetic & NotreDame & Stanford\\
-\hline
-Ciclos por Iteración PageRank & 1896.1 & 822 & 882.2 & 103619.1 & 115099.8 \\
-\hline
-Ciclos por Iteración HITS & 3857.8 & 1213.4 & 2149.5 & 131540.1 & 206502.1
-\end{tabular}
-\end{center}
 
-\subsection{Puntajes obtenidos}
+En todos los casos analizados se obtuvo que el tiempo de cómputo de PageRank aumentó con el valor del $c$ elegido.
 
-\begin{figure}[htbp]
+Se puede notar en ambos gráficos que dicho tiempo de cómputo es proporcional al tamaño de la red para ambos métodos. 
+
+Los tests de mayor tamaño, aunque no requerían una mayor cantidad de iteraciones, sí tienen mayor tiempo de cómputo. Esto se debe a que la multiplicación entre la matriz y el vector que es necesaria en cada iteración tiene una mayor cantidad de elementos. Esto se puede observar en la figura de Ciclos por iteración.
+
+El algoritmo HITS resultó más lento que PageRank para todos los valores de $c < 0,85$ que utilizamos, en todas las redes para las que medimos los tiempos. Sin embargo, consideramos que esta diferencia se debe principalmente a que el algoritmo HITS debe realizar dos productos entre una matriz y un vector, mientras que PageRank solo realiza una.\\
+
+\newpage
+\subsection{Rankings obtenidos}
+
+Se presenta aquí una experimentación sobre una red \textit{real}; se cuenta en esta red con las siguientes páginas:\\
+
+\begin{itemize}
+\item ole.com.ar
+\item clasificados.clarin.com
+\item ciudad.com.ar
+\item lanacion.com.ar
+\item canchallena.lanacion.com.ar
+\item clarin.com
+\item clarin.com/deportes
+\item rollingstone.com.ar
+\item zonaprop.com.ar
+\item google.com
+\item infobae.com
+\item mamapuntocero.com.ar
+\item pagina12.com.ar
+\item yahoo.com \\ \\
+\end{itemize}
+
+Utilizando el $webParser$ provisto por la cátedra, se ha buscado obtener el ranking de estas páginas utilizando los distintos métodos.
+
+En cuanto al PageRank obtenido, se esperaba que las páginas que consideramos más importantes como $google.com$ y $yahoo.com$ estuvieran encabezando la lista. Se esperaba además que por debajo de las más importantes estuvieran las páginas relacionadas con diarios y revistas, tales como $lanacion.com.ar$ y $clarin.com$. Finalmente considerabamos razonable encontrar en último lugar secciones de los diarios (tales como $clarin.com/deportes$) y páginas menos relevantes como $mamapuntocero.com.ar$ .\\
+
+Para el puntaje de hub de HITS, se esperaba algo similar: un gran puntaje en los buscadores (Google, Yahoo) y un puntaje algo menor en los diarios y sus secciones, que deben referenciarse entre sí, y últimas, páginas como $mamapuntocero.com.ar$.
+
+Para el puntaje de autoridad, se esperaba un puntaje bajo para los buscadores, que no suelen tener más links entrantes que los generados por otros buscadores. El puntaje para los diarios y revistas y sus secciones debería ser alto, ya que se espera que se referencien entre sí.\\
+
+Sin embargo, es necesario notar que la estructura de la red no es representativa de la $World$ $Wide$ $Web$: hay cinco sitios del diario Clarín (considerando Olé y Ciudad) y dos de La Nación. Es esperable que estos sitios estén relacionados entre sí, generando un puntaje que puede superar al de los buscadores.
+
+\begin{figure}[ht]
 \centering
-\includegraphics[scale=0.25]{img/casorealPage.png}
-\includegraphics[scale=0.25]{img/casorealHits.png}
-\includegraphics[scale=0.25]{img/casorealIn-Deg.png}
+\includegraphics[scale=0.33]{img/casorealPage.png}
+\includegraphics[scale=0.33]{img/casoRealAut.png} \\
+\includegraphics[scale=0.33]{img/casoRealHub.png}
+\includegraphics[scale=0.33]{img/casorealIn-Deg.png}
 \caption{Puntajes obtenidos con los distintos métodos por distintas páginas}
 \end{figure}
+\begin{tabular}{r|l|r|l|r|l}
+Ranking&PageRank&&Hits (Autoridad)&& Hits(Hub)\\
+\hline
+1	&	clarin.com	&	1	&	clarin.com	&	1	&	clarin.com/deportes	\\
+	&	ole.com.ar	&		&	ole.com.ar	&	2	&	ole.com.ar	\\
+2	&	clasificados.clarin.com	&	2	&	clasificados.clarin.com	&		&	clarin.com	\\
+	&	ciudad.com.ar	&		&	ciudad.com.ar	&	3	&	clasificados.clarin.com	\\
+3	&	lanacion.com.ar         	&	3	&	canchallena.lanacion.com.ar	&		&	ciudad.com.ar	\\
+4	&	canchallena.lanacion.com.ar	&	4	&	lanacion.com.ar         	&	4	&	lanacion.com.ar         	\\
+5	&	rollingstone.com.ar	&	5	&	rollingstone.com.ar	&	5	&	rollingstone.com.ar	\\
+	&	zonaprop.com.ar	&		&	zonaprop.com.ar	&	6	&	canchallena.lanacion.com.ar	\\
+6	&	google.com	&	6	&	google.com	&	7	&	zonaprop.com.ar	\\
+	&	clarin.com/deportes	&		&	clarin.com/deportes	&		&	yahoo.com	\\
+	&	infobae.com	&		&	infobae.com	&		&	pagina12.com.ar	\\
+	&	mamapuntocero.com.ar	&		&	mamapuntocero.com.ar	&		&	mamapuntocero.com.ar	\\
+	&	pagina12.com.ar	&		&	pagina12.com.ar	&		&	infobae.com	\\
+	&	yahoo.com	&		&	yahoo.com	&		&	google.com	\\
 
-\begin{tabular}{r|l}
-1 & www.google.com\\
-2 & www.clarin.com\\
-3 & www.clarin.com/deportes\\
-4 & www.lanacion.com.ar\\
-5 & www.infobae.com\\
-6 & canchallena.lanacion.com.ar\\
-7 & www.rollingstone.com.ar\\
-8 & www.ole.com.ar \\
-9 & www.clasificados.clarin.com\\
-10 & www.mamapuntocero.com.ar\\
-11 & www.ciudad.com.ar\\
-12 & www.zonaprop.com.ar\\
-13 & www.pagina12.com.ar\\
-14 & www.yahoo.com\\
+\hline
 \end{tabular}
 
-\subsection{Redes pequeñas}
-Consideramos los siguientes casos:
+\begin{tabular}{r|l}
+Ranking & InDeg \\
+\hline
+1	&	clarin.com	\\
+	&	ole.com.ar	\\
+2	&	clasificados.clarin.com	\\
+	&	ciudad.com.ar	\\
+3	&	lanacion.com.ar	\\
+	&	canchallena.lanacion.com.ar	\\
+4	&	rollingstone.com.ar	\\
+	&	zonaprop.com.ar	\\
+5	&	google.com	\\
+	&	clarin.com/deportes	\\
+	&	infobae.com	\\
+	&	mamapuntocero.com.ar	\\
+	&	pagina.com.ar	\\
+	&	yahoo.com	\\
+  
+\end{tabular} \newline \newline
+
+
+Al hacer un análisis cualitativo de los puntajes obtenidos se puede observar que los rankings en general no fueron los esperados. Por ejemplo, se esperaba que $Google$ y $Yahoo$ obtuvieran los mayores puntajes de hub, hecho que no tuvo lugar.\\
+
+Esto se debe a que la porción de la red elegida no es representativa. Se ve que $clarin.com$ obtuvo el mayor puntaje de PageRank, pero hay que tener en cuenta que en la lista hay sitios que pertenecen al mismo dominio, que también obtuvieron un puntaje alto. En general, diarios y revistas se ubicaron en primer lugar. Páginas que hemos considerado de menor importancia se han ubicado por debajo, como era esperado.\\
+
+Además, se tomaron las páginas principales de $Google$ y $Yahoo$ que no tienen links salientes. Para obtenerlos, es necesario realizar una búsqueda.
+
+\newpage
+\subsection{Redes pequeñas} 
+
+Para observar el comportamiento de PageRank y HITS, consideramos los siguientes casos de seis nodos, tomando para PageRank $c=0.85$:
 \begin{itemize}
-\item Una red en la que una página apunta a todas
-\item Una red en la que todas las páginas apuntan a una
-\item Una red en la que casi todas las páginas se apuntan entre sí
-\item Una red con muy pocos links
+
+\item Una red en la que todas las páginas apuntan a una. El PageRank de una página puede considerarse como la probabilidad del navegante aleatorio de encontrarse en ella. En este caso, el navegante aleatorio comienza en una página, sigue el link a la única a la que esta apunta y, como ésta es un dangling node, salta a cualquiera y vuelve a seguir el único link. Esto se traduciría en que la mitad del tiempo el navegante se encuentra en la página a la que apuntan todas, y la otra mitad, en cualquier otra. Esto no es exacto por la probabilidad de un salto entre páginas sin seguir links, pero para $c=0.85$ esta probabilidad es baja. Además, se podría saltar directamente a la página central. Para HITS, esperamos ver un puntaje de autoridad de 1 para esta página y un puntaje de hub repartido entre el resto. \\
+\includegraphics[scale=0.5]{img/todosal2G.png}
+
+\item Una red en la que una página apunta a todas. La intención es mostrar un caso en el que el PageRank no consigue representar la estructura de la red, ya que debería ser igual para todas. Esto es porque la página que apunta a todas se comporta exactamente como un dangling node, y el resto lo son. En cambio, en HITS, el puntaje de hub de esta página debería ser 1, mientras que el puntaje de autoridad debe estar repartido entre el resto de las páginas. \\ 
+\includegraphics[scale=0.5]{img/eldosatodosG.png}
+
+\item Una red con muy pocos links. Con esto se puede ver la diferencia entre los dos métodos causada por los dangling nodes: en HITS el puntaje está concentrado en los pocos links, mientras que en PageRank se "fabrican" links salientes de cada dangling node, generando un puntaje similar para todas las páginas. \\
+\includegraphics[scale=0.5]{img/pocoslinksG.png}
+
+\item Una red en la que se forma un ciclo. El navegante aleatorio tiene en todo momento la misma probabilidad de estar en cualquier página, ya que, o bien sigue el ciclo, o bien salta con igual probabilidad a cualquier página, por lo que el PageRank debería ser igual para todas. El puntaje de HITS también, porque todas las páginas tienen un link saliente y un link entrante a páginas que no son distinguibles de sí misma. Lo que se espera ver en este ejemplo es un caso en que las páginas tienen un grado de entrada (In-Deg) muy similar al del ejemplo anterior, pero su estructura es muy diferente. \\
+\includegraphics[scale=0.5]{img/hexaG.png}
 \end{itemize}
-Para observar el comportamiento de PageRank y HITS. Obtuvimos estos resultados:
+Los resultados obtenidos se presentan a continuación:
 
 \begin{figure}[htbp]
 \centering
@@ -544,12 +603,16 @@ Para observar el comportamiento de PageRank y HITS. Obtuvimos estos resultados:
 \caption{Puntajes obtenidos para una red en la que todas las páginas apuntan a la nº 2}
 \end{figure}
 
+En la figura 7 se ve que la página nº 2 es la que, como se esperaba, concentra todo el puntaje de autoridad; y es también la que tiene mayor PageRank. Este es muy cercano a 0.5, pero mayor.
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[scale=0.385]{img/eldosatodos.png}
 \includegraphics[scale=0.385]{img/eldosatodosH.png}
 \caption{Puntajes obtenidos para una red en la que la pagina nº 2 apunta a todas}
 \end{figure}
+
+Por otro lado en la Figura 8, como era esperable, los puntajes de HITS se han invertido completamente, aquellos que quedaban en segundo lugar ahora ocupan el primero. En cambio, el puntaje de PageRank fue igual para todas las páginas.
 
 \begin{figure}[htbp]
 \centering
@@ -558,35 +621,24 @@ Para observar el comportamiento de PageRank y HITS. Obtuvimos estos resultados:
 \caption{Puntajes obtenidos para una red con pocos links}
 \end{figure}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[scale=0.385]{img/muchoslinksout.png}
-\includegraphics[scale=0.385]{img/muchoslinksoutH.png}
-\caption{Puntajes obtenidos para una red con muchos links}
-\end{figure}
+En HITS, tanto el puntajes de autoridad como el de hub están concentrados en las páginas que tienen links. En cambio, en PageRank los puntajes fueron similares para todas las páginas, con un puntaje mayor en las que tienen links entrantes. En este caso, como la \textit{página hub} no tiene ningún link entrante, tiene el mismo puntaje que los nodos aislados. De hecho, en este caso, PageRank no refleja ninguna información sobre los links salientes.
 
 \newpage
-\section{Discusi\'{o}n}
-\label{sec:discusion}
-%Se incluirá aquí un análisis de los resultados obtenidos en la sección anterior (se analizará su validez, coherencia, etc.). Deben analizarse como mínimo los items pedidos en el enunciado. No es aceptable decir que “los resultados fueron los esperados”, sin hacer clara referencia a la teoría la cual se ajustan. Además, se deben mencionar los resultados interesantes y los casos “patológicos” encontrados.
 
-En PageRank, las normas convergen a 0 en forma exponencial luego de las primeras iteraciones. Cuanto mayor sea el valor de $c$, más tarda en alcanzarse el criterio de parada. Como ya se dijo, en un caso extremo, con $c=1$, la norma podría no converger. En HITS, las normas también convergen a 0 en forma exponencial.\\
+\begin{figure}[htbp]
+\centering
+\includegraphics[scale=0.385]{img/hexaout.png}
+\includegraphics[scale=0.385]{img/hexaoutH.png}
+\caption{Puntajes obtenidos para una red cíclica}
+\end{figure}
 
-En todos los casos analizados se obtuvo que el tiempo de cómputo de PageRank aumentó exponencialmente con el valor de $c$.\\
+Para la red que forma un ciclo, el puntaje fue exactamente igual para todos, tanto en PageRank como en Hits. Esto es lo que se esperaba.
 
-El algoritmo HITS resultó más lento que PageRank para todos los valores de $c \leq 0,85$ que utilizamos, en todas las redes para las que medimos los tiempos. Sin embargo, consideramos que esta diferencia se debe principalmente a que el algoritmo HITS debe realizar dos productos entre una matriz y un vector, mientras que PageRank solo realiza una. Se puede comprobar que esta diferencia es proporcional al tamaño de la matriz que representa a la red. Es decir, la diferencia no llega a ser de órdenes de complejidad.\\
+%\newpage
 
-Además, se espera que si se eligen valores de $c$ mayores a un valor, el tiempo de ejecución de Pagerank siempre supere al de HITS.\\
+%El valor de $c$, si bien influye en el ranking, no lo varía demasiado. Un valor más alto de $c$ implica darle una mayor importancia a los links que relacionan las páginas, resultando en un ranking más representativo de la estructura de la red. Sin embargo, no necesariamente será mejor como modelo para el comportamiento de un navegante aleatorio en la práctica.\\
 
-En los tests de mayor tamaño se puede ver que la cantidad de iteraciones necesarias para alcanzar convergencia es igual que en los tests menores o incluso menor. Si tienen mayor tiempo de cómputo, es porque la multiplicación entre la matriz y el vector que es necesaria en cada iteración tiene una mayor cantidad de elementos. Esto se puede ver en el tiempo de iteración. Sin embargo, dada la proporción de links por páginas, esto tampoco influye demasiado.\\
-
-El valor de $c$, si bien influye en el puntaje, no lo varía demasiado. Un valor más alto de $c$ implica darle una mayor importancia a los links que relacionan las páginas, resultando en un ranking más representativo de la estructura de la red. Sin embargo, no necesariamente será mejor como modelo para el comportamiento de un navegante aleatorio en la práctica.\\
-
-Teniendo en cuenta que la cantidad de iteraciones, y por lo tanto el tiempo de ejecución, escalan exponencialmente con este parámetro, es conveniente elegir un valor no demasiado alto. \\
-
-Al hacer un análisis cualitativo de los puntajes obtenidos se pueden obvervar que el puntaje no es el esperado. Por ejemplo, se esperaba que Google obtuviera el mayor puntaje de hub, cosa que no ocurrió.\\
-
-Esto se debe a que la porción de la red elegida no es representativa. Se ve que lanacion.com obtuvo el mayor puntaje de PageRank, pero hay que tener en cuenta que en la lista hay sitios que pertenecen al mismo dominio.\\
+%Teniendo en cuenta que la cantidad de iteraciones, y por lo tanto el tiempo de ejecución, escalan exponencialmente con este parámetro, es conveniente elegir un valor no demasiado alto. \\
 
 \newpage
 
@@ -595,9 +647,7 @@ Esto se debe a que la porción de la red elegida no es representativa. Se ve que
 
 %Esta sección debe contener las conclusiones generales del trabajo. Se deben mencionar las relaciones de la discusión sobre las que se tiene certeza, junto con comentarios y observaciones generales aplicables a todo el proceso. Mencionar también posibles extensiones a los métodos, experimentos que hayan quedado pendientes, etc.
 
-En el paper escrito por Brin y Page \footnote{Brin, Page - 1998 - The anatomy of a large-scale hypertextual Web search engine} se recomienda tomar un $c$ (probabilidad de un navegante aleatorio de seguir un link de la página en la que está) de 0.85.\\ \\%O sea, hacer experimentos 
-
-Consideramos sin embargo que, de contar con los recursos necesarios para realizar mediciones de la magnitud necesaria para obtener resultados representativos, la mejor manera de definir un valor de $c$ fiable en la mayor cantidad de casos posibles sería acercarnos a la probabilidad real con la que el navegante aleatorio $salta$ a otra página sin seguir un link, para esto haría falta hacer experimentos con navegantes reales y realizar un promedio de los $c$ que obtuvimos de estos navegantes; es decir que el mejor $c$ a tomar sería la esperanza de los $c$ obtenidos en estas mediciones.\\
+En el paper escrito por Brin y Page \footnote{Brin, Page - 1998 - The anatomy of a large-scale hypertextual Web search engine} se recomienda tomar un $c$ (probabilidad de un navegante aleatorio de seguir un link de la página en la que está) de 0.85. Consideramos sin embargo que, de contar con los recursos necesarios para realizar mediciones de la magnitud necesaria para obtener resultados representativos, la mejor manera de definir un valor de $c$ fiable en la mayor cantidad de casos posibles sería acercarnos a la probabilidad real con la que el navegante aleatorio $salta$ a otra página sin seguir un link, para esto haría falta hacer experimentos con navegantes reales y realizar un promedio de los $c$ que obtuvimos de estos navegantes; es decir que el mejor $c$ a tomar sería la esperanza de los $c$ obtenidos en estas mediciones.\\
 
 El hecho de que la norma converja exponencialmente permite que la cantidad de iteraciones sea lo suficientemente acotada, teniendo en cuenta que cada iteración es una multiplicación de una matriz por un vector que puede tener varios millones de posiciones.
 
@@ -605,15 +655,19 @@ El hecho de que la norma converja exponencialmente permite que la cantidad de it
 Luego de haber contrastado estos distintos métodos de ranking podemos decir con seguridad que:\\
 
 
-\textbf{In-Deg} es completamente descartable como método para decdidir la relevancia de una página, se limita a realizar el análisis más previsible y propenso a caer en errores.
-Buscadores puramente textuales que siguieron este método, como AltaVista, fueron reemplazados eventualmente por otros más útiles, si bien fueron un paso necesario para la creación de buscadores mejores.\\\\
+\textbf{In-Deg} es completamente descartable como método para decidir la relevancia de una página, se limita a realizar el análisis más previsible y propenso a caer en errores.
+Buscadores puramente textuales que siguieron este método, como AltaVista, fueron reemplazados eventualmente por otros más útiles, si bien fueron un paso necesario para la creación de buscadores mejores.\\ 
 
 \textbf{HITS} es mucho más efectivo y confiable ya que realiza un análisis más inteligente de la red que le es proporcionada, confiriéndole distintos roles a las páginas y contrastándolas a partir de las relaciones entre estas páginas según el rol que estén cumpliendo.\\
 Hemos comprobado que la cantidad de links a una página no son relevantes por sí solos para considerarla una buena autoridad sino que lo más importante es la relevancia como hubs de aquellas páginas que la apuntan, esto revela un análisis mucho más profundo que el de \textit{Indeg}.\\
-Por la naturaleza del análisis que realiza es, sin embargo, más susceptible de caer en engaños tales como que páginas acuerden apuntarse entre sí para ganar peso en el ranking que \textit{HITS} les asigne, mientras que con \textit{PageRank} este artilugio no daría frutos debido a que cuantos más links salientes una página tenga, menos valor le estará transfiriendo con cada link a las páginas apuntadas.\\\\
+Por la naturaleza del análisis que realiza es, sin embargo, más susceptible de caer en engaños tales como que páginas acuerden apuntarse entre sí para ganar peso en el ranking que \textit{HITS} les asigne, mientras que con \textit{PageRank} este artilugio no daría frutos debido a que cuantos más links salientes una página tenga, menos valor le estará transfiriendo con cada link a las páginas apuntadas.
 
-\textbf{PageRank} es el método que consideramos mejor, superando tanto a \textit{HITS} como a \textit{Indeg} debido a que realiza un análisis profundo de las relaciones entre páginas, distinto de aquel proporcionado por \textit{HITS}. En ciertos casos parece que el procedimiento es opuesto. Por ejemplo, una página que apunta a todas le da poco valor a cada una en PageRank, pero al apuntar a muchas autoridades es un buen hub según HITS, luego le da valor a los que apunta. Un inconveniente que tiene este algoritmo es que trata una pagina con links a toda la web igual que un dangling node, mientras que HITS le da a un gran puntaje como hub.
-\\\\
+Por ejemplo, si en el caso considerado en la sección 3.3 se agrega un link de $Clar$í$n$, una página que tiene varios links salientes, a una que está en el último lugar de los rankings, como $mamapuntocero$, la página apuntada asciende al quinto puesto en el ranking de Hubs de Hits, mientras que solo llega al séptimo puesto en el ranking de PageRank (con c=0.85).\\ 
+
+Mirando el concepto detrás de \textit{HITS} (a grandes rasgos), es posible definir una clara relación entre el concepto de Autoridad de una página en $HITS$ y el concepto de importancia de una en \textit{Pagerank}, la relación, sin embargo, no va más allá del concepto ya que los cálculos y la forma de definir el valor de Autoridad o la importancia de una página son evidentemente muy distintos.
+
+\textbf{PageRank} es el método que consideramos mejor, superando tanto a \textit{HITS} como a \textit{Indeg} debido a que realiza un análisis profundo de las relaciones entre páginas, distinto de aquel proporcionado por \textit{HITS}. En ciertos casos parece que el procedimiento es opuesto. Por ejemplo, una página que apunta a todas le da poco valor a cada una en PageRank, pero al apuntar a muchas autoridades es un buen hub según HITS, luego le da valor a los que apunta. Un inconveniente que tiene este algoritmo es que trata una página con links a toda la web igual que un dangling node, mientras que HITS le da un gran puntaje como hub.
+\\ 
 
 Por ultimo, si el cliente quiere tener un mejor PageRank, debe conseguir que lo apunten páginas que tengan la mejor proporción entre PageRank y cantidad de links salientes, ya que el puntaje se distribuye entre todas las páginas. En cambio, si quiere conseguir un mejor puntaje como autoridad en HITS, debe buscar que la mayor cantidad posible de las mejores páginas lo apunten. Si desea tener un mejor puntaje de hub tendría que apuntar a las páginas con mayor autoridad en HITS.\\
 Podemos finalmente concluir que la mejor estrategia a sugerir a clientes sería darle prioridad al ranking proporcionado por Pagerank, está además la prueba de la efectividad del Pagerank en el éxito que tuvo Google al usarlo. 
@@ -627,7 +681,7 @@ Sugeriríamos entonces apoyarse en el orden de resultados que proporcione este b
 \input{tp2}
 
 \newpage
-%En el apéndice B se incluirán los códigos fuente de las funciones relevantes desde el punto de vista numérico. Resultados que valga la pena mencionar en el trabajo pero que sean demasiado específicos para aparecer en el cuerpo principal del trabajo podrán mencionarse en sucesivos apéndicesaerotulados con las letras mayúsculas del alfabeto romano. Por ejemplo: [la demostración de una propiedad que aplican para optimizar el algoritmo que programaron para resolver un problema].
+%En el apéndice B se incluirán los códigos fuente de las funciones relevantes desde el punto de vista numérico. Resultados que valga la pena mencionar en el trabajo pero que sean demasiado específicos para aparecer en el cuerpo principal del trabajo podrán mencionarse en sucesivos apéndices rotulados con las letras mayúsculas del alfabeto romano. Por ejemplo: [la demostración de una propiedad que aplican para optimizar el algoritmo que programaron para resolver un problema].
 
 \section{Referencias}
 \label{sec:ref}
